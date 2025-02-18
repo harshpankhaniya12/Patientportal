@@ -18,9 +18,10 @@
     .ius-form .form-label { margin-bottom: 4px; }
 
     .ius-header {
-        display: flex;
-        align-items: center;
-        padding: 10px 20px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 9px 0 0;
+        gap: 9px;
     }
 
     .hcol-pa {
