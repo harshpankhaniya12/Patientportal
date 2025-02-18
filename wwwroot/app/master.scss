@@ -1,0 +1,217 @@
+.dashboard {
+ $self: &;
+ background: #f7fafc;
+ .popupSm__wrapper {
+  .popup__activator {
+   span {
+    pointer-events: none;
+   }
+   svg {
+    pointer-events: none;
+   }
+  }
+  .popup-sm {
+   width: 200px;
+   border-radius: 10px;
+   box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.08);
+   background: #fff;
+   list-style: none;
+   padding: 10px;
+   border: 1px solid #e7e7e7;
+   top: calc(100% + 5px);
+   position: absolute;
+   opacity: 0;
+   pointer-events: none;
+   transform: translateY(10px);
+   transition: 0.3s ease-out;
+   z-index: 1;
+   li {
+    width: 100%;
+    .btn {
+     padding: 10px;
+     font-weight: 500;
+     font-size: 15px;
+     width: 100%;
+     text-align: left;
+     border-radius: 6px;
+     &:focus {
+      box-shadow: none;
+     }
+     &:hover {
+      background: #fde9ea;
+      color: #e31f24;
+     }
+    }
+   }
+  }
+  &.popup__active {
+   .popup-sm {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0px);
+   }
+  }
+ }
+ &__sidebar {
+  max-width: 300.093px;
+  background: #fff;
+  transition: 0.3s ease-in-out;
+  &--close {
+   width: 0;
+   min-width: 80px !important;
+   max-width: 0;
+   #{$self}__nav {
+    padding-inline: 15px !important;
+    &Links {
+     #{$self}__navLink {
+      overflow: inherit;
+      a {
+       span {
+        position: absolute;
+        left: calc(100% + 11px);
+        background: white;
+        padding: 17px 10px;
+        border-radius: 8px;
+        width: max-content;
+        opacity: 0;
+        transform: translateX(10px);
+       }
+      }
+      &:hover {
+       a {
+        span {
+         opacity: 1;
+         transform: translateX(0px);
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  #{$self}__logo {
+   padding-block: 14px;
+  }
+  #{$self}__nav {
+   padding-inline: 20px;
+   &Links {
+    #{$self}__navLink {
+     border-radius: 12px;
+     position: relative;
+     opacity: 1;
+     overflow: hidden;
+     a {
+      padding: 9px 10px;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      gap: 20px;
+      #{$self}__navLink-icon {
+       min-width: 32px;
+       height: 32px;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       svg {
+        width: 100%;
+        height: 100%;
+        stroke: #2c3e50;
+       }
+      }
+      span {
+       color: #2c3e50;
+       font-size: 18px;
+       font-style: normal;
+       font-weight: 400;
+       line-height: normal;
+       min-width: max-content;
+      }
+     }
+     &--active {
+      background: #fde9ea;
+      &:hover {
+       background: rgb(253, 233, 234, 0.6);
+      }
+      a {
+       span {
+        color: #e31f24;
+       }
+       #{$self}__navLink-icon {
+        svg {
+         stroke: #e31f24;
+        }
+       }
+      }
+     }
+     &:not(.dashboard__navLink--active):hover {
+      background: rgba(170, 170, 170, 0.2);
+     }
+    }
+   }
+  }
+ }
+ &__body {
+  #{$self}__header {
+   height: 60px;
+   padding-inline: 33px 12px;
+   background: #fff;
+   #{$self}__hamburger {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    svg {
+     width: 24px;
+     height: 24px;
+    }
+   }
+   &Right {
+    gap: 42px;
+   }
+  }
+  main {
+   padding: 35px 30px;
+   h3 {
+    color: #2c3e50;
+   }
+   #{$self}__table {
+    border-radius: 18px;
+    border: 1px solid #e7e7e7;
+    background: #fff;
+    padding: 20px;
+    &Body {
+     .table > :not(:last-child) > :last-child > * {
+      border-color: #e7e7e7;
+     }
+     .table > :last-child > :last-child > * {
+      border-bottom: 0;
+     }
+     .table > thead {
+      & > * {
+       color: #2c3e50;
+       font-size: 15px;
+       font-weight: 600;
+      }
+      tr th {
+       padding-inline: 25px;
+       padding-block: 21px;
+      }
+     }
+     .table > tbody {
+      & > * {
+       color: #2c3e50;
+       font-size: 15px;
+       font-weight: 400;
+       padding-inline: 25px;
+       padding-block: 21px;
+      }
+      tr td,
+      tr th {
+       padding-inline: 25px;
+       padding-block: 21px;
+      }
+     }
+    }
+   }
+  }
+ }
+}

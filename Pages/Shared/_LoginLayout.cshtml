@@ -1,0 +1,24 @@
+﻿
+@{
+    Layout = "_Layout";
+}
+
+@section  style {
+
+    <link rel="stylesheet" href="~/css/app/login.css" />
+
+    @RenderSection("Styles", required: false)
+}
+
+
+@RenderBody()
+@RenderSection("Section", required: false)
+
+@section script {
+    <script src="~/js/account/index.js"></script>
+
+
+    @RenderSection("Scripts", false)
+
+}
+

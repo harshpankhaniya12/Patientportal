@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "_Layout";
+}
+@section style {
+
+    <link rel="stylesheet" href="~/css/app/master.css" />
+    <link rel="stylesheet" href="~/css/masterextended.css" />
+
+    @RenderSection("Styles", required: false)
+}
+
+<div class="dashboard d-flex min-vh-100">
+    <div class="dashboard__body overflow-hidden flex-grow-1" style="min-width: 900px;">
+        <partial name="_LayoutMainHeader" />
+
+        <main class="">
+            <div class="dashboard__content">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+</div>

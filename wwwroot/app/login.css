@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+* {
+  font-family: "Inter", sans-serif;
+}
+
+.rounded-6 {
+  border-radius: 8px;
+}
+
+textarea:focus,
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=datetime]:focus,
+input[type=datetime-local]:focus,
+input[type=date]:focus,
+input[type=month]:focus,
+input[type=time]:focus,
+input[type=week]:focus,
+input[type=number]:focus,
+input[type=email]:focus,
+input[type=url]:focus,
+input[type=search]:focus,
+input[type=tel]:focus,
+input[type=color]:focus,
+input[type=checkbox]:focus,
+.uneditable-input:focus {
+  border-color: #e31f24;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(227, 31, 36, 0.25);
+}
+
+input[type=checkbox]:checked {
+  background: #e31f24;
+}
+
+.login__left {
+  background-image: url(./assets/login-bg.png);
+  flex: 1;
+}
+.login__left img {
+  width: 75%;
+  max-width: 650px;
+}
+
+.login__right {
+  width: 39.3%;
+  min-width: 450px;
+  max-width: 1000px;
+  border-radius: 45px 0px 0px 45px;
+  box-shadow: -5px 0px 30px 0px rgba(0, 0, 0, 0.08);
+}
+.login__right .logo {
+  width: 288px;
+  margin-bottom: 70px;
+}
+.login__right h1 {
+  color: #2b2929;
+}
+.login__right p {
+  color: #667085;
+}
+.login__right .form {
+  max-width: 380px;
+}
+.login__right .form label {
+  font-weight: 500;
+  color: #2b2929;
+  font-size: 14px;
+}
+.login__right .form .form-control {
+  height: 44px;
+  position: relative;
+}
+.login__right .form .input__wrapper {
+  position: relative;
+}
+.login__right .form .input__wrapper .icon {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  color: #667085;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login__right .form button {
+  margin-top: 32px;
+  background: #e31f24;
+  padding-block: 12px;
+}
+.login__right .form button:hover {
+  background: #be181e;
+}/*# sourceMappingURL=login.css.map */

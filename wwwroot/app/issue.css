@@ -1,0 +1,51 @@
+main .dashboard__content .dashboard__table .dashboard__tableHead .tabHead__item {
+  flex: 1;
+  height: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+main .dashboard__content .dashboard__table .dashboard__tableHead .tabHead__item span {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: #2c3e50;
+  font-size: 16px;
+  font-weight: 500;
+  transition: 0.3s ease-out;
+}
+    main .dashboard__content .dashboard__table .dashboard__tableHead .tabHead__item.active span {
+        background: #0061AB;
+        color: #fff;
+        transition: 0.3s ease-in;
+    }
+main .dashboard__content .dashboard__table .dashboard__tableBody .tab-content .tab-pane {
+  gap: 35px;
+}
+main .dashboard__content .dashboard__table .dashboard__tableBody .tab-content .tab-pane .dashboard__tableBodyLeft {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+main .dashboard__content .dashboard__table .dashboard__tableBody .tab-content .tab-pane.active {
+  
+}
+main .dashboard__content .dashboard__table .dashboard__tableBody .tab-content .tab-pane .nav.updatelogs-nav, main .dashboard__content .dashboard__table .dashboard__tableBody .tab-content .tab-pane .nav.issueActionables-nav {
+  border-bottom: 1px solid #d4d4d4;
+}
+main .dashboard__content .dashboard__table .dashboard__tableBody .tab-content .tab-pane .nav.updatelogs-nav .nav-item .nav-link, main .dashboard__content .dashboard__table .dashboard__tableBody .tab-content .tab-pane .nav.issueActionables-nav .nav-item .nav-link {
+  min-width: 175px;
+  font-size: 16px;
+  color: #667085;
+  border: none;
+  font-weight: 500;
+}
+main .dashboard__content .dashboard__table .dashboard__tableBody .tab-content .tab-pane .nav.updatelogs-nav .nav-item .nav-link.active, main .dashboard__content .dashboard__table .dashboard__tableBody .tab-content .tab-pane .nav.issueActionables-nav .nav-item .nav-link.active {
+  border-bottom: 2px solid #2c3e50;
+  color: #2c3e50;
+  font-weight: 600;
+}/*# sourceMappingURL=issue.css.map */

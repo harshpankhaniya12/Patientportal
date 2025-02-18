@@ -1,0 +1,59 @@
+* {
+ font-family: "Inter", sans-serif;
+}
+
+.rounded-6 {
+ border-radius: 8px;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+input[type="checkbox"]:focus,
+.uneditable-input:focus,
+.btn:focus {
+/* border-color: #e31f24;*/
+ outline: 0;
+ box-shadow: 0 0 0 0.25rem rgba(227, 31, 36, 0.25) !important;
+}
+
+.btn-danger {
+ --bs-btn-bg: #e31f24;
+ --bs-btn-border-color: #e31f24;
+}
+
+input[type="checkbox"]:checked {
+ /*background-color: #e31f24;*/
+}
+
+.form-check-input:checked {
+ /*background-color: #e31f24;
+ border-color: #e31f24;*/
+}
+
+input[type="checkbox"]:checked {
+/* border-color: #e31f24 !important;*/
+}
+
+.fs-7 {
+ font-size: 14px;
+}
+
+.dashboard__box {
+ border-radius: 18px;
+ border: 1px solid #e7e7e7;
+ background: #fff;
+ padding: 35px;
+}

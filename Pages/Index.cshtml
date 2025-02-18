@@ -1,0 +1,485 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    Layout = "_LayoutMain";
+}
+@{
+
+    List<object> toolbarItems = new List<object>();
+    toolbarItems.Add("ExcelExport");
+    toolbarItems.Add(new { text = "Reset Layout", tooltipText = "Reset Layout", prefixIcon = "e-reset", id = "GridLeave_resetlayout", align = "Right" });
+    toolbarItems.Add(new { text = "Clear Filters", tooltipText = "Clear Filters", prefixIcon = "e-filter-clear", id = "GridLeave_clearfilters", align = "Right" });
+    toolbarItems.Add("ColumnChooser");
+    toolbarItems.Add("Search");
+    List<string> StateList = new List<string> { "Gujarat", "Maharashtra", "Rajasthan" };
+    List<string> CountryList = new List<string> { "Canada", "India", "United States" };
+    List<string> MaritalStatusList = new List<string> { "Single", "Married",  "Divorced"};
+    List<string> AppointmentWith = new List<string> { "Dr. Sejal Saheta", "Dr. Jane Doe", "Dr. John Doe" };
+    List<string> FormofAppointment = new List<string> { "Inclinic", "Online" };
+}
+@Html.AntiForgeryToken()
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Portal</title>
+
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/custom.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <main class="page">
+        <div class="container container-x">
+            <h1 class="page-title text-28">Patient Portal</h1>
+
+            <div class="ius-block ius-card">
+                <h2>Patient Information</h2>
+
+                <form class="ius-form" action="#" method="POST">
+                    <div class="row">
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-name" class="form-label">Name</label>
+                            <input type="text" name="patientname" class="form-control" id="pi-name" value="123">
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-phoneno" class="form-label">Phone Number</label>
+                            <input type="text" name="phoneno" class="form-control" id="pi-phoneno" value="7894561230" disabled>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-email" class="form-label">Email Id</label>
+                            <input type="email" name="email" class="form-control" id="pi-email" value="jaydonday@email.com">
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-age" class="form-label">Age</label>
+                            <input type="number" name="age" class="form-control" id="pi-age" value="46">
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-dob" class="form-label">Date of Birth</label>
+                            @* <input type="date" name="dob" class="form-control form-date" id="pi-dob" value="1995-09-03"> *@
+                            <ejs-datepicker id="pi-dob" class="form-control" format="dd/MM/yyyy" style="height: 45px;"></ejs-datepicker>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label class="form-label">Gender</label>
+
+                            <div class="btn-group" role="group">
+                                <input type="radio" class="btn-check" name="gender" id="gender-male">
+                                <label class="btn" for="gender-male">Male</label>
+
+                                <input type="radio" class="btn-check" name="gender" id="gender-female" checked>
+                                <label class="btn" for="gender-female">Female</label>
+
+                                <input type="radio" class="btn-check" name="gender" id="gender-other">
+                                <label class="btn" for="gender-other">Other</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-matstat" class="form-label">Marital Status</label>
+                            <ejs-dropdownlist Id="pi-matstat" class="form-control" TValue="string" DataSource="MaritalStatusList" Placeholder="Select Marital Status"></ejs-dropdownlist>
+
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-pincode" class="form-label">Pincode</label>
+                            <input type="number" name="pincode" id="pi-pincode" class="form-control" value="380001">
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-locality" class="form-label">Locality</label>
+                            <input type="text" name="locality" id="pi-locality" class="form-control" value="Mumbai">
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-address" class="form-label">Address</label>
+                            <input type="text" name="address" id="pi-address" class="form-control" value="506, A-Wing, Kanakia Western Edge II">
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-city" class="form-label">City</label>
+                            <ejs-dropdownlist id="pi-city" class="form-control"  name="city" dataSource="@(new List<string> { "Ahmedabad", "Mumbai", "Delhi" })" placeholder="Select City">
+                            </ejs-dropdownlist>
+
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-state" class="form-label">State</label>
+                            <ejs-dropdownlist ID="pi-state" class="form-control"  TValue="string" DataSource="StateList" Placeholder="Select State"></ejs-dropdownlist>
+
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-country" class="form-label">Country</label>
+                            <ejs-dropdownlist ID="pi-country" class="form-control" TValue="string" CssClass="is-invalid" DataSource="CountryList" Placeholder="Select Country"></ejs-dropdownlist>
+
+                            @* <div id="pi-name-msg" class="invalid-feedback">
+                                Please select a country.
+                            </div> *@
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="#edit" class="bttn bttn-alt" title="Edit">Edit</a>
+                        <a href="#app-cancel" class="bttn bttn-primary-outline" title="Cancel">Cancel</a>
+                        <a href="#save" class="bttn bttn-primary" title="Save">Save</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="ius-block ius-card ius-notes">
+                <h2 class="mb-2 pb-1 text--red">Notes</h2>
+                <ol>
+                    <li>Appt will be booked for consultation with Dr. Sejal Saheta.</li>
+                    <li>For an appointment with an aesthetician for cosmetic procedures please call Clinic - <a href="tel:+91-9639639630" title="91-9639639630">9639639630</a></li>
+                </ol>
+            </div>
+
+            <div class="ius-block ius-card ius-appdata">
+                <div class="ius-block-head">
+                    <h2>Appointment Grid</h2>
+
+                    <div class="ius-grid-filters">
+                        <a class="bttn-add" href="#app-add" data-bs-toggle="modal" data-bs-target="#app-add" title="Add Appointment">
+                            <img loading="lazy" src="~/assets/plus.svg" width="19" height="19" alt="Add">
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Only for desktop : Syncfusion -->
+                <div class="ius-table d-none d-lg-block table-responsive">
+                        <ejs-grid id="GridAppointments"
+                                  allowResizing="true"
+                                  allowExcelExport="true"
+                                  allowFiltering="true"
+                                  allowPaging="true"
+                                  allowSorting="true"
+                                  allowSelection="true"
+                                  allowReordering="true"
+                                  enableHeaderFocus="true"
+                                  enablePersistence="true"
+                                  enableHover="true"
+                                  autoFit="true"
+                                  height="200"
+                                  showColumnChooser="true"
+                                  rowHeight="38"
+                                  toolbar=toolbarItems
+                                  toolbarClick="toolbarClick">
+
+                            <e-data-manager url="/Index?handler=AppointmentView" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
+
+                            <e-grid-searchsettings fields="@(new string[] {"AppointmentType","DoctorName","FormOfAppointment","AppointmentDateTime","Status"})"></e-grid-searchsettings>
+
+                            <e-grid-filtersettings type="Excel"></e-grid-filtersettings>
+                            <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
+                            <e-grid-pagesettings pageCount="15" pageSize="15" pageSizes="@(new string[] { "All","12","15","25","50"})"></e-grid-pagesettings>
+                            <e-grid-selectionsettings type="Single"></e-grid-selectionsettings>
+
+                            <e-grid-columns>
+                                 <e-grid-column field="AppointmentType" headerText="Type of Appointment" width="200"></e-grid-column>
+                                <e-grid-column field="DoctorName" headerText="Appointment With" width="200"></e-grid-column>
+                                <e-grid-column field="FormOfAppointment" headerText="Form of Appointment" width="200"></e-grid-column>
+                                <e-grid-column field="AppointmentDateTime" headerText="Appointment Date Time" type="dateTime" width="200"></e-grid-column>
+                                <e-grid-column field="Status" headerText="Status" width="150"></e-grid-column>
+                            </e-grid-columns>
+                        </ejs-grid>
+
+                  
+
+                </div>
+
+
+                <!-- Only for mobile : Syncfusion -->
+                <div class="ius-grid d-lg-none text-14" id="appointments-container">
+                    <div class="ius-gridrow">
+                        <div class="ius-appbody">
+                            <div class="ius-appinfo">
+                                <h3>Dr. Sejal Saheta</h3>
+                                <div class="ius-apptyfo">
+                                    <span class="appinfo-type">Consultation</span>
+                                    <span class="appinfo-dot"></span>
+                                    <span class="appinfo-form">Inclinic</span>
+                                </div>
+                            </div>
+                            <div class="ius-ctrls">
+                                <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
+                                    <img loading="lazy" src="~/assets/calendar.svg" width="18" height="20" alt="Calendar">
+                                </a>
+                                <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                                    <img loading="lazy" src="~/assets/delete.svg" width="18" height="20" alt="Cancel">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ius-foo">
+                            <div class="ius-datetime">
+                                <div class="datetime-label text-sb">Date & Time</div>
+                                <div>1/3/2025 12:10:00</div>
+                            </div>
+
+                            <div class="ius-status">
+                                <div class="ius-badge">Schedule</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ius-gridrow">
+                        <div class="ius-appbody">
+                            <div class="ius-appinfo">
+                                <h3>Dr. Sejal Saheta</h3>
+                                <div class="ius-apptyfo">
+                                    <span class="appinfo-type">Consultation</span>
+                                    <span class="appinfo-dot"></span>
+                                    <span class="appinfo-form">Inclinic</span>
+                                </div>
+                            </div>
+                            <div class="ius-ctrls">
+                                <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
+                                    <img loading="lazy" src="~/assets/calendar.svg" width="18" height="20" alt="Calendar">
+                                </a>
+                                <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                                    <img loading="lazy" src="~/assets/delete.svg" width="18" height="20" alt="Cancel">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ius-foo">
+                            <div class="ius-datetime">
+                                <div class="datetime-label text-sb">Date & Time</div>
+                                <div>1/3/2025 12:10:00</div>
+                            </div>
+
+                            <div class="ius-status">
+                                <div class="ius-badge badge-green">Completed</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ius-gridrow">
+                        <div class="ius-appbody">
+                            <div class="ius-appinfo">
+                                <h3>Dr. Sejal Saheta</h3>
+                                <div class="ius-apptyfo">
+                                    <span class="appinfo-type">Consultation</span>
+                                    <span class="appinfo-dot"></span>
+                                    <span class="appinfo-form">Inclinic</span>
+                                </div>
+                            </div>
+                            <div class="ius-ctrls">
+                                <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
+                                    <img loading="lazy" src="~/assets/calendar.svg" width="18" height="20" alt="Calendar">
+                                </a>
+                                <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                                    <img loading="lazy" src="~/assets/delete.svg" width="18" height="20" alt="Cancel">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ius-foo">
+                            <div class="ius-datetime">
+                                <div class="datetime-label text-sb">Date & Time</div>
+                                <div>1/3/2025 12:10:00</div>
+                            </div>
+
+                            <div class="ius-status">
+                                <div class="ius-badge badge-red">Cancelled</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Cancel Appointment - Modal -->
+    <div class="modal fade" id="app-cancel">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="mb-0">Cancel Appointment</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-icon text-center pt-3 pb-3">
+                        <img src="~/assets/cancel.svg" width="80" height="80" alt="Cancel Appointment">
+                    </div>
+
+                    <p class="text-center h4 text-sb">Are you sure you want to delete this appointment?</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="bttn bttn-alt" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="bttn bttn-primary" data-bs-dismiss="modal">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reschedule Appointment - Modal -->
+    <div class="modal fade" id="app-resched">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="mb-0">Reschedule Appointment</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="">
+                        <label for="pi-resched" class="form-label">Appointment Date Time</label>
+                        <input type="datetime-local" name="dob" class="form-control form-date set-datetime" id="pi-resched" value="2025-01-29T22:47">
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="bttn bttn-primary" data-bs-dismiss="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Appointment - Modal -->
+    <div class="modal fade" id="app-add">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="mb-0">Add Appointment</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid ius-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="app-type" class="form-label">Type of Appointment</label>
+                                <input type="text" name="apptype" class="form-control" id="app-type" placeholder="Consultation">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="app-with" class="form-label">Appointment With</label>
+                                <ejs-dropdownlist class="form-control" id="app-with" DataSource="AppointmentWith" placeholder="Select Doctor"></ejs-dropdownlist>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="app-form" class="form-label">Form of Appointment</label>
+                                <ejs-dropdownlist class="form-control" id="app-form" DataSource="FormofAppointment" placeholder="Select Form"></ejs-dropdownlist>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="app-datetime" class="form-label">Appointment Date Time</label>
+                                <input type="datetime-local" name="appdatetime" class="form-control set-datetime form-date" id="app-datetime" value="2025-01-29T22:47">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="app-status" class="form-label">Status</label>  @* its Remove *@
+                               @*  <ejs-dropdownlist id="app-status" placeholder="Select Form"></ejs-dropdownlist> *@
+                                <select class="form-select" id="app-status" name="appstatus">
+                                    <option value="Inclinic">Rescheduled</option>
+                                    <option value="Online">New</option>
+                                    <option value="Visit">Old</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="bttn bttn-primary" data-bs-dismiss="modal">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="./js/custom.js"></script>
+
+</body>
+</html>
+
+<script>
+    function onLoad() {
+        this.dataSource.dataSource.headers = [{ 'XSRF-TOKEN': $("input:hidden[name='__RequestVerificationToken']").val() }];
+    }
+
+    function toolbarClick(args) {
+        debugger;
+
+        if (args.item.id === 'GridLeave_excelexport') {
+            this.excelExport({ hierarchyExportMode: "All", fileName: "Holidays.xlsx" });
+        }
+        if (args.item.id === 'GridLeave_resetlayout') {
+            clearFilters('GridLeave');
+        }
+        if (args.item.id === 'GridLeave_clearfilters') {
+            var gridObj = document.getElementById('GridLeave').ej2_instances[0];
+            gridObj.searchModule.search("");
+            gridObj.clearFiltering();
+        }
+
+    }
+
+    function gridActionComplete() {
+        updateGridUserPreference('GridLeave');
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        loadAppointments();
+    });
+
+    function loadAppointments() {
+        $.ajax({
+            url: '/Index?handler=AppointmentView', // URL sahi daalein
+            type: 'POST',
+            contentType: 'application/json',
+            success: function (response) {
+                console.log(response); // Debugging ke liye
+
+                var appointments = response.result;
+                var container = $("#appointments-container");
+                container.empty();
+
+                $.each(appointments, function (index, appointment) {
+                    console.log(appointment); // Check if appointment has correct data
+
+                    var cardHtml = `
+                        <div class="ius-gridrow">
+                            <div class="ius-appbody">
+                                <div class="ius-appinfo">
+                                            <h3>${appointment.doctorName || 'N/A'}</h3>
+                                    <div class="ius-apptyfo">
+                                            <span class="appinfo-type">${appointment.appointmentType || 'N/A'}</span>
+                                        <span class="appinfo-dot"></span>
+                                            <span class="appinfo-form">${appointment.formOfAppointment || 'N/A'}</span>
+                                    </div>
+                                </div>
+                                <div class="ius-ctrls">
+                                    <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
+                                                 <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
+
+                                    </a>
+                                    <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                                                    <img loading="lazy" src="@Url.Content("~/assets/delete.svg")" width = "18" height = "20" alt = "Cancel" >
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ius-foo">
+                                <div class="ius-datetime">
+                                    <div class="datetime-label text-sb">Date & Time</div>
+                                        <div>${appointment.appointmentDateTime || 'N/A'}</div>
+                                </div>
+                                <div class="ius-status">
+                                        <div class="ius-badge">${appointment.status || 'N/A'}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.append(cardHtml);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching appointments: ", error);
+            }
+        });
+    }
+
+</script>
