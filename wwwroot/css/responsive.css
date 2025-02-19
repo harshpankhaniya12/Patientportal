@@ -3,10 +3,49 @@
 }
 /*MIN 1280 ENDS*/
 
+@media screen and (max-width: 1280px) {
+    .page-login { --leftPer: 55%; }
+}
+
+@media screen and (max-width: 1199px) {
+    .page-login { --leftPer: 50%; }
+    .login-box { padding: 30px; }
+}
+
 @media screen and (max-width: 767px) {
     .hcol-pa { padding-right: 15px; margin-right: 15px; }
     .ius-block-head { flex-wrap: nowrap; margin-bottom: 20px; }
     .ius-block-head h2 { flex: 1 0 auto; width: auto; margin-bottom: 10px; }
+
+    .page-login {
+        position: relative;
+    }
+
+    .login-lt {
+        width: 100%;
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+    }
+    
+    .login-rt {
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.84);
+        z-index: 1;
+    }
+
+    .login-box {
+        width: 480px;
+        margin: 0 auto;
+        flex: 0 0 480px;
+        padding: 50px 30px;
+    }
+
+    .login-box-head { text-align: center; }
 }
 /*767*/
 
