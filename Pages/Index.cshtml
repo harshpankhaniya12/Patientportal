@@ -42,31 +42,36 @@
                 <h2>Patient Information</h2>
 
                 <form class="ius-form" action="#" method="POST">
+                    <input type="hidden" id="PatientId" asp-for="PatientData.Id" name="medicalPatientSignature" class="custom-field-height" />
                     <div class="row">
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-name" class="form-label">Name</label>
-                            <input type="text" name="patientname" class="form-control" id="pi-name" value="123">
+                            <input type="text" name="patientname" asp-for="PatientData.Name" class="form-control" id="pi-name">
+                            <span asp-validation-for="PatientData.Name" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-phoneno" class="form-label">Phone Number</label>
-                            <input type="text" name="phoneno" class="form-control" id="pi-phoneno" value="7894561230" disabled>
+                            <input type="text" name="phoneno" asp-for="PatientData.Mobile" class="form-control" id="pi-phoneno"  disabled>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-email" class="form-label">Email Id</label>
-                            <input type="email" name="email" class="form-control" id="pi-email" value="jaydonday@email.com">
+                            <input type="email" name="email" asp-for="PatientData.Email" class="form-control" id="pi-email" >
+                            <span asp-validation-for="PatientData.Email" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-age" class="form-label">Age</label>
-                            <input type="number" name="age" class="form-control" id="pi-age" value="46">
+                            <input type="number" name="age" asp-for="PatientData.Age" maxlength="2" class="form-control" id="pi-age" >
+                            <span asp-validation-for="PatientData.Age" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-dob" class="form-label">Date of Birth</label>
                             @* <input type="date" name="dob" class="form-control form-date" id="pi-dob" value="1995-09-03"> *@
-                            <ejs-datepicker id="pi-dob" class="form-control" format="dd/MM/yyyy" style="height: 45px;"></ejs-datepicker>
+                            <ejs-datepicker id="pi-dob" ejs-for="PatientData.Dob" class="form-control" format="dd/MM/yyyy" style="height: 45px;"></ejs-datepicker>
+                            <span asp-validation-for="PatientData.Dob" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
@@ -76,74 +81,85 @@
                                 <input type="radio" class="btn-check" name="gender" id="gender-male">
                                 <label class="btn" for="gender-male">Male</label>
 
-                                <input type="radio" class="btn-check" name="gender" id="gender-female" checked>
+                                <input type="radio" class="btn-check" name="gender" id="gender-female">
                                 <label class="btn" for="gender-female">Female</label>
 
                                 <input type="radio" class="btn-check" name="gender" id="gender-other">
                                 <label class="btn" for="gender-other">Other</label>
                             </div>
+
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-matstat" class="form-label">Marital Status</label>
-                            <ejs-dropdownlist Id="pi-matstat" class="form-control" TValue="string" DataSource="MaritalStatusList" Placeholder="Select Marital Status"></ejs-dropdownlist>
-
+                            <ejs-dropdownlist Id="pi-matstat" ejs-for="PatientData.MaritalStatus" class="form-control" TValue="string" DataSource="MaritalStatusList" Placeholder="Select Marital Status"></ejs-dropdownlist>
+                            <span asp-validation-for="PatientData.MaritalStatus" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-pincode" class="form-label">Pincode</label>
-                            <input type="number" name="pincode" id="pi-pincode" class="form-control" value="380001">
+                            <input type="number" name="pincode" id="pi-pincode" asp-for="PatientData.Pincode" class="form-control" readonly>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-locality" class="form-label">Locality</label>
-                            <input type="text" name="locality" id="pi-locality" class="form-control" value="Mumbai">
+                            <input type="text" name="locality" id="pi-locality" asp-for="PatientData.Locality" class="form-control" readonly>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-address" class="form-label">Address</label>
-                            <input type="text" name="address" id="pi-address" class="form-control" value="506, A-Wing, Kanakia Western Edge II">
+                            <input type="text" name="address" asp-for="PatientData.Address" id="pi-address" class="form-control" readonly>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-city" class="form-label">City</label>
-                            <ejs-dropdownlist id="pi-city" class="form-control"  name="city" dataSource="@(new List<string> { "Ahmedabad", "Mumbai", "Delhi" })" placeholder="Select City">
-                            </ejs-dropdownlist>
+                            <input type="text" id="pi-city" class="form-control" name="city" asp-for="PatientData.CityName"  readonly>
 
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-state" class="form-label">State</label>
-                            <ejs-dropdownlist ID="pi-state" class="form-control"  TValue="string" DataSource="StateList" Placeholder="Select State"></ejs-dropdownlist>
+                            <input type="text" id="pi-state" class="form-control" name="state" asp-for="PatientData.StateName" readonly>
 
+                           @*  <ejs-dropdownlist ID="pi-state" class="form-control"  TValue="string" DataSource="StateList" Placeholder="Select State"></ejs-dropdownlist>
+ *@
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-country" class="form-label">Country</label>
-                            <ejs-dropdownlist ID="pi-country" class="form-control" TValue="string" CssClass="is-invalid" DataSource="CountryList" Placeholder="Select Country"></ejs-dropdownlist>
-
-                            @* <div id="pi-name-msg" class="invalid-feedback">
-                                Please select a country.
-                            </div> *@
+                            <input type="text" id="pi-country" class="form-control" name="Country" asp-for="PatientData.CountryName" readonly>
                         </div>
                     </div>
 
                     <div class="form-actions">
-                        <a href="#edit" class="bttn bttn-alt" title="Edit">Edit</a>
-                        <a href="#app-cancel" class="bttn bttn-primary-outline" title="Cancel">Cancel</a>
-                        <a href="#save" class="bttn bttn-primary" title="Save">Save</a>
+                        <a href="#" class="bttn bttn-primary" id="edit-btn" title="Edit">Edit</a>
+                        <a href="#" class="bttn bttn-primary-outline" id="cancel-btn" title="Cancel" disabled>Cancel</a>
+                        <a href="#" class="bttn bttn-primary" id="save-btn" title="Save" disabled>Save</a>
+
                     </div>
                 </form>
             </div>
+            @if (Model.ChangeRequests.Count > 0 && Model.ChangeRequests != null )
+            {
+                <div class="ius-block ius-card ius-notes">
+                    <h2 class="mb-2 pb-1 text--red">Changes Requested</h2>
+                    <ol>
+                        @foreach (var change in Model.ChangeRequests)
+                        {
+                            <li>@change</li>
+                        }
+                    </ol>
+                </div>
 
-            <div class="ius-block ius-card ius-notes">
-                <h2 class="mb-2 pb-1 text--red">Notes</h2>
+            }
+                <div class="ius-block ius-card ius-notes">
+                    <h2 class="mb-2 pb-1 text--red">Notes</h2>
                 <ol>
                     <li>Appt will be booked for consultation with Dr. Sejal Saheta.</li>
                     <li>For an appointment with an aesthetician for cosmetic procedures please call Clinic - <a href="tel:+91-9639639630" title="91-9639639630">9639639630</a></li>
                 </ol>
             </div>
-
+            
             <div class="ius-block ius-card ius-appdata">
                 <div class="ius-block-head">
                     <h2>Appointment Grid</h2>
@@ -160,7 +176,7 @@
                         <ejs-grid id="GridAppointments"
                                   allowResizing="true"
                                   allowExcelExport="true"
-                                  allowFiltering="true"
+                              allowFiltering="true"
                                   allowPaging="true"
                                   allowSorting="true"
                                   allowSelection="true"
@@ -393,6 +409,195 @@
 
 </body>
 </html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var gender = "@Model.PatientData.Gender"; // Server se value leke aayenge
+
+        if (gender === "Male") {
+            document.getElementById("gender-male").checked = true;
+        } else if (gender === "Female") {
+            document.getElementById("gender-female").checked = true;
+        } else if (gender === "Other") {
+            document.getElementById("gender-other").checked = true;
+        }
+    });
+</script>
+<script>
+    document.getElementById('pi-age').addEventListener('input', function (e) {
+        let value = e.target.value;
+        if (value.length > 2) {
+            e.target.value = value.slice(0, 2); // Sirf 2 characters allow karega
+        }
+    });
+
+    document.getElementById('pi-name').addEventListener('input', function (e) {
+        let value = e.target.value;
+        let regex = /^[A-Za-z\s]*$/; // Sirf characters aur space allow karega
+        if (!regex.test(value)) {
+            e.target.value = value.slice(0, -1); // Last invalid character hata dega
+        }
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let editBtn = document.getElementById("edit-btn");
+        let saveBtn = document.getElementById("save-btn");
+        let cancelBtn = document.getElementById("cancel-btn");
+
+        let fieldsToEnable = [
+            "pi-name", "pi-email", "pi-age",
+            "gender-male", "gender-female", "gender-other"
+        ];
+
+        function toggleFields(enable) {
+            fieldsToEnable.forEach(id => {
+                let field = document.getElementById(id);
+                if (field) {
+                    if (field.type === "radio") {
+                        field.disabled = !enable;
+                    } else {
+                        field.readOnly = !enable;
+                    }
+                }
+            });
+
+            // ✅ Syncfusion Dropdown Readonly/Enable Logic
+            let maritalDropdown = document.getElementById("pi-matstat").ej2_instances[0];
+            if (maritalDropdown) {
+                maritalDropdown.enabled = enable;
+            }
+
+            // ✅ Syncfusion DatePicker Readonly/Enable Logic
+            let dobPicker = document.getElementById("pi-dob").ej2_instances[0];
+            if (dobPicker) {
+                dobPicker.enabled = enable; // Enable/Disable DatePicker
+            }
+
+            // ✅ Edit button hide/show logic
+            editBtn.style.display = enable ? "none" : "inline-block";
+
+            // ✅ Submit & Cancel buttons show/hide logic
+            saveBtn.style.display = enable ? "inline-block" : "none";
+            cancelBtn.style.display = enable ? "inline-block" : "none";
+        }
+
+        // Initially disable fields and hide Submit & Cancel buttons
+        toggleFields(false);
+
+        // Edit button event listener
+        editBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            toggleFields(true);
+        });
+
+        // Cancel button event listener
+        cancelBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            toggleFields(false);
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#save-btn").click(function (e) {
+            e.preventDefault();
+
+            var isValid = true;
+
+            // Function to show error messages
+            function showError(inputId, message) {
+                $("#" + inputId).closest(".col-md-6").find(".text-danger").text(message);
+            }
+
+            function clearError(inputId) {
+                $("#" + inputId).closest(".col-md-6").find(".text-danger").text("");
+            }
+
+            // Validate Name
+            if ($("#pi-name").val().trim() === "") {
+                showError("pi-name", "Name is required.");
+                isValid = false;
+            } else {
+                clearError("pi-name");
+            }
+
+            // Validate Phone Number
+            if ($("#pi-phoneno").val().trim() === "") {
+                showError("pi-phoneno", "Phone Number is required.");
+                isValid = false;
+            } else {
+                clearError("pi-phoneno");
+            }
+
+           var email = $("#pi-email").val().trim();
+            var emailRegex = /^[\w\.-]+@@[\w\.-]+\.\w+$/; // ✅ Regex for valid email format
+            if (email === "") {
+                showError("pi-email", "Email is required.");
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                showError("pi-email", "Invalid email address.");
+                isValid = false;
+            } else {
+                clearError("pi-email");
+            }
+
+            // Validate Age
+            if ($("#pi-age").val().trim() === "") {
+                showError("pi-age", "Age is required.");
+                isValid = false;
+            } else {
+                clearError("pi-age");
+            }
+
+            // Validate Date of Birth
+            if ($("#pi-dob").val().trim() === "") {
+                showError("pi-dob", "Date of Birth is required.");
+                isValid = false;
+            } else {
+                clearError("pi-dob");
+            }
+
+            // Validate Marital Status
+            if ($("#pi-matstat").val() === null || $("#pi-matstat").val() === "") {
+                showError("pi-matstat", "Marital Status is required.");
+                isValid = false;
+            } else {
+                clearError("pi-matstat");
+            }
+
+            // If any validation fails, stop AJAX request
+            if (!isValid) {
+                return;
+            }
+
+            var formData = {
+                Name: $("#pi-name").val(),
+                Id: $("#PatientId").val(),
+                Email: $("#pi-email").val(),
+                Age: $("#pi-age").val(),
+                Dob: $("#pi-dob").val(),
+                MaritalStatus: $("#pi-matstat").val()
+            };
+
+            $.ajax({
+                url: "/Index?handler=SavePatient",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    alert("Patient details saved successfully!");
+                    location.reload();
+                },
+                error: function (xhr) {
+                    alert("Error: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+
 
 <script>
     function onLoad() {
@@ -406,10 +611,10 @@
             this.excelExport({ hierarchyExportMode: "All", fileName: "Holidays.xlsx" });
         }
         if (args.item.id === 'GridLeave_resetlayout') {
-            clearFilters('GridLeave');
+            clearFilters('GridAppointments');
         }
         if (args.item.id === 'GridLeave_clearfilters') {
-            var gridObj = document.getElementById('GridLeave').ej2_instances[0];
+            var gridObj = document.getElementById('GridAppointments').ej2_instances[0];
             gridObj.searchModule.search("");
             gridObj.clearFiltering();
         }
@@ -417,7 +622,7 @@
     }
 
     function gridActionComplete() {
-        updateGridUserPreference('GridLeave');
+        updateGridUserPreference('GridAppointments');
     }
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -428,7 +633,7 @@
 
     function loadAppointments() {
         $.ajax({
-            url: '/Index?handler=AppointmentView', // URL sahi daalein
+            url: '/Index?handler=AppointmentViewCard', // URL sahi daalein
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {
@@ -483,3 +688,20 @@
     }
 
 </script>
+<style>
+    span.e-input-group.e-control-wrapper.e-ddl.e-lib.e-keyboard.e-valid-input.e-disabled {
+        background: #e9ecef !important;
+        color: black !important;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #e9ecef;
+        opacity: 1;
+        pointer-events: none !important;
+    }
+
+    span.e-input-group.e-control-wrapper.e-date-wrapper.e-valid-input.e-disabled {
+        background-color: #e9ecef !important;
+        color: black !important;
+    }
+</style>

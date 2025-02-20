@@ -209,7 +209,6 @@ input[disabled],
 select[disabled],
 textarea[disabled],
 .form-control:disabled {
-    background: var(--lightgray);
     border-color: var(--midgray);
 }
 
