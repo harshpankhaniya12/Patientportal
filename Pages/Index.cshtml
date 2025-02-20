@@ -32,6 +32,8 @@
 
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
 </head>
 <body>
     <main class="page">
@@ -406,6 +408,8 @@
     <script src="./js/jquery.min.js"></script>
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="./js/custom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 
 </body>
 </html>
@@ -571,13 +575,21 @@
             if (!isValid) {
                 return;
             }
+            var genderMapping = {
+                "gender-male": "Male",
+                "gender-female": "Female",
+                "gender-other": "Other"
+            };
 
+            var selectedGenderId = $("input[name='gender']:checked").attr("id");
+            var selectedGender = genderMapping[selectedGenderId] || "";
             var formData = {
                 Name: $("#pi-name").val(),
                 Id: $("#PatientId").val(),
                 Email: $("#pi-email").val(),
                 Age: $("#pi-age").val(),
                 Dob: $("#pi-dob").val(),
+                Gender: selectedGender, // Get selected gender
                 MaritalStatus: $("#pi-matstat").val()
             };
 
@@ -587,8 +599,10 @@
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    alert("Patient details saved successfully!");
-                    location.reload();
+                    toastr.success("Patient details saved successfully!");
+                    setTimeout(function () {
+                        location.reload();
+                    }, 2000); // Reload after 2 seconds
                 },
                 error: function (xhr) {
                     alert("Error: " + xhr.responseText);

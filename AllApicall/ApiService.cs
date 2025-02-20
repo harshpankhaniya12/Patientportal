@@ -54,8 +54,18 @@ namespace Patientportal.AllApicall
 
                 if (response.IsSuccessStatusCode)
                 {
+                    
                     string jsonResponse = await response.Content.ReadAsStringAsync();
-                    return JsonSerializer.Deserialize<TResponse>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    var result = JsonSerializer.Deserialize<TResponse>(jsonResponse, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                    // Ensure IsSuccess is true when the response is successful
+                    if (result is ApiResponse apiResponse)
+                    {
+                        apiResponse.IsSuccess = true;
+                        return (TResponse)(object)apiResponse;
+                    }
+
+                    return result;
                 }
                 else
                 {

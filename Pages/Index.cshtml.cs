@@ -97,7 +97,7 @@ namespace Patientportal.Pages
 
             if (response != null && response.IsSuccess)
             {
-                return new JsonResult(new { message = "Patient details saved successfully." });
+                return new JsonResult(new {  message = "Your change request has been submitted." });
 
             }
             else
