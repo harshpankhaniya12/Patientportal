@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using Patientportal.Model;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 

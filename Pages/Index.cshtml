@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Patient Portal";
     Layout = "_LayoutMain";
 }
 @{
@@ -48,7 +48,7 @@
                     <div class="row">
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-name" class="form-label">Name</label>
-                            <input type="text" name="patientname" asp-for="PatientData.Name" class="form-control" id="pi-name">
+                            <input type="text" name="patientname" maxlength="100" asp-for="PatientData.Name" class="form-control" id="pi-name">
                             <span asp-validation-for="PatientData.Name" class="text-danger"></span>
                         </div>
 
@@ -59,7 +59,7 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-email" class="form-label">Email Id</label>
-                            <input type="email" name="email" asp-for="PatientData.Email" class="form-control" id="pi-email" >
+                            <input type="email" name="email" asp-for="PatientData.Email" maxlength="100" class="form-control" id="pi-email">
                             <span asp-validation-for="PatientData.Email" class="text-danger"></span>
                         </div>
 

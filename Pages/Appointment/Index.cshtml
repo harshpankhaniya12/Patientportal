@@ -1,0 +1,262 @@
+﻿@page
+@model Patientportal.Pages.Appointment.IndexModel
+@{
+    ViewData["Title"] = "Appointment";
+    Layout = "_LayoutMain";
+}
+@{
+    List<string> FormofAppointment = new List<string> { "Inclinic", "Video" };
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Appointment</title>
+
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/custom.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
+
+</head>
+<body>
+    <main class="page">
+        <div class="container container-x">
+            <h1 class="page-title text-28">Add Appointment</h1>
+
+            <div class="ius-block ius-card">
+                <h2>Add Appointment</h2>
+
+                <form class="ius-form" action="#" method="POST">
+                    <input type="hidden" id="PatientId"  name="medicalPatientSignature" class="custom-field-height" />
+                    <div class="row">
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-formofappt" class="form-label">Form of Appointment</label>
+                            <ejs-dropdownlist class="form-control" id="pi-formofappt" style="height:45px;" DataSource="FormofAppointment"></ejs-dropdownlist>
+                            <span id="pi-formofappt" class="text-danger"></span>
+                        </div>   
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-resched" class="form-label">Appointment Date Time</label>
+                            <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                            <span id="pi-resched" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-name" class="form-label">Name</label>
+                            <input type="text" name="patientname" maxlength="100" class="form-control" id="pi-name">
+                            <span id="Namespan" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-phoneno" class="form-label">Phone Number</label>
+                            <input type="text" name="phoneno" maxlength="13" pattern="[0-9]*" inputmode="numeric" class="form-control" id="pi-phoneno">
+                            <span id="pi-phoneno" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-email" class="form-label">Email</label>
+                            <input type="email" name="email" maxlength="100" class="form-control" id="pi-email">
+                            <span id="emailidspan" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label class="form-label">Gender</label>
+
+                            <div class="btn-group" role="group">
+                                <input type="radio" class="btn-check" name="gender" id="gender-male">
+                                <label class="btn" for="gender-male">Male</label>
+
+                                <input type="radio" class="btn-check" name="gender" id="gender-female">
+                                <label class="btn" for="gender-female">Female</label>
+
+                                <input type="radio" class="btn-check" name="gender" id="gender-other">
+                                <label class="btn" for="gender-other">Other</label>
+                            </div>
+
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-dob" class="form-label">Date of Birth</label>
+                            @* <input type="date" name="dob" class="form-control form-date" id="pi-dob" value="1995-09-03"> *@
+                            <ejs-datepicker id="pi-dob" class="form-control" format="dd/MM/yyyy" style="height: 45px;"></ejs-datepicker>
+                            <span id="dobspan" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-age" class="form-label">Age</label>
+                            <input type="number" name="age"  maxlength="2" class="form-control" id="pi-age">
+                            <span id="agespan" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 col-xl-4">
+                            <label for="pi-notes" class="form-label">Notes</label>
+                            <textarea type="Notes" name="age" maxlength="200" class="form-control" id="pi-notes"></textarea>
+                            <span id="notesspan" class="text-danger"></span>
+                        </div>
+
+                       
+
+                        
+                    </div>
+
+                    <div class="form-actions">
+                        <a href="#" class="bttn bttn-primary-outline" id="cancel-btn" title="Cancel" >Cancel</a>
+                        <a href="#" class="bttn bttn-primary" id="save-btn" title="Save">Save</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#save-btn").click(function (e) {
+            e.preventDefault();
+
+            var isValid = true;
+
+            // Function to show error messages
+            function showError(inputId, message) {
+                $("#" + inputId).closest(".col-md-6").find(".text-danger").text(message);
+            }
+
+            function clearError(inputId) {
+                $("#" + inputId).closest(".col-md-6").find(".text-danger").text("");
+            }
+
+            // Validate Name
+            if ($("#pi-name").val().trim() === "") {
+                showError("pi-name", "Name is required.");
+                isValid = false;
+            } else {
+                clearError("pi-name");
+            }
+            if ($("#pi-formofappt").val().trim() === "") {
+                showError("pi-formofappt", "Form of Appointment is required.");
+                isValid = false;
+            } else {
+                clearError("pi-formofappt");
+            }
+
+            // Validate Appointment Date Time
+            if ($("#pi-resched").val().trim() === "") {
+                showError("pi-resched", "Appointment Date Time is required.");
+                isValid = false;
+            } else {
+                clearError("pi-resched");
+            } 
+            if ($("#pi-phoneno").val().trim() === "") {
+                showError("pi-phoneno", "Mobile Number is required.");
+                isValid = false;
+            } else {
+                clearError("pi-phoneno");
+            }
+
+            // Validate Notes
+            if ($("#pi-notes").val().trim() === "") {
+                showError("pi-notes", "Notes are required.");
+                isValid = false;
+            } else {
+                clearError("pi-notes");
+            }
+            // Validate Phone Number
+            if ($("#pi-phoneno").val().trim() === "") {
+                showError("pi-phoneno", "Phone Number is required.");
+                isValid = false;
+            } else {
+                clearError("pi-phoneno");
+            }
+
+           var email = $("#pi-email").val().trim();
+            var emailRegex = /^[\w\.-]+@@[\w\.-]+\.\w+$/; // ✅ Regex for valid email format
+            if (email === "") {
+                showError("pi-email", "Email is required.");
+                isValid = false;
+            } else if (!emailRegex.test(email)) {
+                showError("pi-email", "Invalid email address.");
+                isValid = false;
+            } else {
+                clearError("pi-email");
+            }
+
+            if ($("#pi-phoneno").val().trim() === "") {
+                showError("pi-phoneno", "Phone Number is required.");
+                isValid = false;
+            } else {
+                clearError("pi-phoneno");
+            }
+            // If any validation fails, stop AJAX request
+            if (!isValid) {
+                return;
+            }
+            var genderMapping = {
+                "gender-male": "Male",
+                "gender-female": "Female",
+                "gender-other": "Other"
+            };
+
+            var selectedGenderId = $("input[name='gender']:checked").attr("id");
+            var selectedGender = genderMapping[selectedGenderId] || "";
+            var dobValue = $("#pi-dob").val(); // Get the date input
+            var AppointmentStartTime = $("#pi-resched").val(); // Get the date input
+            var formattedDob = formatDateToMMDDYYYY(dobValue); // Convert to MM/DD/YYYY
+            var formattedAppointmentStartTime = formatDateToMMDDYYYY(AppointmentStartTime); // Convert to MM/DD/YYYY
+
+            var formData = {
+                Name: $("#pi-name").val(),
+                Email: $("#pi-email").val(),
+                AppointmentForm: $("#pi-formofappt").val(),
+                Mobile: $("#pi-phoneno").val(),
+                Comment: $("#pi-notes").val(),
+                AppointmentStartTime: formattedAppointmentStartTime,
+                Age: $("#pi-age").val(),
+                Dob: formattedAppointmentStartTime, // Use formatted date
+                Gender: selectedGender
+            };
+
+            // Function to convert date to MM/DD/YYYY
+            function formatDateToMMDDYYYY(dateString) {
+                if (!dateString) return "";
+
+                var parts = dateString.split("/"); // Assuming input format is DD/MM/YYYY
+                if (parts.length === 3) {
+                    return `${parts[1]}/${parts[0]}/${parts[2]}`; // Convert to MM/DD/YYYY
+                }
+                return dateString; // Return original if format is unknown
+            }
+
+
+            $.ajax({
+                url: "/Appointment/Index?handler=Pireschedule",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(formData),
+                success: function (response) {
+                    localStorage.setItem("showPatientSuccessMessage", "true"); // Set flag before reload
+                    location.reload(); // Reload page
+                },
+                error: function (xhr) {
+                    alert("Error: " + xhr.responseText);
+                }
+            });
+        });
+        $(document).ready(function () {
+            // Check if success message flag is set in localStorage
+            if (localStorage.getItem("showPatientSuccessMessage") === "true") {
+                toastr.success("Patient details saved successfully!"); // Show success message
+                localStorage.removeItem("showPatientSuccessMessage"); // Remove flag after showing message
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#pi-phoneno").on("input", function () {
+            this.value = this.value.replace(/\D/g, ""); // Remove non-numeric characters
+        });
+    });
+
+</script>
