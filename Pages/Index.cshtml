@@ -16,7 +16,7 @@
     List<string> CountryList = new List<string> { "Canada", "India", "United States" };
     List<string> MaritalStatusList = new List<string> { "Single", "Married",  "Divorced"};
     List<string> AppointmentWith = new List<string> { "Dr. Sejal Saheta", "Dr. Jane Doe", "Dr. John Doe" };
-    List<string> FormofAppointment = new List<string> { "Inclinic", "Online" };
+    List<string> FormofAppointment = new List<string> { "Inclinic", "Video" };
 }
 @Html.AntiForgeryToken()
 <!DOCTYPE html>
@@ -195,7 +195,7 @@
 
                             <e-data-manager url="/Index?handler=AppointmentView" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
 
-                            <e-grid-searchsettings fields="@(new string[] {"AppointmentType","DoctorName","FormOfAppointment","AppointmentDateTime","Status"})"></e-grid-searchsettings>
+                        <e-grid-searchsettings fields="@(new string[] {"AppointmentType","DoctorName","AppointmentForm","AppointmentDateTime","Status"})"></e-grid-searchsettings>
 
                             <e-grid-filtersettings type="Excel"></e-grid-filtersettings>
                             <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
@@ -203,18 +203,63 @@
                             <e-grid-selectionsettings type="Single"></e-grid-selectionsettings>
 
                             <e-grid-columns>
-                                 <e-grid-column field="AppointmentType" headerText="Type of Appointment" width="200"></e-grid-column>
+
+                                <e-grid-column headerText="Actions" width="120" textAlign="Center" template="#actionTemplate"></e-grid-column>
+                                <e-grid-column field="Id" headerText="Id" width="200" visible="false"></e-grid-column>
+                            <e-grid-column field="AppoinmentType" headerText="Type of Appointment" width="200"></e-grid-column>
                                 <e-grid-column field="DoctorName" headerText="Appointment With" width="200"></e-grid-column>
-                                <e-grid-column field="FormOfAppointment" headerText="Form of Appointment" width="200"></e-grid-column>
-                                <e-grid-column field="AppointmentDateTime" headerText="Appointment Date Time" type="dateTime" width="200"></e-grid-column>
-                                <e-grid-column field="Status" headerText="Status" width="150"></e-grid-column>
+                            <e-grid-column field="AppointmentForm" headerText="Form of Appointment" width="200"></e-grid-column>
+                            <e-grid-column field="AppointmentStartTime" headerText="Appointment Date Time" format="@Model.EjsDateTimePattern" type="dateTime" width="200"></e-grid-column>
+                            <e-grid-column field="StatusName" headerText="Status" width="150"></e-grid-column>
                             </e-grid-columns>
                         </ejs-grid>
-
+                    <script id="actionTemplate" type="text/x-template">
+                        <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
+                        <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
+                        
+                        </a>
+                        <a href="#app-cancel" class="marginleft" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                            <img loading="lazy" src="@Url.Content("~/assets/delete.svg")" width="18" height="20" alt="Cancel">
+                        </a>
+                    </script>
                   
 
                 </div>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        // Event delegation for dynamically generated elements
+                        document.querySelector("#GridAppointments").addEventListener("click", function (event) {
+                            let rescheduleBtn = event.target.closest(".app-resched");
+                            let cancelBtn = event.target.closest(".marginleft");
 
+                            if (rescheduleBtn) {
+                                let row = rescheduleBtn.closest("tr");
+                                if (row) {
+                                    let grid = document.getElementById("GridAppointments").ej2_instances[0];
+                                    let rowData = grid.getRowInfo(row).rowData;
+                                    let appointmentId = rowData.id;
+
+                                    // Set the Id value in the hidden PatientId field inside Reschedule Modal
+                                    document.getElementById("AppoinmentId").value = appointmentId;
+                                }
+                            }
+
+                            if (cancelBtn) {
+                                let row = cancelBtn.closest("tr");
+                                if (row) {
+                                    let grid = document.getElementById("GridAppointments").ej2_instances[0];
+                                    let rowData = grid.getRowInfo(row).rowData;
+                                    let appointmentId = rowData.id;
+
+                                    // Set the Id value in the hidden field inside Cancel Modal
+                                    document.getElementById("CancelPatientId").value = appointmentId;
+                                }
+                            }
+                        });
+                    });
+
+
+                </script>
 
                 <!-- Only for mobile : Syncfusion -->
                 <div class="ius-grid d-lg-none text-14" id="appointments-container">
@@ -244,7 +289,7 @@
                             </div>
 
                             <div class="ius-status">
-                                <div class="ius-badge">Schedule</div>
+                                <div class="ius-badge">Reschedule</div>
                             </div>
                         </div>
                     </div>
@@ -275,7 +320,7 @@
                             </div>
 
                             <div class="ius-status">
-                                <div class="ius-badge badge-green">Completed</div>
+                                <div class="ius-badge badge-green">Booked</div>
                             </div>
                         </div>
                     </div>
@@ -322,20 +367,59 @@
                     <h3 class="mb-0">Cancel Appointment</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <input type="hidden" id="CancelPatientId"  name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="StatusIds" value="79" class="custom-field-height" />
                 <div class="modal-body">
-                    <div class="modal-icon text-center pt-3 pb-3">
-                        <img src="~/assets/cancel.svg" width="80" height="80" alt="Cancel Appointment">
+                    <div class="">
+                        <label for="pi-Resason" class="form-label">Reason</label>
+                        <input type="Text" name="Resason" class="form-control form-date"  maxlength="100" id="pi-Resason" />
+                        <span id="Span-reson" class="text-danger"></span>
                     </div>
-
-                    <p class="text-center h4 text-sb">Are you sure you want to delete this appointment?</p>
                 </div>
                 <div class="modal-footer border-0 justify-content-center">
-                    <button type="button" class="bttn bttn-alt" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="bttn bttn-primary" data-bs-dismiss="modal">Yes</button>
+                    <button type="button" id="SubmitCancel" class="bttn bttn-primary">Save</button>
                 </div>
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#SubmitCancel").click(function () {
+                var appointmentId = $("#CancelPatientId").val();
+                var statusId = $("#StatusIds").val();
+                var reason = $("#pi-Resason").val();
+
+                if (reason === "") {
+                    $("#Span-reson").text("Reason is required");
+                    return; // Stop further execution
+                } else {
+                    $("#Span-reson").text(""); // Clear error if input is valid
+                }
+
+                var requestData = {
+                    Id: appointmentId,
+                    StatusId: statusId,
+                    Comment: reason
+                };
+
+                $.ajax({
+                    url: "/Index?handler=Pireschedule",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(requestData),
+                    success: function (response) {
+                        localStorage.setItem("showCancelSuccessMessage", "true"); // Set flag before reload
+                        location.reload(); // Reload page
+                    },
+                    error: function () {
+                        alert("Failed to submit reschedule request.");
+                    }
+                });
+            });
+        });
+    </script>
+
 
     <!-- Reschedule Appointment - Modal -->
     <div class="modal fade" id="app-resched">
@@ -345,18 +429,143 @@
                     <h3 class="mb-0">Reschedule Appointment</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <input type="hidden" id="AppoinmentId" name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="StatusId" value="77" name="medicalPatientSignature" class="custom-field-height" />
                 <div class="modal-body">
                     <div class="">
                         <label for="pi-resched" class="form-label">Appointment Date Time</label>
-                        <input type="datetime-local" name="dob" class="form-control form-date set-datetime" id="pi-resched" value="2025-01-29T22:47">
+                        <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                        <span id="AptDatetime-reson" class="text-danger"></span>
+                    </div>
+                    <div class="">
+                        <label for="pi-ResasonRe" class="form-label">Reason</label>
+                        <input type="Text" name="Resason" class="form-control form-date" maxlength="100" id="pi-ReasonRe" />
+                        <span id="Aptreosan-reson" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="modal-footer border-0 justify-content-center">
-                    <button type="button" class="bttn bttn-primary" data-bs-dismiss="modal">Save</button>
+                    <button type="button" id="SubmitRescedule" class="bttn bttn-primary">Save</button>
                 </div>
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#SubmitRescedule").click(function () {
+                var appointmentId = $("#AppoinmentId").val();
+                var statusId = $("#StatusId").val();
+                var appointmentDateTime = $("#pi-resched").val();
+                var reason = $("#pi-ReasonRe").val();
+                var selectedDate = appointmentDateTime;
+                var currentDate = new Date(); // Current date-time
+                var formattedCurrentDate = formatDate(currentDate); // Format the current date
+
+
+                if (appointmentDateTime === "") {
+                    $("#AptDatetime-reson").text("Appointment Date Time is required.");
+                    return; // Stop further execution
+                }
+                else if (selectedDate < formattedCurrentDate) {
+                    $("#AptDatetime-reson").text("Invalid Appointment Date Time.");
+                    return; // Stop further execution
+                }
+                else {
+                    $("#AptDatetime-reson").text(""); // Clear error if input is valid
+                }
+                if (reason === "") {
+                    $("#Aptreosan-reson").text("Reason is required.");
+                    return; // Stop further execution
+                } else {
+                    $("#Aptreosan-reson").text(""); // Clear error if input is valid
+                }
+                var formattedDate = convertDateFormat(appointmentDateTime);
+
+
+                var requestData = {
+                    Id: appointmentId,
+                    StatusId: statusId,
+                    AppointmentStartTime: formattedDate,
+                    Comment: reason
+                };
+
+                $.ajax({
+                    url: "/Index?handler=Pireschedule",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(requestData),
+                    success: function (response) {
+                        localStorage.setItem("showRescheduleSuccessMessage", "true"); // Set flag before reload
+                        location.reload(); // Reload page
+                    },
+                    error: function () {
+                        alert("Failed to submit reschedule request.");
+                    }
+                });
+            });
+            $(document).ready(function () {
+                // Check if success message flag is set in localStorage
+                if (localStorage.getItem("showRescheduleSuccessMessage") === "true") {
+                    toastr.success("Appointment Rescheduled successfully!"); // Show success message
+                    localStorage.removeItem("showRescheduleSuccessMessage"); // Remove flag after showing message
+                }
+            });
+            function convertDateFormat(dateString) {
+                var parts = dateString.split(/[\s/:]+/); // Split date and time
+                var day = parts[0];
+                var month = parts[1];
+                var year = parts[2];
+                var hours = parseInt(parts[3]);
+                var minutes = parts[4];
+                var seconds = parts[5];
+                var meridian = parts[6];
+
+                // Convert 12-hour format to 24-hour format
+                if (meridian === "PM" && hours !== 12) {
+                    hours += 12;
+                } else if (meridian === "AM" && hours === 12) {
+                    hours = 0;
+                }
+
+                // Format into "YYYY-MM-DD HH:mm:ss"
+                return `${year}-${month}-${day} ${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+            }
+            function formatDate(date) {
+                var dd = String(date.getDate()).padStart(2, '0');
+                var MM = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                var yyyy = date.getFullYear();
+
+                var hours = date.getHours();
+                var minutes = String(date.getMinutes()).padStart(2, '0');
+                var seconds = String(date.getSeconds()).padStart(2, '0');
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12; // Convert to 12-hour format
+
+                return `${dd}/${MM}/${yyyy} ${hours}:${minutes}:${seconds} ${ampm}`;
+            }
+
+            // Function to parse dd/MM/yyyy hh:mm:ss a string to Date object
+            function parseDate(dateStr) {
+                var parts = dateStr.split(/[\s/:]+/); // Split by space, slash, or colon
+                var dd = parseInt(parts[0], 10);
+                var MM = parseInt(parts[1], 10) - 1; // Months are zero-based
+                var yyyy = parseInt(parts[2], 10);
+                var hours = parseInt(parts[3], 10);
+                var minutes = parseInt(parts[4], 10);
+                var seconds = parseInt(parts[5], 10);
+                var ampm = parts[6];
+
+                if (ampm === 'PM' && hours < 12) hours += 12;
+                if (ampm === 'AM' && hours === 12) hours = 0;
+
+                return new Date(yyyy, MM, dd, hours, minutes, seconds);
+            }
+
+        });
+
+    </script>
+
+
 
     <!-- Add Appointment - Modal -->
     <div class="modal fade" id="app-add">
@@ -369,42 +578,159 @@
                 <div class="modal-body">
                     <div class="container-fluid ius-form">
                         <div class="row">
-                            <div class="col-md-6">
+                            <input type="hidden" id="AddPatientId" asp-for="PatientData.Id" name="medicalPatientSignature" class="custom-field-height" />
+
+                            @*    <div class="col-md-6">
                                 <label for="app-type" class="form-label">Type of Appointment</label>
-                                <input type="text" name="apptype" class="form-control" id="app-type" placeholder="Consultation">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="app-with" class="form-label">Appointment With</label>
                                 <ejs-dropdownlist class="form-control" id="app-with" DataSource="AppointmentWith" placeholder="Select Doctor"></ejs-dropdownlist>
-                            </div>
+                            </div> *@
                             <div class="col-md-6">
                                 <label for="app-form" class="form-label">Form of Appointment</label>
-                                <ejs-dropdownlist class="form-control" id="app-form" DataSource="FormofAppointment" placeholder="Select Form"></ejs-dropdownlist>
+                                <ejs-dropdownlist class="form-control" id="app-form" style="height:45px;" DataSource="FormofAppointment" placeholder="Select Form"></ejs-dropdownlist>
+                                <span id="AptAddformapt" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="app-datetime" class="form-label">Appointment Date Time</label>
-                                <input type="datetime-local" name="appdatetime" class="form-control set-datetime form-date" id="app-datetime" value="2025-01-29T22:47">
+                                <ejs-datetimepicker id="app-datetim" class="form-control" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                                <span id="AptaddDatetime" class="text-danger"></span>
                             </div>
-                            <div class="col-md-6">
-                                <label for="app-status" class="form-label">Status</label>  @* its Remove *@
-                               @*  <ejs-dropdownlist id="app-status" placeholder="Select Form"></ejs-dropdownlist> *@
+                          @*   <div class="col-md-6">
+                                <label for="app-status" class="form-label">Status</label> 
                                 <select class="form-select" id="app-status" name="appstatus">
                                     <option value="Inclinic">Rescheduled</option>
                                     <option value="Online">New</option>
                                     <option value="Visit">Old</option>
                                 </select>
-                            </div>
+                            </div> *@
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer border-0 justify-content-center">
-                    <button type="button" class="bttn bttn-primary" data-bs-dismiss="modal">Save</button>
+                    <button type="button" id="SubmitAppointment" class="bttn bttn-primary">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <script>
+        $(document).ready(function () {
+            $("#SubmitAppointment").click(function () {
+                var patietId = $("#AddPatientId").val();
+                var formofappt = $("#app-form").val();
+                var appointmentDateTime = $("#app-datetim").val();
+                var selectedDate = appointmentDateTime;
+                var currentDate = new Date(); // Current date-time
+                var formattedCurrentDate = formatDate(currentDate); // Format the current date
 
+                var isValid = true;
+
+                if (appointmentDateTime === "") {
+                    $("#AptaddDatetime").text("Appointment Date Time is required.");
+                    isValid = false; // Stop further execution
+                }
+                else if (selectedDate < formattedCurrentDate) {
+                    $("#AptaddDatetime").text("Invalid Appointment Date Time.");
+                    isValid = false; // Stop further execution
+                }
+                else {
+                    $("#AptaddDatetime").text(""); // Clear error if input is valid
+                }
+                if (formofappt === "") {
+                    $("#AptAddformapt").text("Form of Appointment is required.");
+                    isValid = false; // Stop further execution
+                } else {
+                    $("#AptAddformapt").text(""); // Clear error if input is valid
+                }
+
+                if(!isValid)
+                {
+                    return;
+                }
+                var formattedDate = convertDateFormat(appointmentDateTime);
+
+
+                var requestData = {
+                    PatientId: patietId,
+                    AppointmentForm: formofappt,
+                    AppointmentStartTime: formattedDate
+                };
+
+                $.ajax({
+                    url: "/Index?handler=Addaptall",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(requestData),
+                    success: function (response) {
+                        localStorage.setItem("showSuccessMessage", "true"); // Set flag before reload
+                        location.reload(); // Reload page
+                    },
+                    error: function () {
+                        alert("Failed to submit reschedule request.");
+                    }
+                });
+
+            });
+            function convertDateFormat(dateString) {
+                var parts = dateString.split(/[\s/:]+/); // Split date and time
+                var day = parts[0];
+                var month = parts[1];
+                var year = parts[2];
+                var hours = parseInt(parts[3]);
+                var minutes = parts[4];
+                var seconds = parts[5];
+                var meridian = parts[6];
+
+                // Convert 12-hour format to 24-hour format
+                if (meridian === "PM" && hours !== 12) {
+                    hours += 12;
+                } else if (meridian === "AM" && hours === 12) {
+                    hours = 0;
+                }
+
+                // Format into "YYYY-MM-DD HH:mm:ss"
+                return `${year}-${month}-${day} ${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+            }
+            $(document).ready(function () {
+                // Check if success message flag is set in localStorage
+                if (localStorage.getItem("showSuccessMessage") === "true") {
+                    toastr.success("Appointment Added successfully!"); // Show success message
+                    localStorage.removeItem("showSuccessMessage"); // Remove flag after showing message
+                }
+            });
+            function formatDate(date) {
+                var dd = String(date.getDate()).padStart(2, '0');
+                var MM = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                var yyyy = date.getFullYear();
+
+                var hours = date.getHours();
+                var minutes = String(date.getMinutes()).padStart(2, '0');
+                var seconds = String(date.getSeconds()).padStart(2, '0');
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12; // Convert to 12-hour format
+
+                return `${dd}/${MM}/${yyyy} ${hours}:${minutes}:${seconds} ${ampm}`;
+            }
+
+            // Function to parse dd/MM/yyyy hh:mm:ss a string to Date object
+            function parseDate(dateStr) {
+                var parts = dateStr.split(/[\s/:]+/); // Split by space, slash, or colon
+                var dd = parseInt(parts[0], 10);
+                var MM = parseInt(parts[1], 10) - 1; // Months are zero-based
+                var yyyy = parseInt(parts[2], 10);
+                var hours = parseInt(parts[3], 10);
+                var minutes = parseInt(parts[4], 10);
+                var seconds = parseInt(parts[5], 10);
+                var ampm = parts[6];
+
+                if (ampm === 'PM' && hours < 12) hours += 12;
+                if (ampm === 'AM' && hours === 12) hours = 0;
+
+                return new Date(yyyy, MM, dd, hours, minutes, seconds);
+            }
+
+        });
+
+    </script>
     <script src="./js/jquery.min.js"></script>
     <script src="./js/bootstrap.bundle.min.js"></script>
     <script src="./js/custom.js"></script>
@@ -583,15 +909,30 @@
 
             var selectedGenderId = $("input[name='gender']:checked").attr("id");
             var selectedGender = genderMapping[selectedGenderId] || "";
+            var dobValue = $("#pi-dob").val(); // Get the date input
+            var formattedDob = formatDateToMMDDYYYY(dobValue); // Convert to MM/DD/YYYY
+
             var formData = {
                 Name: $("#pi-name").val(),
                 Id: $("#PatientId").val(),
                 Email: $("#pi-email").val(),
                 Age: $("#pi-age").val(),
-                Dob: $("#pi-dob").val(),
+                Dob: formattedDob, // Use formatted date
                 Gender: selectedGender, // Get selected gender
                 MaritalStatus: $("#pi-matstat").val()
             };
+
+            // Function to convert date to MM/DD/YYYY
+            function formatDateToMMDDYYYY(dateString) {
+                if (!dateString) return "";
+
+                var parts = dateString.split("/"); // Assuming input format is DD/MM/YYYY
+                if (parts.length === 3) {
+                    return `${parts[1]}/${parts[0]}/${parts[2]}`; // Convert to MM/DD/YYYY
+                }
+                return dateString; // Return original if format is unknown
+            }
+
 
             $.ajax({
                 url: "/Index?handler=SavePatient",
@@ -599,15 +940,20 @@
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    toastr.success("Patient details saved successfully!");
-                    setTimeout(function () {
-                        location.reload();
-                    }, 2000); // Reload after 2 seconds
+                    localStorage.setItem("showPatientSuccessMessage", "true"); // Set flag before reload
+                    location.reload(); // Reload page
                 },
                 error: function (xhr) {
                     alert("Error: " + xhr.responseText);
                 }
             });
+        });
+        $(document).ready(function () {
+            // Check if success message flag is set in localStorage
+            if (localStorage.getItem("showPatientSuccessMessage") === "true") {
+                toastr.success("Patient details saved successfully!"); // Show success message
+                localStorage.removeItem("showPatientSuccessMessage"); // Remove flag after showing message
+            }
         });
     });
 </script>
@@ -659,16 +1005,21 @@
 
                 $.each(appointments, function (index, appointment) {
                     console.log(appointment); // Check if appointment has correct data
-
+                    var badgeClass = "";
+                    if (appointment.statusName === "Booked" || appointment.statusName === "Completed") {
+                        badgeClass = "badge-green";
+                    } else if (appointment.statusName === "Cancelled") {
+                        badgeClass = "badge-red";
+                    }
                     var cardHtml = `
                         <div class="ius-gridrow">
                             <div class="ius-appbody">
                                 <div class="ius-appinfo">
-                                            <h3>${appointment.doctorName || 'N/A'}</h3>
+                                                <h3>${appointment.doctorName || 'N/A'}</h3>
                                     <div class="ius-apptyfo">
-                                            <span class="appinfo-type">${appointment.appointmentType || 'N/A'}</span>
+                                                <span class="appinfo-type">${appointment.appoinmentType || 'N/A'}</span>
                                         <span class="appinfo-dot"></span>
-                                            <span class="appinfo-form">${appointment.formOfAppointment || 'N/A'}</span>
+                                                <span class="appinfo-form">${appointment.appointmentForm || 'N/A'}</span>
                                     </div>
                                 </div>
                                 <div class="ius-ctrls">
@@ -684,10 +1035,10 @@
                             <div class="ius-foo">
                                 <div class="ius-datetime">
                                     <div class="datetime-label text-sb">Date & Time</div>
-                                        <div>${appointment.appointmentDateTime || 'N/A'}</div>
+                                            <div>${appointment.appointmentStartTime || 'N/A'}</div>
                                 </div>
                                 <div class="ius-status">
-                                        <div class="ius-badge">${appointment.status || 'N/A'}</div>
+                                     <div class="ius-badge ${badgeClass}">${appointment.statusName || 'N/A'}</div>
                                 </div>
                             </div>
                         </div>
@@ -717,5 +1068,9 @@
     span.e-input-group.e-control-wrapper.e-date-wrapper.e-valid-input.e-disabled {
         background-color: #e9ecef !important;
         color: black !important;
+    }
+
+    a.marginleft {
+        margin-left: 5px;
     }
 </style>

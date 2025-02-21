@@ -20,6 +20,8 @@ namespace Patientportal.Pages
         private readonly HttpClient _httpClient;
         private readonly ApiService _apiService;
         public vwProfileListItem PatientData { get; set; }
+        public vwAppointmentListItem AppoinmentData { get; set; }
+        public string? EjsDateTimePattern = "dd/MM/yyyy hh:mm:ss a";
         public List<string> ChangeRequests { get; set; } = new List<string>();
         public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, ApiService apiService)
         {
@@ -27,18 +29,16 @@ namespace Patientportal.Pages
             _httpClient = httpClientFactory;
             _apiService = apiService;
         }
-        public JsonResult OnPostAppointmentView([FromBody] DataManagerRequest dm)
+        public async Task<JsonResult> OnPostAppointmentView([FromBody] DataManagerRequest dm)
         {
             if (dm == null)
             {
                 return new JsonResult(new { result = new List<object>(), count = 0 });
             }
-            var appointments = new List<object>
-                {
-                    new { AppointmentType = "Consultation", DoctorName = "Dr. Sejal Saheta", FormOfAppointment = "In-Person", AppointmentDateTime = DateTime.Now.AddHours(2), Status = "Confirmed" },
-                    new { AppointmentType = "Follow-up", DoctorName = "Dr. Ramesh Patel", FormOfAppointment = "Online", AppointmentDateTime = DateTime.Now.AddDays(1), Status = "Pending" },
-                    new { AppointmentType = "Routine Checkup", DoctorName = "Dr. Anita Sharma", FormOfAppointment = "In-Person", AppointmentDateTime = DateTime.Now.AddDays(3), Status = "Completed" }
-                };
+            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id=575";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiMTliN2Y1NTgtZDdhNS00NGE2LThmZGUtNjQ2MzgwMmQ4ZmZiIiwibmJmIjoxNzQwMDU1OTIzLCJleHAiOjE3NzE1OTE5MjMsImlhdCI6MTc0MDA1NTkyMywiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.tW5vy8tSKQNHBZlcFg7nB0luLBipQ18xyCLLbp1ifv5Hvt8vUrU1ejuSekvLku1ebZnUrL0PA6N-_iALHfh5RQ"; // सही टोकन डालें
+            var appointments = await _apiService.GetAsync<List<vwAppointmentListItem>>(apiUrl, token);
+
 
             IEnumerable<object> data = appointments;
             int count = data.Count();
@@ -57,16 +57,19 @@ namespace Patientportal.Pages
 
             return new JsonResult(new { result = data, count });
         }
-        public JsonResult OnPostAppointmentViewCard([FromBody] DataManagerRequest dm)
+        public  async Task<JsonResult> OnPostAppointmentViewCard([FromBody] DataManagerRequest dm)
         {
-            var appointments = new List<object>
-                {
-                    new { AppointmentType = "Consultation", DoctorName = "Dr. Sejal Saheta", FormOfAppointment = "In-Person", AppointmentDateTime = DateTime.Now.AddHours(2), Status = "Confirmed" },
-                    new { AppointmentType = "Follow-up", DoctorName = "Dr. Ramesh Patel", FormOfAppointment = "Online", AppointmentDateTime = DateTime.Now.AddDays(1), Status = "Pending" },
-                    new { AppointmentType = "Routine Checkup", DoctorName = "Dr. Anita Sharma", FormOfAppointment = "In-Person", AppointmentDateTime = DateTime.Now.AddDays(3), Status = "Completed" }
-                };
+            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id=575";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiMTliN2Y1NTgtZDdhNS00NGE2LThmZGUtNjQ2MzgwMmQ4ZmZiIiwibmJmIjoxNzQwMDU1OTIzLCJleHAiOjE3NzE1OTE5MjMsImlhdCI6MTc0MDA1NTkyMywiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.tW5vy8tSKQNHBZlcFg7nB0luLBipQ18xyCLLbp1ifv5Hvt8vUrU1ejuSekvLku1ebZnUrL0PA6N-_iALHfh5RQ"; // सही टोकन डालें
+            var appointments =  await _apiService.GetAsync<List<vwAppointmentListItem>>(apiUrl, token);
 
-            var dataCount = appointments.Count;
+            if (appointments == null || !appointments.Any())
+            {
+                return new JsonResult(new { result = new List<object>(), count = 0 });
+            }
+
+            IEnumerable<object> data = appointments;
+            int dataCount = data.Count();
 
             return new JsonResult(new { result = appointments, count = dataCount });
         }
@@ -94,6 +97,52 @@ namespace Patientportal.Pages
 
             var apiHelper = new ApiService(_httpClient);
             var response = await _apiService.PostAsync<vwProfileListItem, ApiResponse>(apiUrl, viewModel, token);
+
+            if (response != null && response.IsSuccess)
+            {
+                return new JsonResult(new {  message = "Your change request has been submitted." });
+
+            }
+            else
+            {
+                return BadRequest("Failed to save patient details.");
+            }
+        } 
+        public async Task<IActionResult> OnPostPirescheduleAsync()
+        {
+            using var reader = new StreamReader(HttpContext.Request.Body);
+            var json = await reader.ReadToEndAsync();
+            vwAppointmentListItem viewModel = JSON.Deserialize<vwAppointmentListItem>(json);
+
+
+            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/viewAppointmentButton";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiMTliN2Y1NTgtZDdhNS00NGE2LThmZGUtNjQ2MzgwMmQ4ZmZiIiwibmJmIjoxNzQwMDU1OTIzLCJleHAiOjE3NzE1OTE5MjMsImlhdCI6MTc0MDA1NTkyMywiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.tW5vy8tSKQNHBZlcFg7nB0luLBipQ18xyCLLbp1ifv5Hvt8vUrU1ejuSekvLku1ebZnUrL0PA6N-_iALHfh5RQ"; // Valid token yahan dalein
+
+            var apiHelper = new ApiService(_httpClient);
+            var response = await _apiService.PostAsync<vwAppointmentListItem, ApiResponse>(apiUrl, viewModel, token);
+
+            if (response != null && response.IsSuccess)
+            {
+                return new JsonResult(new {  message = "Your change request has been submitted." });
+
+            }
+            else
+            {
+                return BadRequest("Failed to save patient details.");
+            }
+        } 
+        public async Task<IActionResult> OnPostAddaptallAsync()
+        {
+            using var reader = new StreamReader(HttpContext.Request.Body);
+            var json = await reader.ReadToEndAsync();
+            vwAppointmentListItem viewModel = JSON.Deserialize<vwAppointmentListItem>(json);
+
+
+            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/AddAppointmentbyPatientPortal";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiMTliN2Y1NTgtZDdhNS00NGE2LThmZGUtNjQ2MzgwMmQ4ZmZiIiwibmJmIjoxNzQwMDU1OTIzLCJleHAiOjE3NzE1OTE5MjMsImlhdCI6MTc0MDA1NTkyMywiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.tW5vy8tSKQNHBZlcFg7nB0luLBipQ18xyCLLbp1ifv5Hvt8vUrU1ejuSekvLku1ebZnUrL0PA6N-_iALHfh5RQ"; // Valid token yahan dalein
+
+            var apiHelper = new ApiService(_httpClient);
+            var response = await _apiService.PostAsync<vwAppointmentListItem, ApiResponse>(apiUrl, viewModel, token);
 
             if (response != null && response.IsSuccess)
             {
@@ -214,4 +263,57 @@ public class ApiResponse
 {
     public bool IsSuccess { get; set; }
     public string Message { get; set; }
+}
+public class vwAppointmentListItem
+{
+    //public string? Location { get; set; }
+    public int? DoctoreId { get; set; }
+    public int? SourceId { get; set; }
+    public DateTime? AppointmentStartTime { get; set; }
+    public DateTime? AppointmentEndDateTime { get; set; }
+
+    public int? StatusId { get; set; }
+    public string? AppoinmentType { get; set; }
+    //[NotMapped]
+    public long? LeadId { get; set; }
+    //[NotMapped]
+    //public string? Name { get; set; }
+    //[NotMapped]
+    public string? Mobile { get; set; }
+    public int? Age { get; set; }
+    public string? Location { get; set; }
+    //[NotMapped]
+    public string? Gender { get; set; }
+
+    //[NotMapped]
+    public string? Email { get; set; }
+    //[NotMapped]
+    public long? PatientId { get; set; }
+    public string? PatientName { get; set; }
+
+    public string? ProfileImage { get; set; }
+
+    //[NotMapped]
+    public string? AppointmentNo { get; set; }
+
+    public short? Year { get; set; }
+    public string? StatusName { get; set; }
+
+    public string? AppointmentForm { get; set; }
+    public string? Comment { get; set; }
+    public string? SourceName { get; set; }
+    public string? DoctorName { get; set; }
+
+
+    //[NotMapped]
+    public string? ConcernGroups { get; set; }
+    [NotMapped]
+    public List<string>? NotAllowedAction { get; set; }
+    public long Id { get; set; }
+    public long? CreatedBy { get; set; }
+    //public string? CreatedByUserName { get; set; }
+    public long? ModifiedBy { get; set; }
+    //public string? ModifiedByUserName { get; set; }
+    public DateTimeOffset? CreatedOn { get; set; }
+    public DateTimeOffset? ModifiedOn { get; set; }
 }
