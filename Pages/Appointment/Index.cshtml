@@ -36,30 +36,31 @@
                     <input type="hidden" id="PatientId"  name="medicalPatientSignature" class="custom-field-height" />
                     <div class="row">
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-formofappt" class="form-label">Form of Appointment</label>
+                            <label for="pi-formofappt" class="form-label">Form of Appointment*</label>
                             <ejs-dropdownlist class="form-control" id="pi-formofappt" style="height:45px;" DataSource="FormofAppointment"></ejs-dropdownlist>
                             <span id="pi-formofappt" class="text-danger"></span>
                         </div>   
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-resched" class="form-label">Appointment Date Time</label>
+                            <label for="pi-resched" class="form-label">Appointment Date Time*</label>
                             <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
                             <span id="pi-resched" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-name" class="form-label">Name</label>
+                            <label for="pi-name" class="form-label">Name*</label>
                             <input type="text" name="patientname" maxlength="100" class="form-control" id="pi-name">
                             <span id="Namespan" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-phoneno" class="form-label">Phone Number</label>
-                            <input type="text" name="phoneno" maxlength="13" pattern="[0-9]*" inputmode="numeric" class="form-control" id="pi-phoneno">
+                            <label for="pi-phoneno" class="form-label">Phone Number*</label>
+                          <input type="text" name="phoneno" maxlength="14" class="form-control" id="pi-phoneno">
+
                             <span id="pi-phoneno" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-email" class="form-label">Email</label>
+                            <label for="pi-email" class="form-label">Email*</label>
                             <input type="email" name="email" maxlength="100" class="form-control" id="pi-email">
                             <span id="emailidspan" class="text-danger"></span>
                         </div>
@@ -80,8 +81,7 @@
                         </div>
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-dob" class="form-label">Date of Birth</label>
-                            @* <input type="date" name="dob" class="form-control form-date" id="pi-dob" value="1995-09-03"> *@
-                            <ejs-datepicker id="pi-dob" class="form-control" format="dd/MM/yyyy" style="height: 45px;"></ejs-datepicker>
+                              <ejs-datepicker id="pi-dob" class="form-control" format="dd/MM/yyyy" style="height: 45px;"></ejs-datepicker>
                             <span id="dobspan" class="text-danger"></span>
                         </div>
                         <div class="col-md-6 col-xl-4">
@@ -90,14 +90,14 @@
                             <span id="agespan" class="text-danger"></span>
                         </div>
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-notes" class="form-label">Notes</label>
-                            <textarea type="Notes" name="age" maxlength="200" class="form-control" id="pi-notes"></textarea>
+                            <label for="pi-notes" class="form-label">Notes*</label>
+                            <textarea type="Notes" name="age" maxlength="200" id="pi-notes"></textarea>
                             <span id="notesspan" class="text-danger"></span>
                         </div>
 
-                       
 
-                        
+
+
                     </div>
 
                     <div class="form-actions">
@@ -109,8 +109,72 @@
         </div>
     </main>
 </body>
+
+
 </html>
+<div class="modal fade" id="successModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content" style="margin-top: 154px; max-width: 400px; margin: auto;">
+            <div class="modal-body">
+                <div class="modal-body text-center">
+                    Your appointment has been added successfully 
+                </div>
+                <div class="modal-footer border-top-0 d-flex justify-content-center">
+                    <button id="confirmYes" class="btn d-flex align-items-center gap-1 justify-content-center px-3"
+                        style="border-radius: 10px; background: #0061AB; height: 45px; min-width: 120px; font-size: 15px; font-weight: 600; color: #fff;">
+                        Thanks 
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById("pi-age").addEventListener("input", function () {
+        if (this.value.length > 2) {
+            this.value = this.value.slice(0, 2); // Sirf pehle 2 digits rakho
+        }
+    });
+    document.getElementById("pi-phoneno").addEventListener("input", function (e) {
+    this.value = this.value.replace(/[^0-9+]/g, ''); // Allow only numbers and '+'
+});
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("pi-name").addEventListener("input", function () {
+        this.value = this.value.replace(/[^A-Za-z\s]/g, ""); // Allow only letters and spaces
+    });
+});
+
+
+
+</script>
+<script>
+    document.getElementById("pi-age").addEventListener("input", function () {
+        let age = parseInt(this.value, 10);
+        if (!isNaN(age) && age > 0 && age <= 99) { // Age valid range me ho
+            let today = new Date();
+            let birthYear = today.getFullYear() - age; // DOB ka year calculate karna
+            let birthDate = new Date(birthYear, today.getMonth(), today.getDate()); // DOB set karna
+
+            let datepicker = document.getElementById("pi-dob").ej2_instances[0]; // Syncfusion DatePicker instance
+            datepicker.value = birthDate; // DOB set karna
+        }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var datepicker = document.getElementById("pi-dob").ej2_instances[0];
+        datepicker.max = new Date(); // Aaj ki date tak hi allow karega
+    });
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>   
+<script src="./js/jquery.min.js"></script>
+   <script src="./js/bootstrap.bundle.min.js"></script>
+   <script src="./js/custom.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   
 <script>
     $(document).ready(function () {
         $("#save-btn").click(function (e) {
@@ -141,20 +205,60 @@
                 clearError("pi-formofappt");
             }
 
+            
             // Validate Appointment Date Time
             if ($("#pi-resched").val().trim() === "") {
                 showError("pi-resched", "Appointment Date Time is required.");
                 isValid = false;
-            } else {
+            } 
+            else {
                 clearError("pi-resched");
             } 
-            if ($("#pi-phoneno").val().trim() === "") {
-                showError("pi-phoneno", "Mobile Number is required.");
+           var aptValue = $("#pi-resched").val(); // Expected format: DD/MM/YYYY HH:mm:ss
+            if (!aptValue) {
+                showError("pi-resched", "Appointment Date Time is required.");
                 isValid = false;
             } else {
-                clearError("pi-phoneno");
+                var dateTimeParts = aptValue.split(" "); // Split date and time
+                var datePart = dateTimeParts[0]; // Extract date (DD/MM/YYYY)
+                var timePart = dateTimeParts[1] || "00:00:00"; // Extract time (HH:mm:ss) or default to midnight
+
+                var aptParts = datePart.split("/"); // Split date
+                var timeParts = timePart.split(":"); // Split time
+
+                // Create Date object (YYYY, MM-1, DD, HH, MM, SS)
+                var aptdob = new Date(
+                    aptParts[2], // Year
+                    aptParts[1] - 1, // Month (0-based index)
+                    aptParts[0], // Day
+                    timeParts[0], // Hour
+                    timeParts[1], // Minute
+                    timeParts[2] // Second
+                );
+
+                var todayapt = new Date();
+
+                if (aptdob < todayapt) {
+                    showError("pi-resched", "Invalid Appointment Date Time.");
+                    isValid = false;
+                } else {
+                    clearError("pi-resched");
+                }
             }
 
+        if (dobValue) {
+            var dobParts = dobValue.split("/"); // Assuming input format is DD/MM/YYYY
+            var dob = new Date(dobParts[2], dobParts[1] - 1, dobParts[0]); // Convert to Date object
+            var today = new Date();
+            today.setHours(0, 0, 0, 0); // Reset time to compare only dates
+
+            if (dob > today) {
+                showError("pi-dob", "Invalid Date of Birth");
+                isValid = false;
+            } else {
+                clearError("pi-dob");
+            }
+        }
             // Validate Notes
             if ($("#pi-notes").val().trim() === "") {
                 showError("pi-notes", "Notes are required.");
@@ -162,13 +266,7 @@
             } else {
                 clearError("pi-notes");
             }
-            // Validate Phone Number
-            if ($("#pi-phoneno").val().trim() === "") {
-                showError("pi-phoneno", "Phone Number is required.");
-                isValid = false;
-            } else {
-                clearError("pi-phoneno");
-            }
+       
 
            var email = $("#pi-email").val().trim();
             var emailRegex = /^[\w\.-]+@@[\w\.-]+\.\w+$/; // ✅ Regex for valid email format
@@ -182,10 +280,15 @@
                 clearError("pi-email");
             }
 
-            if ($("#pi-phoneno").val().trim() === "") {
+                  if ($("#pi-phoneno").val().trim() === "") {
                 showError("pi-phoneno", "Phone Number is required.");
                 isValid = false;
-            } else {
+            }
+            else if ($("#pi-phoneno").val().trim().length < 10) {
+    showError("pi-phoneno", "Invalid Mobile Number.");
+    isValid = false;
+}
+            else {
                 clearError("pi-phoneno");
             }
             // If any validation fails, stop AJAX request
@@ -235,8 +338,22 @@
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                    localStorage.setItem("showPatientSuccessMessage", "true"); // Set flag before reload
-                    location.reload(); // Reload page
+                               Swal.fire({
+            icon: 'success',
+            title: 'success',
+            text: 'Your appointment has been added successfully.',
+            confirmButtonText: 'Thanks',
+            confirmButtonColor: '#137A5D',
+            customClass: {
+                popup: 'rounded-3',
+                title: 'text-success'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/account"; // Redirect to /account on button click
+            }
+        });
+
                 },
                 error: function (xhr) {
                     alert("Error: " + xhr.responseText);
@@ -250,13 +367,15 @@
                 localStorage.removeItem("showPatientSuccessMessage"); // Remove flag after showing message
             }
         });
+         $("#confirmYes").click(function () {
+        window.location.href = "/account"; // Redirect to /account
+    });
     });
 </script>
 <script>
-    $(document).ready(function () {
-        $("#pi-phoneno").on("input", function () {
-            this.value = this.value.replace(/\D/g, ""); // Remove non-numeric characters
-        });
-    });
+document.getElementById("cancel-btn").addEventListener("click", function (event) {
+    event.preventDefault(); // Prevent default anchor behavior
+    location.reload(); // Refresh the page
+});
 
 </script>

@@ -371,7 +371,7 @@
                 <input type="hidden" id="StatusIds" value="79" class="custom-field-height" />
                 <div class="modal-body">
                     <div class="">
-                        <label for="pi-Resason" class="form-label">Reason</label>
+                        <label for="pi-Resason" class="form-label">Reason*</label>
                         <input type="Text" name="Resason" class="form-control form-date"  maxlength="100" id="pi-Resason" />
                         <span id="Span-reson" class="text-danger"></span>
                     </div>
@@ -433,12 +433,12 @@
                 <input type="hidden" id="StatusId" value="77" name="medicalPatientSignature" class="custom-field-height" />
                 <div class="modal-body">
                     <div class="">
-                        <label for="pi-resched" class="form-label">Appointment Date Time</label>
+                        <label for="pi-resched" class="form-label">Appointment Date Time*</label>
                         <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
                         <span id="AptDatetime-reson" class="text-danger"></span>
                     </div>
                     <div class="">
-                        <label for="pi-ResasonRe" class="form-label">Reason</label>
+                        <label for="pi-ResasonRe" class="form-label">Reason*</label>
                         <input type="Text" name="Resason" class="form-control form-date" maxlength="100" id="pi-ReasonRe" />
                         <span id="Aptreosan-reson" class="text-danger"></span>
                     </div>
@@ -585,12 +585,12 @@
                                 <ejs-dropdownlist class="form-control" id="app-with" DataSource="AppointmentWith" placeholder="Select Doctor"></ejs-dropdownlist>
                             </div> *@
                             <div class="col-md-6">
-                                <label for="app-form" class="form-label">Form of Appointment</label>
+                                <label for="app-form" class="form-label">Form of Appointment*</label>
                                 <ejs-dropdownlist class="form-control" id="app-form" style="height:45px;" DataSource="FormofAppointment" placeholder="Select Form"></ejs-dropdownlist>
                                 <span id="AptAddformapt" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="app-datetime" class="form-label">Appointment Date Time</label>
+                                <label for="app-datetime" class="form-label">Appointment Date Time*</label>
                                 <ejs-datetimepicker id="app-datetim" class="form-control" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
                                 <span id="AptaddDatetime" class="text-danger"></span>
                             </div>
