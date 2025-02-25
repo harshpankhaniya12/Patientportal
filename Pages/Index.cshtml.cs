@@ -36,29 +36,50 @@ namespace Patientportal.Pages
             {
                 return new JsonResult(new { result = new List<object>(), count = 0 });
             }
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id=575";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiMTliN2Y1NTgtZDdhNS00NGE2LThmZGUtNjQ2MzgwMmQ4ZmZiIiwibmJmIjoxNzQwMDU1OTIzLCJleHAiOjE3NzE1OTE5MjMsImlhdCI6MTc0MDA1NTkyMywiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.tW5vy8tSKQNHBZlcFg7nB0luLBipQ18xyCLLbp1ifv5Hvt8vUrU1ejuSekvLku1ebZnUrL0PA6N-_iALHfh5RQ"; // सही टोकन डालें
-            var appointments = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
 
+            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id=575";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiMTliN2Y1NTgtZDdhNS00NGE2LThmZGUtNjQ2MzgwMmQ4ZmZiIiwibmJmIjoxNzQwMDU1OTIzLCJleHAiOjE3NzE1OTE5MjMsImlhdCI6MTc0MDA1NTkyMywiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.tW5vy8tSKQNHBZlcFg7nB0luLBipQ18xyCLLbp1ifv5Hvt8vUrU1ejuSekvLku1ebZnUrL0PA6N-_iALHfh5RQ";
+            var appointments = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
 
             IEnumerable<object> data = appointments;
             int count = data.Count();
 
+            var dataOperations = new DataOperations();
+
+            // Filtering
             if (dm.Where != null && dm.Where.Count > 0)
             {
-                var dataOperations = new DataOperations();
                 data = dataOperations.PerformFiltering(data, dm.Where, "and");
                 count = data.Count();
             }
+
+            // Searching
             if (dm.Search != null && dm.Search.Count > 0)
             {
-                var dataOperations = new DataOperations(); // ✅ DataOperations का एक instance बनाएं
                 data = dataOperations.PerformSearching(data, dm.Search);
+                count = data.Count();
+            }
+
+            // Sorting
+            if (dm.Sorted != null && dm.Sorted.Count > 0)
+            {
+                data = dataOperations.PerformSorting(data, dm.Sorted);
+            }
+
+            // Paging
+            if (dm.Skip != 0)
+            {
+                data = dataOperations.PerformSkip(data, dm.Skip);
+            }
+            if (dm.Take != 0)
+            {
+                data = dataOperations.PerformTake(data, dm.Take);
             }
 
             return new JsonResult(new { result = data, count });
         }
-        public  async Task<JsonResult> OnPostAppointmentViewCard([FromBody] DataManagerRequest dm)
+
+        public async Task<JsonResult> OnPostAppointmentViewCard([FromBody] DataManagerRequest dm)
         {
             string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id=575";
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiMTliN2Y1NTgtZDdhNS00NGE2LThmZGUtNjQ2MzgwMmQ4ZmZiIiwibmJmIjoxNzQwMDU1OTIzLCJleHAiOjE3NzE1OTE5MjMsImlhdCI6MTc0MDA1NTkyMywiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.tW5vy8tSKQNHBZlcFg7nB0luLBipQ18xyCLLbp1ifv5Hvt8vUrU1ejuSekvLku1ebZnUrL0PA6N-_iALHfh5RQ"; // सही टोकन डालें
@@ -139,7 +160,7 @@ namespace Patientportal.Pages
             AppointmentListItem viewModel = JSON.Deserialize<AppointmentListItem>(json);
 
 
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/AddAppointmentbyPatientPortal";
+            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/AddAppointmentbyportalAppointmentbyPatientId";
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiMTliN2Y1NTgtZDdhNS00NGE2LThmZGUtNjQ2MzgwMmQ4ZmZiIiwibmJmIjoxNzQwMDU1OTIzLCJleHAiOjE3NzE1OTE5MjMsImlhdCI6MTc0MDA1NTkyMywiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.tW5vy8tSKQNHBZlcFg7nB0luLBipQ18xyCLLbp1ifv5Hvt8vUrU1ejuSekvLku1ebZnUrL0PA6N-_iALHfh5RQ"; // Valid token yahan dalein
 
             var apiHelper = new ApiService(_httpClient);

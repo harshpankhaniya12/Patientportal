@@ -1,0 +1,143 @@
+﻿@page
+@model Patientportal.Pages.Calendar.IndexModel
+@{
+}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var doctorBlockTimes = @Html.Raw(Json.Serialize(Model.Doctorblocktime));
+
+        if (doctorBlockTimes.length === 0) {
+            console.log("No blocked appointments found.");
+        } else {
+            console.log("Blocked Appointments:", doctorBlockTimes);
+        }
+
+        var scheduleObj = document.getElementById('schedule').ej2_instances[0];
+
+        // Convert data to Scheduler format
+        var blockAppointments = doctorBlockTimes.map(function (item) {
+            return {
+                Id: item.id, // Ensure this matches your data model
+                Subject: 'Not available', // Blocked slot label
+                StartTime: new Date(item.appointmentStartTime),
+                EndTime: new Date(item.appointmentEndDateTime),
+                IsReadonly: true // Makes event non-editable
+            };
+        });
+
+        // Debugging output
+        console.log("Final Event Data for Scheduler:", blockAppointments);
+
+        // Set the scheduler events
+        scheduleObj.eventSettings.dataSource = blockAppointments;
+    });
+</script>
+
+<div class="control-section">
+    <div class="schedule-wrapper">
+        <ejs-schedule id="schedule" height="650px"
+                      selectedDate="DateTime.Today"
+                      allowDragAndDrop="false" allowResizing="false"
+                      startHour="10:00" endHour="19:15"
+                      workDays="new int[] {1, 2, 3, 4, 5}"  
+                      cellClick="onCellClick">
+            <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
+
+            <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
+        </ejs-schedule>
+    </div>
+</div>
+<script>
+    function onPopupOpen(args) {
+        // Quick popup open hone se rokna
+        if (args.type === "QuickInfo") {
+            args.cancel = true;
+        }
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var scheduleObj = document.getElementById('schedule').ej2_instances[0];
+
+        scheduleObj.popupOpen = function (args) {
+            if (args.type === "Editor" && args.data.Id === undefined) {
+                args.cancel = true; // Disable double-click popup (event creation popup)
+            }
+        };
+    });
+</script>
+
+
+<script>
+    function onCellClick(args) {
+        // Prevent default popup behavior
+        args.cancel = true;
+
+        var currentDateTime = new Date(); // Current Date & Time
+        var clickedDateTime = new Date(args.startTime); // Clicked Cell Date & Time
+
+        // Agar clicked datetime past hai toh click event ko rok do
+        if (clickedDateTime < currentDateTime) {
+            alert("Past dates and times are not clickable.");
+            return; // Stop execution (No redirect)
+        }
+        var clickedDate = new Date(args.startTime);
+        var day = clickedDate.getDay(); // 0 = Sunday, 6 = Saturday
+
+        // Agar clicked date Saturday ya Sunday hai toh click disable kar do
+        if (day === 0 || day === 6) {
+            args.cancel = true; // Click event ko cancel karo
+            return;
+        }
+        // Get the clicked slot's start time
+        let startTime = args.startTime;
+
+        // Convert to ISO 8601 format (YYYY-MM-DDTHH:MM:SS.SSSZ)
+        let formattedTime = startTime.toISOString();
+
+        // Redirect to Appointment page for future date & time only
+        window.location.href = `http://localhost:5085/Appointment?SelectedDateTime=${formattedTime}`;
+    }
+
+</script>
+
+
+
+
+
+
+<!-- Template to show "Book" on blocked slots -->
+<script id="blockTemplate" type="text/x-template">
+    <div class="blocked-slot">Not available</div>
+</script>
+
+<style>
+    .blocked-slot {
+        background-color: red;
+        color: white;
+        text-align: center;
+        font-weight: bold;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+    .e-appointment.e-read-only {
+        width: 100% !important;
+    }
+
+    .e-quick-popup-wrapper.e-lib.e-popup.e-control.e-popup-open {
+        display: none;
+    }
+
+    <style >
+    /* Saturday & Sunday cells ko grey color dena aur click disable karna */
+    .e-work-cells:nth-child(7), /* Saturday */
+    .e-work-cells:nth-child(1), /* Sunday */
+    .e-work-hours:nth-child(7), /* Saturday header */
+    .e-work-hours:nth-child(1) { /* Sunday header */
+        background-color: #e0e0e0 !important; /* Light Grey */
+        pointer-events: none; /* Click disable */
+    }
+</style>
+
+</style>

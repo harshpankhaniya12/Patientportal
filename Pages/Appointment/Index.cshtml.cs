@@ -15,6 +15,8 @@ namespace Patientportal.Pages.Appointment
         private readonly HttpClient _httpClient;
         private readonly ApiService _apiService;
         public AppointmentListItem AppoinmentData { get; set; }
+        [FromQuery(Name = "selectedDateTime")]
+        public DateTimeOffset SelectedDateTime { get; set; }
         public string? EjsDateTimePattern = "dd/MM/yyyy hh:mm:ss a";
         public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, ApiService apiService)
         {

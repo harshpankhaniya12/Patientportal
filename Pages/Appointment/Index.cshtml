@@ -1,10 +1,6 @@
 ﻿@page
 @model Patientportal.Pages.Appointment.IndexModel
 @{
-    ViewData["Title"] = "Appointment";
-    Layout = "_LayoutMainAppoinment";
-}
-@{
     List<string> FormofAppointment = new List<string> { "Inclinic", "Video" };
 }
 <!DOCTYPE html>
@@ -12,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Appointment</title>
+    <title>Book Appointment</title>
 
     <link rel="stylesheet" href="~/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/custom.css">
@@ -27,10 +23,13 @@
 <body>
     <main class="page">
         <div class="container container-x">
-            <h1 class="page-title text-28">Add Appointment</h1>
+            <h1 class="page-title text-28">Book Appointment</h1>
 
             <div class="ius-block ius-card">
-                <h2>Add Appointment</h2>
+               <div class="d-flex justify-content-between align-items-center">
+        <h2>Book Appointment</h2>
+        <a href="#" class="bttn bttn-secondary" id="goto-calendar-btn" title="Go to Calendar">Go to Calendar</a>
+    </div>
 
                 <form class="ius-form" action="#" method="POST">
                     <input type="hidden" id="PatientId"  name="medicalPatientSignature" class="custom-field-height" />
@@ -42,7 +41,7 @@
                         </div>   
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-resched" class="form-label">Appointment Date Time*</label>
-                            <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                            <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" value="@Model.SelectedDateTime"  format="@Model.EjsDateTimePattern" readonly="true" ></ejs-datetimepicker>
                             <span id="pi-resched" class="text-danger"></span>
                         </div>
 
@@ -55,7 +54,6 @@
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-phoneno" class="form-label">Phone Number*</label>
                           <input type="text" name="phoneno" maxlength="14" class="form-control" id="pi-phoneno">
-
                             <span id="pi-phoneno" class="text-danger"></span>
                         </div>
 
@@ -77,7 +75,7 @@
                                 <input type="radio" class="btn-check" name="gender" id="gender-other">
                                 <label class="btn" for="gender-other">Other</label>
                             </div>
-
+                             <span id="Genderspan" class="text-danger"></span>
                         </div>
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-dob" class="form-label">Date of Birth</label>
@@ -105,6 +103,13 @@
                         <a href="#" class="bttn bttn-primary" id="save-btn" title="Save">Save</a>
                     </div>
                 </form>
+            </div>
+            <div class="ius-block ius-card ius-notes">
+                <h2 class="mb-2 pb-1 text--red">Notes</h2>
+                <ol>
+                    <li>Appointment  will be booked for consultation with Dr. Sejal Saheta.</li>
+                    <li>For an appointment with an aesthetician for cosmetic procedures please call Clinic - <a href="tel:+91-9639639630" title="91-9639639630">9639639630</a></li>
+                </ol>
             </div>
         </div>
     </main>
@@ -145,21 +150,49 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-
 </script>
 <script>
-    document.getElementById("pi-age").addEventListener("input", function () {
-        let age = parseInt(this.value, 10);
-        if (!isNaN(age) && age > 0 && age <= 99) { // Age valid range me ho
-            let today = new Date();
-            let birthYear = today.getFullYear() - age; // DOB ka year calculate karna
-            let birthDate = new Date(birthYear, today.getMonth(), today.getDate()); // DOB set karna
-
-            let datepicker = document.getElementById("pi-dob").ej2_instances[0]; // Syncfusion DatePicker instance
-            datepicker.value = birthDate; // DOB set karna
-        }
+    document.getElementById("goto-calendar-btn").addEventListener("click", function(event) {
+        event.preventDefault(); // Default behavior ko rokna
+        window.open("/Calendar", "_blank"); // Naye tab me open karna
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+                        var ageInput = document.getElementById("pi-age");
+                        var dobPicker = document.getElementById("pi-dob").ej2_instances[0]; // Syncfusion Datepicker instance
+
+                        // Age se Date of Birth calculate karna
+                        ageInput.addEventListener("input", function () {
+                            var age = parseInt(this.value, 10);
+                            if (!isNaN(age) && age > 0) {
+                                var today = new Date();
+                                var birthYear = today.getFullYear() - age;
+                                var birthDate = new Date(birthYear, today.getMonth(), today.getDate());
+                                dobPicker.value = birthDate; // Syncfusion Datepicker me set karna
+                            }
+                        });
+
+                        // Date of Birth se Age calculate karna
+                        dobPicker.addEventListener("change", function () {
+                            var dob = dobPicker.value;
+                            if (dob) {
+                                var today = new Date();
+                                var birthDate = new Date(dob);
+                                var age = today.getFullYear() - birthDate.getFullYear();
+
+                                // Agar DOB ke month aur date aaj ke month aur date se aage hain, toh age -1 karna
+                                var monthDiff = today.getMonth() - birthDate.getMonth();
+                                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                                    age--;
+                                }
+
+                                ageInput.value = age; // Age input ko update karna
+                            }
+                        });
+                    });
+</script>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var datepicker = document.getElementById("pi-dob").ej2_instances[0];
@@ -213,37 +246,6 @@ document.addEventListener("DOMContentLoaded", function () {
             } 
             else {
                 clearError("pi-resched");
-            } 
-           var aptValue = $("#pi-resched").val(); // Expected format: DD/MM/YYYY HH:mm:ss
-            if (!aptValue) {
-                showError("pi-resched", "Appointment Date Time is required.");
-                isValid = false;
-            } else {
-                var dateTimeParts = aptValue.split(" "); // Split date and time
-                var datePart = dateTimeParts[0]; // Extract date (DD/MM/YYYY)
-                var timePart = dateTimeParts[1] || "00:00:00"; // Extract time (HH:mm:ss) or default to midnight
-
-                var aptParts = datePart.split("/"); // Split date
-                var timeParts = timePart.split(":"); // Split time
-
-                // Create Date object (YYYY, MM-1, DD, HH, MM, SS)
-                var aptdob = new Date(
-                    aptParts[2], // Year
-                    aptParts[1] - 1, // Month (0-based index)
-                    aptParts[0], // Day
-                    timeParts[0], // Hour
-                    timeParts[1], // Minute
-                    timeParts[2] // Second
-                );
-
-                var todayapt = new Date();
-
-                if (aptdob < todayapt) {
-                    showError("pi-resched", "Invalid Appointment Date Time.");
-                    isValid = false;
-                } else {
-                    clearError("pi-resched");
-                }
             }
 
         if (dobValue) {
@@ -340,7 +342,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 success: function (response) {
                                Swal.fire({
             icon: 'success',
-            title: 'success',
+            title: 'Success',
             text: 'Your appointment has been added successfully.',
             confirmButtonText: 'Thanks',
             confirmButtonColor: '#137A5D',

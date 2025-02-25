@@ -177,13 +177,9 @@ textarea::placeholder {
 }
 
 textarea {
-    line-height: 26px;
-    min-height: 180px;
-    max-height: 200px;
-    padding-top: 14px;
-    border-radius: 20px;
-    resize: none;
+    resize: vertical;
 }
+
 
 select,
 .form-select {
@@ -398,9 +394,6 @@ textarea[disabled],
     --white);
 }
 
-.ius-form .row {
-    row-gap: 20px;
-}
 
 .ius-form .form-label {
     display: block;

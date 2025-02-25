@@ -1,5 +1,5 @@
 ﻿@page
-@model IndexModel
+@model Patientportal.Pages.IndexModel
 @{
     ViewData["Title"] = "Patient Portal";
     Layout = "_LayoutMain";
@@ -7,10 +7,6 @@
 @{
 
     List<object> toolbarItems = new List<object>();
-    toolbarItems.Add("ExcelExport");
-    toolbarItems.Add(new { text = "Reset Layout", tooltipText = "Reset Layout", prefixIcon = "e-reset", id = "GridLeave_resetlayout", align = "Right" });
-    toolbarItems.Add(new { text = "Clear Filters", tooltipText = "Clear Filters", prefixIcon = "e-filter-clear", id = "GridLeave_clearfilters", align = "Right" });
-    toolbarItems.Add("ColumnChooser");
     toolbarItems.Add("Search");
     List<string> StateList = new List<string> { "Gujarat", "Maharashtra", "Rajasthan" };
     List<string> CountryList = new List<string> { "Canada", "India", "United States" };
@@ -55,10 +51,11 @@
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-phoneno" class="form-label">Phone Number</label>
                             <input type="text" name="phoneno" asp-for="PatientData.Mobile" class="form-control" id="pi-phoneno"  disabled>
+                            <span asp-validation-for="PatientData.Mobile" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-email" class="form-label">Email Id</label>
+                            <label for="pi-email" class="form-label">Email</label>
                             <input type="email" name="email" asp-for="PatientData.Email" maxlength="100" class="form-control" id="pi-email">
                             <span asp-validation-for="PatientData.Email" class="text-danger"></span>
                         </div>
@@ -75,7 +72,40 @@
                             <ejs-datepicker id="pi-dob" ejs-for="PatientData.Dob" class="form-control" format="dd/MM/yyyy" style="height: 45px;"></ejs-datepicker>
                             <span asp-validation-for="PatientData.Dob" class="text-danger"></span>
                         </div>
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                var dobInput = document.getElementById("pi-dob");
 
+                                dobInput.addEventListener("input", function (e) {
+                                    var val = dobInput.value.replace(/\D/g, ""); // Remove non-numeric characters
+                                    var formatted = "";
+
+                                    if (val.length > 2) {
+                                        formatted += val.substring(0, 2) + "/";
+                                        if (val.length > 4) {
+                                            formatted += val.substring(2, 4) + "/";
+                                            formatted += val.substring(4, 8);
+                                        } else {
+                                            formatted += val.substring(2);
+                                        }
+                                    } else {
+                                        formatted = val;
+                                    }
+
+                                    dobInput.value = formatted;
+                                });
+
+                                dobInput.addEventListener("keydown", function (event) {
+                                    var allowedKeys = [8, 46]; // Allow backspace and delete
+                                    if ((event.keyCode >= 48 && event.keyCode <= 57) ||  // Numbers 0-9
+                                        (event.keyCode >= 96 && event.keyCode <= 105) || // Numpad Numbers
+                                        allowedKeys.includes(event.keyCode)) {
+                                        return true;
+                                    }
+                                    event.preventDefault(); // Prevent other keys
+                                });
+                            });
+                        </script>
                         <div class="col-md-6 col-xl-4">
                             <label class="form-label">Gender</label>
 
@@ -89,39 +119,45 @@
                                 <input type="radio" class="btn-check" name="gender" id="gender-other">
                                 <label class="btn" for="gender-other">Other</label>
                             </div>
-
+                            <span asp-validation-for="PatientData.Gender" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-matstat" class="form-label">Marital Status</label>
-                            <ejs-dropdownlist Id="pi-matstat" ejs-for="PatientData.MaritalStatus" class="form-control" TValue="string" DataSource="MaritalStatusList" Placeholder="Select Marital Status"></ejs-dropdownlist>
+                            <ejs-dropdownlist Id="pi-matstat" ejs-for="PatientData.MaritalStatus" style="height: 45px;" class="form-control" TValue="string" DataSource="MaritalStatusList" Placeholder="Select Marital Status"></ejs-dropdownlist>
                             <span asp-validation-for="PatientData.MaritalStatus" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-pincode" class="form-label">Pincode</label>
                             <input type="number" name="pincode" id="pi-pincode" asp-for="PatientData.Pincode" class="form-control" readonly>
+                            <span asp-validation-for="PatientData.Pincode" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-locality" class="form-label">Locality</label>
                             <input type="text" name="locality" id="pi-locality" asp-for="PatientData.Locality" class="form-control" readonly>
+                            <span asp-validation-for="PatientData.Locality" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-address" class="form-label">Address</label>
-                            <input type="text" name="address" asp-for="PatientData.Address" id="pi-address" class="form-control" readonly>
+                            <textarea type="text" name="address" style="min-height:45px;" asp-for="PatientData.Address" id="pi-address" class="form-control" readonly> </textarea>
+                            <span asp-validation-for="PatientData.Address" class="text-danger"></span>
+
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-city" class="form-label">City</label>
                             <input type="text" id="pi-city" class="form-control" name="city" asp-for="PatientData.CityName"  readonly>
+                            <span asp-validation-for="PatientData.City" class="text-danger"></span>
 
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-state" class="form-label">State</label>
                             <input type="text" id="pi-state" class="form-control" name="state" asp-for="PatientData.StateName" readonly>
+                            <span asp-validation-for="PatientData.State" class="text-danger"></span>
 
                            @*  <ejs-dropdownlist ID="pi-state" class="form-control"  TValue="string" DataSource="StateList" Placeholder="Select State"></ejs-dropdownlist>
  *@
@@ -130,6 +166,7 @@
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-country" class="form-label">Country</label>
                             <input type="text" id="pi-country" class="form-control" name="Country" asp-for="PatientData.CountryName" readonly>
+                            <span asp-validation-for="PatientData.CountryName" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -157,7 +194,7 @@
                 <div class="ius-block ius-card ius-notes">
                     <h2 class="mb-2 pb-1 text--red">Notes</h2>
                 <ol>
-                    <li>Appt will be booked for consultation with Dr. Sejal Saheta.</li>
+                    <li>Appointment  will be booked for consultation with Dr. Sejal Saheta.</li>
                     <li>For an appointment with an aesthetician for cosmetic procedures please call Clinic - <a href="tel:+91-9639639630" title="91-9639639630">9639639630</a></li>
                 </ol>
             </div>
@@ -178,7 +215,7 @@
                         <ejs-grid id="GridAppointments"
                                   allowResizing="true"
                                   allowExcelExport="true"
-                              allowFiltering="true"
+                                  allowFiltering="true"
                                   allowPaging="true"
                                   allowSorting="true"
                                   allowSelection="true"
@@ -195,7 +232,7 @@
 
                             <e-data-manager url="/Index?handler=AppointmentView" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
 
-                        <e-grid-searchsettings fields="@(new string[] {"AppointmentType","DoctorName","AppointmentForm","AppointmentDateTime","Status"})"></e-grid-searchsettings>
+                        <e-grid-searchsettings fields="@(new string[] {"AppoinmentType","DoctorName","AppointmentForm","AppointmentStartTime","StatusName"})"></e-grid-searchsettings>
 
                             <e-grid-filtersettings type="Excel"></e-grid-filtersettings>
                             <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
@@ -214,14 +251,16 @@
                             </e-grid-columns>
                         </ejs-grid>
                     <script id="actionTemplate" type="text/x-template">
-                        <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
-                        <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
-                        
-                        </a>
-                        <a href="#app-cancel" class="marginleft" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
-                            <img loading="lazy" src="@Url.Content("~/assets/delete.svg")" width="18" height="20" alt="Cancel">
-                        </a>
+                        ${if(statusName !== "Cancelled")}
+                            <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
+                                <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
+                            </a>
+                            <a href="#app-cancel" class="marginleft" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                                <img loading="lazy" src="@Url.Content("~/assets/delete.svg")" width="18" height="20" alt="Cancel">
+                            </a>
+                        ${/if}
                     </script>
+
                   
 
                 </div>
@@ -259,6 +298,41 @@
                     });
 
 
+                </script>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        var ageInput = document.getElementById("pi-age");
+                        var dobPicker = document.getElementById("pi-dob").ej2_instances[0]; // Syncfusion Datepicker instance
+
+                        // Age se Date of Birth calculate karna
+                        ageInput.addEventListener("input", function () {
+                            var age = parseInt(this.value, 10);
+                            if (!isNaN(age) && age > 0) {
+                                var today = new Date();
+                                var birthYear = today.getFullYear() - age;
+                                var birthDate = new Date(birthYear, today.getMonth(), today.getDate());
+                                dobPicker.value = birthDate; // Syncfusion Datepicker me set karna
+                            }
+                        });
+
+                        // Date of Birth se Age calculate karna
+                        dobPicker.addEventListener("change", function () {
+                            var dob = dobPicker.value;
+                            if (dob) {
+                                var today = new Date();
+                                var birthDate = new Date(dob);
+                                var age = today.getFullYear() - birthDate.getFullYear();
+
+                                // Agar DOB ke month aur date aaj ke month aur date se aage hain, toh age -1 karna
+                                var monthDiff = today.getMonth() - birthDate.getMonth();
+                                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                                    age--;
+                                }
+
+                                ageInput.value = age; // Age input ko update karna
+                            }
+                        });
+                    });
                 </script>
 
                 <!-- Only for mobile : Syncfusion -->
@@ -416,6 +490,13 @@
                         alert("Failed to submit reschedule request.");
                     }
                 });
+            });
+            $(document).ready(function () {
+                // Check if success message flag is set in localStorage
+                if (localStorage.getItem("showCancelSuccessMessage") === "true") {
+                    toastr.success("Appointment Cancel successfully!"); // Show success message
+                    localStorage.removeItem("showCancelSuccessMessage"); // Remove flag after showing message
+                }
             });
         });
     </script>
@@ -628,10 +709,11 @@
                     $("#AptaddDatetime").text("Appointment Date Time is required.");
                     isValid = false; // Stop further execution
                 }
-                else if (selectedDate < formattedCurrentDate) {
+               else if (new Date(selectedDate) < new Date(formattedCurrentDate)) {
                     $("#AptaddDatetime").text("Invalid Appointment Date Time.");
                     isValid = false; // Stop further execution
                 }
+
                 else {
                     $("#AptaddDatetime").text(""); // Clear error if input is valid
                 }
@@ -880,13 +962,29 @@
             } else {
                 clearError("pi-age");
             }
-
+              var dobValue = $("#pi-dob").val().trim();
+            var dobRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
             // Validate Date of Birth
             if ($("#pi-dob").val().trim() === "") {
                 showError("pi-dob", "Date of Birth is required.");
                 isValid = false;
-            } else {
+            } else if (!dobRegex.test(dobValue)) {
+                showError("dob-error", "Invalid Date");
+                isValid = false;
+            }
+            else {
                 clearError("pi-dob");
+            }
+              
+
+            if (dobValue === "") {
+                showError("dob-error", "Date of Birth is required.");
+                isValid = false;
+            } else if (!dobRegex.test(dobValue)) {
+                showError("dob-error", "Invalid Date");
+                isValid = false;
+            } else {
+                clearError("dob-error");
             }
 
             // Validate Marital Status
@@ -1062,7 +1160,7 @@
     .form-control:disabled, .form-control[readonly] {
         background-color: #e9ecef;
         opacity: 1;
-        pointer-events: none !important;
+        color: rgba(0, 0, 0, 0.42);
     }
 
     span.e-input-group.e-control-wrapper.e-date-wrapper.e-valid-input.e-disabled {
@@ -1072,5 +1170,9 @@
 
     a.marginleft {
         margin-left: 5px;
+    }
+
+    textarea#pi-address {
+        resize: vertical !important;
     }
 </style>
