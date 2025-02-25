@@ -248,19 +248,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 clearError("pi-resched");
             }
 
-        if (dobValue) {
-            var dobParts = dobValue.split("/"); // Assuming input format is DD/MM/YYYY
-            var dob = new Date(dobParts[2], dobParts[1] - 1, dobParts[0]); // Convert to Date object
-            var today = new Date();
-            today.setHours(0, 0, 0, 0); // Reset time to compare only dates
+            var dobValue = $("#pi-dob").val(); // Get the DOB input value
+            if (dobValue) {
+                var dobParts = dobValue.split("/"); // Assuming DD/MM/YYYY format
+                var dob = new Date(dobParts[2], dobParts[1] - 1, dobParts[0]); // Convert to Date object
+                var today = new Date();
+                today.setFullYear(today.getFullYear() - 1); // Subtract 1 year
+                today.setHours(0, 0, 0, 0); // Reset time for comparison
 
-            if (dob > today) {
-                showError("pi-dob", "Invalid Date of Birth");
-                isValid = false;
-            } else {
-                clearError("pi-dob");
+                if (dob > today) {
+                    showError("pi-dob", "Invalid Date of Birth.");
+                    isValid = false;
+                } else {
+                    clearError("pi-dob");
+                }
             }
-        }
             // Validate Notes
             if ($("#pi-notes").val().trim() === "") {
                 showError("pi-notes", "Notes are required.");

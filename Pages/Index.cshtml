@@ -204,7 +204,7 @@
                     <h2>Appointment Grid</h2>
 
                     <div class="ius-grid-filters">
-                        <a class="bttn-add" href="#app-add" data-bs-toggle="modal" data-bs-target="#app-add" title="Add Appointment">
+                        <a class="bttn-add" href="#schedulerModal2" data-bs-toggle="modal" data-bs-target="#schedulerModal2" title="Add Appointment">
                             <img loading="lazy" src="~/assets/plus.svg" width="19" height="19" alt="Add">
                         </a>
                     </div>
@@ -252,7 +252,7 @@
                         </ejs-grid>
                     <script id="actionTemplate" type="text/x-template">
                         ${if(statusName !== "Cancelled")}
-                            <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
+                            <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
                                 <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
                             </a>
                             <a href="#app-cancel" class="marginleft" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
@@ -515,7 +515,7 @@
                 <div class="modal-body">
                     <div class="">
                         <label for="pi-resched" class="form-label">Appointment Date Time*</label>
-                        <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                        <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern" readonly></ejs-datetimepicker>
                         <span id="AptDatetime-reson" class="text-danger"></span>
                     </div>
                     <div class="">
@@ -530,6 +530,362 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var rescheduleModalEl = document.getElementById('app-resched');
+
+            rescheduleModalEl.addEventListener('hidden.bs.modal', function () {
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove(); 
+                }
+            });
+        });
+
+    </script>
+    <div class="modal fade" id="schedulerModal" tabindex="-1" aria-labelledby="schedulerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="schedulerModalLabel">Doctor Schedule</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="control-section">
+                        <div class="schedule-wrapper">
+                            <ejs-schedule id="schedulerss" height="650px"
+                                          selectedDate="DateTime.Today"
+                                          allowDragAndDrop="false" allowResizing="false"
+                                          startHour="10:00" endHour="19:15"
+                                          workDays="new int[] {1, 2, 3, 4, 5}"
+                                          cellClick="onCellClick">
+                                <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
+
+                                <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
+                            </ejs-schedule>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                $('#schedulerModal').on('shown.bs.modal', function () {
+                    loadSchedulerData(); // Modal open hone par function call hoga
+                });
+            });
+
+            function loadSchedulerData() {
+                var doctorBlockTimes = @Html.Raw(Json.Serialize(Model.Doctorblocktime));
+
+            if (!doctorBlockTimes || doctorBlockTimes.length === 0) {
+                console.log("No blocked appointments found.");
+            return;
+                } else {
+                console.log("Blocked Appointments:", doctorBlockTimes);
+                }
+
+            setTimeout(function () {
+                    var scheduleObj = document.getElementById('schedulerss')?.ej2_instances?.[0];
+
+            if (!scheduleObj) {
+                console.error("Scheduler instance not found.");
+            return;
+                    }
+
+            // Convert data to Scheduler format
+            var blockAppointments = doctorBlockTimes.map(function (item) {
+                        return {
+                Id: item.id,
+            Subject: 'Not available',
+            StartTime: new Date(item.appointmentStartTime),
+            EndTime: new Date(item.appointmentEndDateTime),
+            IsReadonly: true,
+            ClassName: "blocked-slot" // Apply CSS for styling
+                        };
+                    });
+
+            console.log("Final Event Data for Scheduler:", blockAppointments);
+
+            // Reset scheduler and load new data
+            scheduleObj.eventSettings.dataSource = [];
+            scheduleObj.refresh(); // First refresh to clear old data
+
+                    setTimeout(() => {
+                scheduleObj.eventSettings.dataSource = blockAppointments;
+            scheduleObj.refresh(); // Second refresh to load new data
+                    }, 300); // Small delay to prevent UI issues
+
+                }, 500);
+            }
+
+    </script>
+
+    <script>
+        function onPopupOpen(args) {
+            // Quick popup open hone se rokna
+            if (args.type === "QuickInfo") {
+                args.cancel = true;
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var scheduleObj = document.getElementById('schedulerss').ej2_instances[0];
+
+            scheduleObj.popupOpen = function (args) {
+                if (args.type === "Editor" && args.data.Id === undefined) {
+                    args.cancel = true; // Disable double-click popup (event creation popup)
+                }
+            };
+        });
+    </script>
+
+
+    <script>
+        function onCellClick(args) {
+            // Prevent default popup behavior
+            args.cancel = true;
+
+            var currentDateTime = new Date(); // Current Date & Time
+            var clickedDateTime = new Date(args.startTime); // Clicked Cell Date & Time
+
+            // अगर क्लिक किया गया datetime past है तो event रोक दो
+            if (clickedDateTime < currentDateTime) {
+                alert("Past dates and times are not clickable.");
+                return; // Stop execution (No further action)
+            }
+
+            var clickedDate = new Date(args.startTime);
+            var day = clickedDate.getDay(); // 0 = Sunday, 6 = Saturday
+
+            // अगर क्लिक किया गया दिन Saturday या Sunday है तो क्लिक disable कर दो
+            if (day === 0 || day === 6) {
+                args.cancel = true; // Click event cancel करो
+                return;
+            }
+
+            // Get the clicked slot's start time
+            let startTime = args.startTime;
+
+            // Convert to ISO 8601 format (YYYY-MM-DDTHH:MM:SS.SSSZ)
+            let formattedTime = startTime.toISOString();
+
+            // **Step 1:** `schedulerModal` को बंद करना
+            var schedulerModalEl = document.getElementById('schedulerModal');
+            var schedulerModal = bootstrap.Modal.getInstance(schedulerModalEl);
+            if (schedulerModal) {
+                schedulerModal.hide();
+            }
+
+            // **Step 2:** `schedulerModal` से जुड़ा modal-backdrop हटाना
+            schedulerModalEl.addEventListener('hidden.bs.modal', function () {
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove(); // सिर्फ `schedulerModal` का backdrop हटाएगा
+                }
+            });
+
+            // **Step 3:** Reschedule Appointment Modal (`app-resched`) खोलना
+            var rescheduleModal = new bootstrap.Modal(document.getElementById('app-resched'));
+            rescheduleModal.show();
+
+            // **Step 4:** Selected Date Time को ejs-datetimepicker में सेट करना
+            var dateTimePicker = document.getElementById("pi-resched").ej2_instances[0];
+            dateTimePicker.value = new Date(startTime);
+        }
+
+
+
+    </script>
+
+
+
+
+
+
+
+    <!-- Template to show "Book" on blocked slots -->
+    <script id="blockTemplate" type="text/x-template">
+        <div class="blocked-slot">Not available</div>
+    </script>
+
+
+
+
+
+
+
+
+
+    <!-- JavaScript to Open Modal -->
+    <script>
+        function openSchedulerPopup() {
+            var modal = new bootstrap.Modal(document.getElementById('schedulerModal'));
+            modal.show();
+        }
+    </script>
+
+
+    <!-- Second Scheduler Modal -->
+    <div class="modal fade" id="schedulerModal2" tabindex="-1" aria-labelledby="schedulerModalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="schedulerModalLabel2">Doctor Schedule 2</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="control-section">
+                        <div class="schedule-wrapper">
+                            <ejs-schedule id="schedulerss2" height="650px"
+                                          selectedDate="DateTime.Today"
+                                          allowDragAndDrop="false" allowResizing="false"
+                                          startHour="10:00" endHour="19:15"
+                                          workDays="new int[] {1, 2, 3, 4, 5}"
+                                          cellClick="onCellClick2">
+                                <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
+                                <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
+                            </ejs-schedule>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript to Handle Both Modals -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () { 
+
+            $('#schedulerModal2').on('shown.bs.modal', function () {
+                loadSchedulerData2('schedulerss2'); // Load data for second modal
+            });
+        });
+
+        function loadSchedulerData2(schedulerId) {
+            var doctorBlockTimes = @Html.Raw(Json.Serialize(Model.Doctorblocktime));
+
+            if (!doctorBlockTimes || doctorBlockTimes.length === 0) {
+                console.log("No blocked appointments found.");
+                return;
+            } else {
+                console.log("Blocked Appointments:", doctorBlockTimes);
+            }
+
+            setTimeout(function () {
+                var scheduleObj = document.getElementById(schedulerId)?.ej2_instances?.[0];
+
+                if (!scheduleObj) {
+                    console.error("Scheduler instance not found.");
+                    return;
+                }
+
+                // Convert data to Scheduler format
+                var blockAppointments = doctorBlockTimes.map(function (item) {
+                    return {
+                        Id: item.id,
+                        Subject: 'Not available',
+                        StartTime: new Date(item.appointmentStartTime),
+                        EndTime: new Date(item.appointmentEndDateTime),
+                        IsReadonly: true,
+                        ClassName: "blocked-slot"
+                    };
+                });
+
+                console.log("Final Event Data for Scheduler:", blockAppointments);
+
+                // Reset scheduler and load new data
+                scheduleObj.eventSettings.dataSource = [];
+                scheduleObj.refresh();
+
+                setTimeout(() => {
+                    scheduleObj.eventSettings.dataSource = blockAppointments;
+                    scheduleObj.refresh();
+                }, 300);
+
+            }, 500);
+        }
+
+        // Prevents quick popup opening
+        function onPopupOpen(args) {
+            if (args.type === "QuickInfo") {
+                args.cancel = true;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var scheduleObj2 = document.getElementById('schedulerss2').ej2_instances[0];
+
+            if (scheduleObj1) {
+                scheduleObj1.popupOpen = function (args) {
+                    if (args.type === "Editor" && args.data.Id === undefined) {
+                        args.cancel = true;
+                    }
+                };
+            }
+
+            if (scheduleObj2) {
+                scheduleObj2.popupOpen = function (args) {
+                    if (args.type === "Editor" && args.data.Id === undefined) {
+                        args.cancel = true;
+                    }
+                };
+            }
+        });
+
+
+        function onCellClick2(args) {
+            handleCellClick(args, 'schedulerModal2');
+        }
+
+        function handleCellClick(args, modalId) {
+            args.cancel = true;
+            var currentDateTime = new Date();
+            var clickedDateTime = new Date(args.startTime);
+
+            if (clickedDateTime < currentDateTime) {
+                alert("Past dates and times are not clickable.");
+                return;
+            }
+
+            var clickedDate = new Date(args.startTime);
+            var day = clickedDate.getDay();
+
+            if (day === 0 || day === 6) {
+                args.cancel = true;
+                return;
+            }
+
+            let startTime = args.startTime;
+            let formattedTime = startTime.toISOString();
+
+            var schedulerModalEl = document.getElementById(modalId);
+            var schedulerModal = bootstrap.Modal.getInstance(schedulerModalEl);
+            if (schedulerModal) {
+                schedulerModal.hide();
+            }
+
+            schedulerModalEl.addEventListener('hidden.bs.modal', function () {
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            });
+
+            var rescheduleModal = new bootstrap.Modal(document.getElementById('app-add'));
+            rescheduleModal.show();
+
+            var dateTimePicker = document.getElementById("app-datetim").ej2_instances[0];
+            dateTimePicker.value = new Date(startTime);
+        }
+    </script>
+
+    <!-- Blocked Slot Template -->
+    <script id="blockTemplate" type="text/x-template">
+        <div class="blocked-slot">Not available</div>
+    </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -672,7 +1028,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="app-datetime" class="form-label">Appointment Date Time*</label>
-                                <ejs-datetimepicker id="app-datetim" class="form-control" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                                <ejs-datetimepicker id="app-datetim" class="form-control" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern" readonly></ejs-datetimepicker>
                                 <span id="AptaddDatetime" class="text-danger"></span>
                             </div>
                           @*   <div class="col-md-6">
@@ -692,7 +1048,19 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var rescheduleModalEladd = document.getElementById('app-add');
 
+            rescheduleModalEladd.addEventListener('hidden.bs.modal', function () {
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            });
+        });
+
+    </script>
     <script>
         $(document).ready(function () {
             $("#SubmitAppointment").click(function () {
@@ -962,18 +1330,21 @@
             } else {
                 clearError("pi-age");
             }
-              var dobValue = $("#pi-dob").val().trim();
-            var dobRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
-            // Validate Date of Birth
-            if ($("#pi-dob").val().trim() === "") {
+            var dobValue = $("#pi-dob").val().trim();
+            if (dobValue === "") {
                 showError("pi-dob", "Date of Birth is required.");
                 isValid = false;
-            } else if (!dobRegex.test(dobValue)) {
-                showError("dob-error", "Invalid Date");
-                isValid = false;
-            }
-            else {
-                clearError("pi-dob");
+            } else {
+                var dobDate = new Date(dobValue.split('/').reverse().join('-')); // Convert dd/MM/yyyy to yyyy-MM-dd
+                var currentDate = new Date();
+                currentDate.setFullYear(currentDate.getFullYear() - 1); // Subtract 1 year from today
+
+                if (dobDate > currentDate) {
+                    showError("pi-dob", "Invalid Date of Birth.");
+                    isValid = false;
+                } else {
+                    clearError("pi-dob");
+                }
             }
               
 
@@ -1121,7 +1492,7 @@
                                     </div>
                                 </div>
                                 <div class="ius-ctrls">
-                                    <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
+                                        <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
                                                  <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
 
                                     </a>
@@ -1175,4 +1546,29 @@
     textarea#pi-address {
         resize: vertical !important;
     }
+
+    .e-appointment.blocked-slot {
+        background-color: red !important;
+        color: white !important;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .e-appointment.e-read-only {
+        width: 100% !important;
+    }
+
+    .e-quick-popup-wrapper.e-lib.e-popup.e-control.e-popup-open {
+        display: none;
+    }
+
+    /* Saturday & Sunday cells ko grey color dena aur click disable karna */
+    .e-work-cells:nth-child(7), /* Saturday */
+    .e-work-cells:nth-child(1), /* Sunday */
+    .e-work-hours:nth-child(7), /* Saturday header */
+    .e-work-hours:nth-child(1) { /* Sunday header */
+        background-color: #e0e0e0 !important; /* Light Grey */
+        pointer-events: none; /* Click disable */
+    }
+
 </style>

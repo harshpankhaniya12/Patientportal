@@ -24,6 +24,7 @@ namespace Patientportal.Pages
         public AppointmentListItem AppoinmentData { get; set; }
         public string? EjsDateTimePattern = "dd/MM/yyyy hh:mm:ss a";
         public List<string> ChangeRequests { get; set; } = new List<string>();
+        public List<AppointmentListItem> Doctorblocktime { get; set; } = new List<AppointmentListItem>();
         public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, ApiService apiService)
         {
             _logger = logger;
@@ -97,10 +98,14 @@ namespace Patientportal.Pages
         }
 
         public async Task OnGetAsync()
+
         {
             string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/getProfile?id=575";
             string apiUrl2 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/getDetailsChangesbyId?id=575";
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiMTliN2Y1NTgtZDdhNS00NGE2LThmZGUtNjQ2MzgwMmQ4ZmZiIiwibmJmIjoxNzQwMDU1OTIzLCJleHAiOjE3NzE1OTE5MjMsImlhdCI6MTc0MDA1NTkyMywiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.tW5vy8tSKQNHBZlcFg7nB0luLBipQ18xyCLLbp1ifv5Hvt8vUrU1ejuSekvLku1ebZnUrL0PA6N-_iALHfh5RQ"; // Valid token yahan dalein
+            string apiUrl3 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/GetAppointmentsByDoctor";
+          
+            Doctorblocktime = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl3, token) ?? new List<AppointmentListItem>();
 
             PatientData = await _apiService.GetAsync<ProfileListItem>(apiUrl, token) ?? new ProfileListItem();
 
