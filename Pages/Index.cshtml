@@ -1346,17 +1346,6 @@
                     clearError("pi-dob");
                 }
             }
-              
-
-            if (dobValue === "") {
-                showError("dob-error", "Date of Birth is required.");
-                isValid = false;
-            } else if (!dobRegex.test(dobValue)) {
-                showError("dob-error", "Invalid Date");
-                isValid = false;
-            } else {
-                clearError("dob-error");
-            }
 
             // Validate Marital Status
             if ($("#pi-matstat").val() === null || $("#pi-matstat").val() === "") {
