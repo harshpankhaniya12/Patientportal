@@ -903,10 +903,6 @@
                     $("#AptDatetime-reson").text("Appointment Date Time is required.");
                     return; // Stop further execution
                 }
-                else if (selectedDate < formattedCurrentDate) {
-                    $("#AptDatetime-reson").text("Invalid Appointment Date Time.");
-                    return; // Stop further execution
-                }
                 else {
                     $("#AptDatetime-reson").text(""); // Clear error if input is valid
                 }
@@ -1077,11 +1073,6 @@
                     $("#AptaddDatetime").text("Appointment Date Time is required.");
                     isValid = false; // Stop further execution
                 }
-               else if (new Date(selectedDate) < new Date(formattedCurrentDate)) {
-                    $("#AptaddDatetime").text("Invalid Appointment Date Time.");
-                    isValid = false; // Stop further execution
-                }
-
                 else {
                     $("#AptaddDatetime").text(""); // Clear error if input is valid
                 }
