@@ -152,6 +152,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </script>
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var dobInput = document.getElementById("pi-dob");
+
+        dobInput.addEventListener("input", function (e) {
+            var val = dobInput.value.replace(/\D/g, ""); // Remove non-numeric characters
+            var formatted = "";
+
+            if (val.length > 2) {
+                formatted += val.substring(0, 2) + "/";
+                if (val.length > 4) {
+                    formatted += val.substring(2, 4) + "/";
+                    formatted += val.substring(4, 8);
+                } else {
+                    formatted += val.substring(2);
+                }
+            } else {
+                formatted = val;
+            }
+
+            dobInput.value = formatted;
+        });
+
+        dobInput.addEventListener("keydown", function (event) {
+            var allowedKeys = [8, 46]; // Allow backspace and delete
+            if ((event.keyCode >= 48 && event.keyCode <= 57) ||  // Numbers 0-9
+                (event.keyCode >= 96 && event.keyCode <= 105) || // Numpad Numbers
+                allowedKeys.includes(event.keyCode)) {
+                return true;
+            }
+            event.preventDefault(); // Prevent other keys
+        });
+    });
+</script>
+<script>
     document.getElementById("goto-calendar-btn").addEventListener("click", function(event) {
         event.preventDefault(); // Default behavior ko rokna
         window.open("/Calendar", "_blank"); // Naye tab me open karna
@@ -248,18 +282,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 clearError("pi-resched");
             }
 
-            var dobValue = $("#pi-dob").val(); // Get the DOB input value
-            if (dobValue) {
-                var dobParts = dobValue.split("/"); // Assuming DD/MM/YYYY format
-                var dob = new Date(dobParts[2], dobParts[1] - 1, dobParts[0]); // Convert to Date object
-                var today = new Date();
-                today.setFullYear(today.getFullYear() - 1); // Subtract 1 year
-                today.setHours(0, 0, 0, 0); // Reset time for comparison
+            var dobValue = $("#pi-dob").val().trim();
+            if (dobValue === "") {
+                showError("pi-dob", "Date of Birth is required.");
+                isValid = false;
+            } else {
+                var dobDate = new Date(dobValue.split('/').reverse().join('-')); // Convert dd/MM/yyyy to yyyy-MM-dd
+                var currentDate = new Date();
+                var oneYearBack = new Date();
+                oneYearBack.setFullYear(currentDate.getFullYear() - 1); // Current date se 1 year back
 
-                if (dob > today) {
+                var minDate = new Date();
+                minDate.setFullYear(currentDate.getFullYear() - 99); // Minimum 99 years allowed
+
+                if (dobDate > oneYearBack) {
                     showError("pi-dob", "Invalid Date of Birth.");
                     isValid = false;
-                } else {
+                } else if (dobDate < minDate) {
+                    showError("pi-dob", "Invalid Date of Birth.");
+                    isValid = false;
+                }
+                else if (dobDate = "Invalid Date")
+                {
+                    showError("pi-dob", "Invalid Date of Birth.");
+                    isValid = false;
+                }
+                else {
                     clearError("pi-dob");
                 }
             }
@@ -383,3 +431,9 @@ document.getElementById("cancel-btn").addEventListener("click", function (event)
 });
 
 </script>
+
+<style>
+    span {
+        font-size: 13px;
+    }
+</style>

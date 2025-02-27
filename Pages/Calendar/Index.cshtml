@@ -78,7 +78,7 @@
 
         // Agar clicked datetime past hai toh click event ko rok do
         if (clickedDateTime < currentDateTime) {
-            alert("Past dates and times are not clickable.");
+            alert("You cannot select this time or date for appointments.");
             return; // Stop execution (No redirect)
         }
         var clickedDate = new Date(args.startTime);
@@ -113,7 +113,6 @@
 
 <style>
     .blocked-slot {
-        background-color: red;
         color: white;
         text-align: center;
         font-weight: bold;
