@@ -228,6 +228,7 @@
                                   showColumnChooser="true"
                                   rowHeight="38"
                                   toolbar=toolbarItems
+                              queryCellInfo="onQueryCellInfo"
                                   toolbarClick="toolbarClick">
 
                             <e-data-manager url="/Index?handler=AppointmentView" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
@@ -260,45 +261,66 @@
                             </a>
                         ${/if}
                     </script>
-
+                    
                   
 
                 </div>
                 <script>
                     document.addEventListener("DOMContentLoaded", function () {
                         // Event delegation for dynamically generated elements
-                        document.querySelector("#GridAppointments").addEventListener("click", function (event) {
+                        document.body.addEventListener("click", function (event) {
                             let rescheduleBtn = event.target.closest(".app-resched");
-                            let cancelBtn = event.target.closest(".marginleft");
+                            let cancelBtn = event.target.closest("[data-bs-target='#app-cancel']");
 
                             if (rescheduleBtn) {
+                                let appointmentId;
+
+                                // Check if clicked inside the grid or a dynamically generated card
                                 let row = rescheduleBtn.closest("tr");
-                                if (row) {
+                                if (row && document.getElementById("GridAppointments")) {
                                     let grid = document.getElementById("GridAppointments").ej2_instances[0];
                                     let rowData = grid.getRowInfo(row).rowData;
-                                    let appointmentId = rowData.id;
+                                    appointmentId = rowData.id;
+                                } else {
+                                    // Handle dynamically generated card
+                                    let card = rescheduleBtn.closest(".ius-gridrow");
+                                    if (card) {
+                                        appointmentId = card.querySelector("input[name='appointmentId']").value;
+                                    }
+                                }
 
-                                    // Set the Id value in the hidden PatientId field inside Reschedule Modal
+                                // Set the appointmentId value in the hidden field inside the Reschedule Modal
+                                if (appointmentId) {
                                     document.getElementById("AppoinmentId").value = appointmentId;
                                 }
                             }
 
                             if (cancelBtn) {
+                                let appointmentId;
+
+                                // Check if clicked inside the grid or a dynamically generated card
                                 let row = cancelBtn.closest("tr");
-                                if (row) {
+                                if (row && document.getElementById("GridAppointments")) {
                                     let grid = document.getElementById("GridAppointments").ej2_instances[0];
                                     let rowData = grid.getRowInfo(row).rowData;
-                                    let appointmentId = rowData.id;
+                                    appointmentId = rowData.id;
+                                } else {
+                                    // Handle dynamically generated card
+                                    let card = cancelBtn.closest(".ius-gridrow");
+                                    if (card) {
+                                        appointmentId = card.querySelector("input[name='appointmentId']").value;
+                                    }
+                                }
 
-                                    // Set the Id value in the hidden field inside Cancel Modal
+                                // Set the appointmentId value in the hidden field inside the Cancel Modal
+                                if (appointmentId) {
                                     document.getElementById("CancelPatientId").value = appointmentId;
                                 }
                             }
                         });
                     });
-
-
                 </script>
+
                 <script>
                     document.addEventListener("DOMContentLoaded", function () {
                         var ageInput = document.getElementById("pi-age");
@@ -334,7 +356,22 @@
                         });
                     });
                 </script>
-
+                <script>
+                    function onQueryCellInfo(args) {
+                        if (args.column.field === "StatusName") {
+                            if (args.data.statusName === "Booked") {
+                                args.cell.innerHTML = `<span class="badge badge-success">Booked</span>`;
+                            }
+                            else if (args.data.statusName === "Reschedule") {
+                                args.cell.innerHTML = `<span class="badge badge-secondary">Schedule</span>`;
+                            }
+                            else if (args.data.statusName === "Cancelled") {
+                                args.cell.innerHTML = `<span class="badge badge-danger">Cancelled</span>`;
+                            }
+                        }
+                    }
+                    
+                </script>
                 <!-- Only for mobile : Syncfusion -->
                 <div class="ius-grid d-lg-none text-14" id="appointments-container">
                     <div class="ius-gridrow">
@@ -1464,6 +1501,8 @@
                         <div class="ius-gridrow">
                             <div class="ius-appbody">
                                 <div class="ius-appinfo">
+                                    <input type="hidden" name="appointmentId" value="${appointment.id}">
+
                                                 <h3>${appointment.doctorName || 'N/A'}</h3>
                                     <div class="ius-apptyfo">
                                                 <span class="appinfo-type">${appointment.appoinmentType || 'N/A'}</span>
@@ -1534,6 +1573,28 @@
         font-weight: bold;
     }
 
+    .badge {
+        padding: 7px 13px;
+        border-radius: 20px;
+        color: white;
+        font-weight: bold;
+        display: inline-block;
+        text-align: center;
+        font-size: 12px;
+        width: 130px;
+    }
+
+    .badge-success {
+        background-color: #28a745; /* Green */
+    }
+
+    .badge-secondary {
+        background-color: #6c757d; /* Gray */
+    }
+
+    .badge-danger {
+        background-color: #dc3545; /* Red */
+    }
     .e-appointment.e-read-only {
         width: 100% !important;
     }
