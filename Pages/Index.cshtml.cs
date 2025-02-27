@@ -156,7 +156,7 @@ namespace Patientportal.Pages
 
 
                 string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/Addpatientportalchanges";
-                string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NDUiLCJqdGkiOiI0N2FiZjA0NC1kYjQzLTQwZGItYWQ3MC03NWMzMDY3M2U1MjciLCJuYmYiOjE3NDA2NDgyODgsImV4cCI6MTc3MjE4NDI4NywiaWF0IjoxNzQwNjQ4Mjg4LCJpc3MiOiJDb25uZXR3ZWxsQ0lTIiwiYXVkIjoiQ29ubmV0d2VsbENJUyJ9.QoJcFwTUCrVEQWfe3zjXFnduo7nSUOwok5lCZUqrjJcK4bMt9R9pvU3UOla7XfI6cj8tHvHAZVZykexi19GpQQ"; // Valid token yahan dalein
+                string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiYjk5MDM2ZWItNTRhZS00ZWE0LWI1MjMtNThmYThlM2UzMzdkIiwibmJmIjoxNzQwNTU2NDQ1LCJleHAiOjE3NzIwOTI0NDUsImlhdCI6MTc0MDU1NjQ0NSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.yex9R3CP67Mkp715Y61FEIUIFhtiQhGJa8X01V_vEd_c9PuKw4uZbEi3_bQtpzQpwukb5uS_SPi4TN2HGh_JBQ"; // Valid token yahan dalein
 
                 var apiHelper = new ApiService(_httpClient);
                 var response = await _apiService.PostAsync<ProfileListItem, ApiResponse>(apiUrl, viewModel, token);
