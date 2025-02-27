@@ -1056,22 +1056,24 @@
                             </div> *@
                             <div class="col-md-6">
                                 <label for="app-form" class="form-label">Form of Appointment*</label>
-                                <ejs-dropdownlist class="form-control" id="app-form" style="height:45px;" DataSource="@FormofAppointment" placeholder="Select Form"></ejs-dropdownlist>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="Inclinic" name="FormofAppointment" value="Inclinic" checked>
+                                        <label class="form-check-label" for="Inclinic">Inclinic</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="Video" name="FormofAppointment" value="Video">
+                                        <label class="form-check-label" for="Video">Video</label>
+                                    </div>
+                                </div>
                                 <span id="AptAddformapt" class="text-danger"></span>
                             </div>
+
                             <div class="col-md-6">
                                 <label for="app-datetime" class="form-label">Appointment Date Time*</label>
                                 <ejs-datetimepicker id="app-datetim" class="form-control" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern" readonly></ejs-datetimepicker>
                                 <span id="AptaddDatetime" class="text-danger"></span>
                             </div>
-                          @*   <div class="col-md-6">
-                                <label for="app-status" class="form-label">Status</label> 
-                                <select class="form-select" id="app-status" name="appstatus">
-                                    <option value="Inclinic">Rescheduled</option>
-                                    <option value="Online">New</option>
-                                    <option value="Visit">Old</option>
-                                </select>
-                            </div> *@
                         </div>
                     </div>
                 </div>
@@ -1096,14 +1098,22 @@
     </script>
     <script>
         $(document).ready(function () {
+            $("input[name='FormofAppointment']").on("change", function () {
+                if ($(this).is(":checked")) {
+                    $("input[name='FormofAppointment']").not(this).prop("checked", false); // Uncheck others
+                }
+                if (!$("input[name='FormofAppointment']:checked").length) {
+                    $(this).prop("checked", true); // If none is selected, reselect current
+                }
+            });
             $("#SubmitAppointment").click(function () {
                 var patietId = $("#AddPatientId").val();
-                var formofappt = $("#app-form").val();
+                // var formofappt = $("#app-form").val();
                 var appointmentDateTime = $("#app-datetim").val();
                 var selectedDate = appointmentDateTime;
                 var currentDate = new Date(); // Current date-time
                 var formattedCurrentDate = formatDate(currentDate); // Format the current date
-
+                var formofappt = $("input[name='FormofAppointment']:checked").val(); // Checkbox value
                 var isValid = true;
 
                 if (appointmentDateTime === "") {
@@ -1593,6 +1603,11 @@
         background-color: #e9ecef !important;
         color: black !important;
     }
+
+    .form-check-input {
+        appearance: radio; /* Makes checkbox look like radio button */
+    }
+
 
     a.marginleft {
         margin-left: 5px;

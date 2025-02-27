@@ -41,6 +41,17 @@ namespace Patientportal.Pages
             string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id=575";
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiMTliN2Y1NTgtZDdhNS00NGE2LThmZGUtNjQ2MzgwMmQ4ZmZiIiwibmJmIjoxNzQwMDU1OTIzLCJleHAiOjE3NzE1OTE5MjMsImlhdCI6MTc0MDA1NTkyMywiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.tW5vy8tSKQNHBZlcFg7nB0luLBipQ18xyCLLbp1ifv5Hvt8vUrU1ejuSekvLku1ebZnUrL0PA6N-_iALHfh5RQ";
             var appointments = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
+            if (appointments != null && appointments.Count > 0)
+            {
+                foreach (var appointment in appointments)
+                {
+                    if (appointment.AppointmentStartTime.HasValue)
+                    {
+                        appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
+                        appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
+                    }
+                }
+            }
 
             IEnumerable<object> data = appointments;
             int count = data.Count();
@@ -85,7 +96,17 @@ namespace Patientportal.Pages
             string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id=575";
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiMTliN2Y1NTgtZDdhNS00NGE2LThmZGUtNjQ2MzgwMmQ4ZmZiIiwibmJmIjoxNzQwMDU1OTIzLCJleHAiOjE3NzE1OTE5MjMsImlhdCI6MTc0MDA1NTkyMywiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.tW5vy8tSKQNHBZlcFg7nB0luLBipQ18xyCLLbp1ifv5Hvt8vUrU1ejuSekvLku1ebZnUrL0PA6N-_iALHfh5RQ"; // सही टोकन डालें
             var appointments =  await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
-
+            if (appointments != null && appointments.Count > 0)
+            {
+                foreach (var appointment in appointments)
+                {
+                    if (appointment.AppointmentStartTime.HasValue)
+                    {
+                        appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
+                        appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
+                    }
+                }
+            }
             if (appointments == null || !appointments.Any())
             {
                 return new JsonResult(new { result = new List<object>(), count = 0 });
@@ -106,6 +127,17 @@ namespace Patientportal.Pages
             string apiUrl3 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/GetAppointmentsByDoctor";
           
             Doctorblocktime = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl3, token) ?? new List<AppointmentListItem>();
+            if (Doctorblocktime != null && Doctorblocktime.Count > 0)
+            {
+                foreach (var appointment in Doctorblocktime)
+                {
+                    if (appointment.AppointmentStartTime.HasValue)
+                    {
+                        appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
+                        appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
+                    }
+                }
+            }
 
             PatientData = await _apiService.GetAsync<ProfileListItem>(apiUrl, token) ?? new ProfileListItem();
 
@@ -114,25 +146,34 @@ namespace Patientportal.Pages
 
         public async Task<IActionResult> OnPostSavePatientAsync()
         {
-            using var reader = new StreamReader(HttpContext.Request.Body);
-            var json = await reader.ReadToEndAsync();
-            ProfileListItem viewModel = JSON.Deserialize<ProfileListItem>(json);
-
-
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/Addpatientportalchanges";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiYjk5MDM2ZWItNTRhZS00ZWE0LWI1MjMtNThmYThlM2UzMzdkIiwibmJmIjoxNzQwNTU2NDQ1LCJleHAiOjE3NzIwOTI0NDUsImlhdCI6MTc0MDU1NjQ0NSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.yex9R3CP67Mkp715Y61FEIUIFhtiQhGJa8X01V_vEd_c9PuKw4uZbEi3_bQtpzQpwukb5uS_SPi4TN2HGh_JBQ"; // Valid token yahan dalein
-
-            var apiHelper = new ApiService(_httpClient);
-            var response = await _apiService.PostAsync<ProfileListItem, ApiResponse>(apiUrl, viewModel, token);
-
-            if (response != null && response.IsSuccess)
+            try
             {
-                return new JsonResult(new {  message = "Your change request has been submitted." });
 
+
+                using var reader = new StreamReader(HttpContext.Request.Body);
+                var json = await reader.ReadToEndAsync();
+                ProfileListItem viewModel = JSON.Deserialize<ProfileListItem>(json);
+
+
+                string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/Addpatientportalchanges";
+                string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3NDUiLCJqdGkiOiI0N2FiZjA0NC1kYjQzLTQwZGItYWQ3MC03NWMzMDY3M2U1MjciLCJuYmYiOjE3NDA2NDgyODgsImV4cCI6MTc3MjE4NDI4NywiaWF0IjoxNzQwNjQ4Mjg4LCJpc3MiOiJDb25uZXR3ZWxsQ0lTIiwiYXVkIjoiQ29ubmV0d2VsbENJUyJ9.QoJcFwTUCrVEQWfe3zjXFnduo7nSUOwok5lCZUqrjJcK4bMt9R9pvU3UOla7XfI6cj8tHvHAZVZykexi19GpQQ"; // Valid token yahan dalein
+
+                var apiHelper = new ApiService(_httpClient);
+                var response = await _apiService.PostAsync<ProfileListItem, ApiResponse>(apiUrl, viewModel, token);
+
+                if (response != null && response.IsSuccess)
+                {
+                    return new JsonResult(new { message = "Your change request has been submitted." });
+
+                }
+                else
+                {
+                    return BadRequest("Failed to save patient details.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Failed to save patient details.");
+                throw new NotImplementedException();   
             }
         } 
         public async Task<IActionResult> OnPostPirescheduleAsync()
@@ -163,7 +204,7 @@ namespace Patientportal.Pages
             using var reader = new StreamReader(HttpContext.Request.Body);
             var json = await reader.ReadToEndAsync();
             AppointmentListItem viewModel = JSON.Deserialize<AppointmentListItem>(json);
-
+            
 
             string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/AddAppointmentbyportalAppointmentbyPatientId";
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiYjk5MDM2ZWItNTRhZS00ZWE0LWI1MjMtNThmYThlM2UzMzdkIiwibmJmIjoxNzQwNTU2NDQ1LCJleHAiOjE3NzIwOTI0NDUsImlhdCI6MTc0MDU1NjQ0NSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.yex9R3CP67Mkp715Y61FEIUIFhtiQhGJa8X01V_vEd_c9PuKw4uZbEi3_bQtpzQpwukb5uS_SPi4TN2HGh_JBQ"; // Valid token yahan dalein

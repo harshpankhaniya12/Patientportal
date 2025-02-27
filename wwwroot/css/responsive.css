@@ -86,7 +86,11 @@
 /*575*/
 
 @media screen and (max-width: 459px) {
-    .bttn { min-width: 90px; padding: 0 15px; }
+    .bttn {
+        min-width: 90px;
+        padding: 0 15px;
+        margin-bottom: 20px !important;
+    }
     .form-actions { gap: 10px; justify-content: center; }
 }
 /*459*/
