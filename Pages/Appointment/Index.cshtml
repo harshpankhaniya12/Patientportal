@@ -1,7 +1,7 @@
 ﻿@page
 @model Patientportal.Pages.Appointment.IndexModel
 @{
-    List<string> FormofAppointment = new List<string> { "Inclinic", "Video" };
+    List<string> FormofAppointment = new List<string> { "Appointment for Consultation", "Appointment Request for Online Consultation", "Appointment Request for " };
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -27,21 +27,21 @@
 
             <div class="ius-block ius-card">
                <div class="d-flex justify-content-between align-items-center">
-        <h2>Book Appointment</h2>
-        <a href="#" class="bttn bttn-secondary" id="goto-calendar-btn" title="Go to Calendar">Go to Calendar</a>
-    </div>
+                    <h2>Book Appointment</h2>
+                    <a href="#" class="bttn bttn-secondary" id="goto-calendar-btn" title="Go to Calendar">Go to Calendar</a>
+                </div>
 
                 <form class="ius-form" action="#" method="POST">
                     <input type="hidden" id="PatientId"  name="medicalPatientSignature" class="custom-field-height" />
                     <div class="row">
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-formofappt" class="form-label">Form of Appointment*</label>
-                            <ejs-dropdownlist class="form-control" id="pi-formofappt" style="height:45px;" DataSource="FormofAppointment"></ejs-dropdownlist>
+                            <label for="pi-formofappt" class="form-label">Type of Appointment*</label>
+                            <ejs-dropdownlist class="form-control" id="pi-formofappt" style="height:45px;" DataSource="FormofAppointment" change="onAppointmentTypeChange"></ejs-dropdownlist>
                             <span id="pi-formofappt" class="text-danger"></span>
                         </div>   
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-resched" class="form-label">Appointment Date Time*</label>
-                            <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" value="@Model.SelectedDateTime"  format="@Model.EjsDateTimePattern" readonly="true" ></ejs-datetimepicker>
+                            <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" value="@Model.SelectedDateTime"  format="@Model.EjsDateTimePattern" ></ejs-datetimepicker>
                             <span id="pi-resched" class="text-danger"></span>
                         </div>
 
@@ -117,6 +117,24 @@
 
 
 </html>
+<script>
+    function onAppointmentTypeChange(args) {
+        debugger;
+        var dateTimePicker = document.getElementById('pi-resched').ej2_instances[0];
+        var selectedDateTime = new Date("@Model.SelectedDateTime.ToString("yyyy-MM-ddTHH:mm:ss")");
+        if (args.value === "Appointment for Consultation") {
+            dateTimePicker.value = selectedDateTime;
+            dateTimePicker.readonly = true; // Make it readonly
+        } else {
+            dateTimePicker.readonly = false; // Make it editable
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var appointmentDropdown = document.getElementById('pi-formofappt').ej2_instances[0];
+        onAppointmentTypeChange({ value: appointmentDropdown.value });
+    });
+</script>
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content" style="margin-top: 154px; max-width: 400px; margin: auto;">
@@ -274,12 +292,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
             
             // Validate Appointment Date Time
-            if ($("#pi-resched").val().trim() === "") {
+            // Validate Appointment Date Time
+            var appointmentValue = $("#pi-resched").val().trim();
+            var dateTimeRegex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2} [APap][Mm]$/; // Format: dd/MM/yyyy hh:mm:ss AM/PM
+            var currentDateTime = new Date();
+            var enteredDateTime;
+
+            if (appointmentValue === "") {
                 showError("pi-resched", "Appointment Date Time is required.");
                 isValid = false;
-            } 
-            else {
-                clearError("pi-resched");
+            } else if (!dateTimeRegex.test(appointmentValue)) {
+                showError("pi-resched", "Invalid Appointment Date Time format.");
+                isValid = false;
+            } else {
+                // Convert to Date object
+                var parts = appointmentValue.split(" ");
+                var dateParts = parts[0].split("/");
+                var timeParts = parts[1].split(":");
+                var meridian = parts[2];
+
+                var hours = parseInt(timeParts[0], 10);
+                if (meridian.toUpperCase() === "PM" && hours !== 12) {
+                    hours += 12;
+                } else if (meridian.toUpperCase() === "AM" && hours === 12) {
+                    hours = 0;
+                }
+
+                enteredDateTime = new Date(
+                    dateParts[2], // Year
+                    dateParts[1] - 1, // Month (0-based index)
+                    dateParts[0], // Day
+                    hours,
+                    parseInt(timeParts[1], 10),
+                    parseInt(timeParts[2], 10)
+                );
+
+                if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
+                    showError("pi-resched", "Invalid Appointment Date Time.");
+                    isValid = false;
+                } else {
+                    clearError("pi-resched");
+                }
             }
 
             var dobValue = $("#pi-dob").val().trim();
@@ -290,7 +343,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 var dobDate = new Date(dobValue.split('/').reverse().join('-')); // Convert dd/MM/yyyy to yyyy-MM-dd
                 var currentDate = new Date();
                 var oneYearBack = new Date();
-                oneYearBack.setFullYear(currentDate.getFullYear() - 1); // Current date se 1 year back
+                oneYearBack.setFullYear(currentDate.getFullYear()); // Current date se 1 year back
 
                 var minDate = new Date();
                 minDate.setFullYear(currentDate.getFullYear() - 99); // Minimum 99 years allowed

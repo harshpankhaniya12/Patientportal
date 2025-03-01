@@ -93,6 +93,28 @@
     }
     .form-actions { gap: 10px; justify-content: center; }
 }
+/* Mobile ke liye responsive layout */
+@media (max-width: 768px) {
+    td.e-left-indent {
+        width: 60px !important;
+    }
+    .modal-dialog {
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .modal-content {
+        height: 100%;
+        width: 100%;
+        border-radius: 0;
+    }
+    .full-screen-schedule {
+        height: 100vh; /* Full Screen */
+        width: 100vw;
+    }
+}
+
 /*459*/
 
 @media screen and (max-width: 380px) {

@@ -10,7 +10,7 @@
     toolbarItems.Add("Search");
     List<string> StateList = new List<string> { "Gujarat", "Maharashtra", "Rajasthan" };
     List<string> CountryList = new List<string> { "Canada", "India", "United States" };
-    List<string> MaritalStatusList = new List<string> { "Single", "Married",  "Divorced"};
+    List<string> MaritalStatusList = new List<string> { "Single", "Married", "Divorced" };
     List<string> AppointmentWith = new List<string> { "Dr. Sejal Saheta", "Dr. Jane Doe", "Dr. John Doe" };
     List<string> FormofAppointment = new List<string> { "Inclinic", "Video" };
 }
@@ -159,7 +159,7 @@
                             <input type="text" id="pi-state" class="form-control" name="state" asp-for="PatientData.StateName" readonly>
                             <span asp-validation-for="PatientData.State" class="text-danger"></span>
 
-                           @*  <ejs-dropdownlist ID="pi-state" class="form-control"  TValue="string" DataSource="StateList" Placeholder="Select State"></ejs-dropdownlist>
+                            @*  <ejs-dropdownlist ID="pi-state" class="form-control"  TValue="string" DataSource="StateList" Placeholder="Select State"></ejs-dropdownlist>
  *@
                         </div>
 
@@ -178,17 +178,17 @@
                     </div>
                 </form>
             </div>
-            @if (Model.ChangeRequests.Count > 0 && Model.ChangeRequests != null )
+            @if (Model.ChangeRequests.Count > 0 && Model.ChangeRequests != null)
             {
-                <div class="ius-block ius-card ius-notes">
-                    <h2 class="mb-2 pb-1 text--red">Changes Requested</h2>
-                    <ol>
+                    <div class="ius-block ius-card ius-notes">
+                        <h2 class="mb-2 pb-1 text--red">Changes Requested</h2>
+                        <ol>
                         @foreach (var change in Model.ChangeRequests)
                         {
-                            <li>@change</li>
+                                    <li>@change</li>
                         }
-                    </ol>
-                </div>
+                        </ol>
+                    </div>
 
             }
                 <div class="ius-block ius-card ius-notes">
@@ -198,16 +198,36 @@
                     <li>For an appointment with an aesthetician for cosmetic procedures please call Clinic - <a href="tel:+91-9639639630" title="91-9639639630">9639639630</a></li>
                 </ol>
             </div>
-            
+
             <div class="ius-block ius-card ius-appdata">
                 <div class="ius-block-head">
-                    <h2>Appointment Grid</h2>
+                    <h2>Appointment</h2>
 
                     <div class="ius-grid-filters">
-                        <a class="bttn-add" href="#schedulerModal2" data-bs-toggle="modal" data-bs-target="#schedulerModal2" title="Add Appointment">
-                            <img loading="lazy" src="~/assets/plus.svg" width="19" height="19" alt="Add">
-                        </a>
+                        <div class="dropdown">
+                            <a class="bttn-add" href="#" data-bs-toggle="dropdown" title="Add Appointment">
+                                <img loading="lazy" src="~/assets/plus.svg" width="19" height="19" alt="Add">
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#schedulerModal2">
+                                        Appointment for Consultation
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#oConsultationModal">
+                                        Appointment Request for Online Consultation
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#cosmeticProcModel">
+                                        Appointment Request for Procedures
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
+
                 </div>
 
                 <!-- Only for desktop : Syncfusion -->
@@ -261,8 +281,8 @@
                             </a>
                         ${/if}
                     </script>
-                    
-                  
+
+
 
                 </div>
                 <script>
@@ -370,7 +390,7 @@
                             }
                         }
                     }
-                    
+
                 </script>
                 <!-- Only for mobile : Syncfusion -->
                 <div class="ius-grid d-lg-none text-14" id="appointments-container">
@@ -548,17 +568,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <input type="hidden" id="AppoinmentId" name="medicalPatientSignature" class="custom-field-height" />
-                <input type="hidden" id="StatusId" value="77" name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="StatusId" value="74" name="medicalPatientSignature" class="custom-field-height" />
                 <div class="modal-body">
                     <div class="">
                         <label for="pi-resched" class="form-label">Appointment Date Time*</label>
                         <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern" readonly></ejs-datetimepicker>
                         <span id="AptDatetime-reson" class="text-danger"></span>
-                    </div>
-                    <div class="">
-                        <label for="pi-ResasonRe" class="form-label">Reason*</label>
-                        <input type="Text" name="Resason" class="form-control form-date" maxlength="100" id="pi-ReasonRe" />
-                        <span id="Aptreosan-reson" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="modal-footer border-0 justify-content-center">
@@ -567,11 +582,56 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="oConsultationModal">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="mb-0">
+                        Appointment Request for Online Consultation</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <input type="hidden" id="OCStatusId" value="74" name="medicalPatientSignature" class="custom-field-height" />
+                <div class="modal-body">
+                    <div class="">
+                        <label for="OC-resched" class="form-label">Appointment Date Time*</label>
+                        <ejs-datetimepicker id="OC-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                        <span id="AptDatetime-reson" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" id="SubmitOnlineconsult" class="bttn bttn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>  
+    <div class="modal fade" id="cosmeticProcModel">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="mb-0">
+                        Appointment Request for Procedures</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <input type="hidden" id="OCStatusId" value="74" name="medicalPatientSignature" class="custom-field-height" />
+                <div class="modal-body">
+                    <div class="">
+                        <label for="OC-resched" class="form-label">Appointment Date Time*</label>
+                        <ejs-datetimepicker id="RP-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                        <span id="AptDatetime-reson" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" id="SubmitProceduresReuest" class="bttn bttn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var rescheduleModalEl = document.getElementById('app-resched');
+            var OCModalEl = document.getElementById('oConsultationModal');
 
-            rescheduleModalEl.addEventListener('hidden.bs.modal', function () {
+            OCModalEl.addEventListener('hidden.bs.modal', function () {
                 let backdrop = document.querySelector('.modal-backdrop');
                 if (backdrop) {
                     backdrop.remove(); 
@@ -580,32 +640,33 @@
         });
 
     </script>
-    <div class="modal fade" id="schedulerModal" tabindex="-1" aria-labelledby="schedulerModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="schedulerModalLabel">Doctor Schedule</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="control-section">
-                        <div class="schedule-wrapper">
-                            <ejs-schedule id="schedulerss" height="650px"
-                                          selectedDate="DateTime.Today"
-                                          allowDragAndDrop="false" allowResizing="false"
-                                          startHour="10:00" endHour="19:15"
-                                          workDays="new int[] {1, 2, 3, 4, 5}"
-                                          cellClick="onCellClick">
-                                <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
+ <div class="modal fade" id="schedulerModal" tabindex="-1" aria-labelledby="schedulerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="schedulerModalLabel">Doctor Schedule</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="control-section">
+                    <div class="schedule-wrapper">
+                        <ejs-schedule id="schedulerss" height="100%" width="100%"
+                                      selectedDate="DateTime.Today"
+                                      allowDragAndDrop="false" allowResizing="false"
+                                      startHour="10:00" endHour="19:15"
+                                      workDays="new int[] {1, 2, 3, 4, 5}"
+                                      cellClick="onCellClick" showQuickInfo="false">
+                            <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
 
-                                <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
-                            </ejs-schedule>
-                        </div>
+                            <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
+                        </ejs-schedule>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
     <script>
             document.addEventListener("DOMContentLoaded", function () {
                 $('#schedulerModal').on('shown.bs.modal', function () {
@@ -765,32 +826,33 @@
     </script>
 
 
-    <!-- Second Scheduler Modal -->
-    <div class="modal fade" id="schedulerModal2" tabindex="-1" aria-labelledby="schedulerModalLabel2" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="schedulerModalLabel">Doctor Schedule</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="control-section">
-                        <div class="schedule-wrapper">
-                            <ejs-schedule id="schedulerss2" height="650px"
-                                          selectedDate="DateTime.Today"
-                                          allowDragAndDrop="false" allowResizing="false"
-                                          startHour="10:00" endHour="19:15"
-                                          workDays="new int[] {1, 2, 3, 4, 5}"
-                                          cellClick="onCellClick2">
-                                <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
-                                <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
-                            </ejs-schedule>
-                        </div>
+ <!-- Second Scheduler Modal -->
+<div class="modal fade" id="schedulerModal2" tabindex="-1" aria-labelledby="schedulerModalLabel2" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="schedulerModalLabel">Doctor Schedule</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="control-section">
+                    <div class="schedule-wrapper">
+                        <ejs-schedule id="schedulerss2" height="100%" width="100%"
+                                       selectedDate="DateTime.Today"
+                                      allowDragAndDrop="false" allowResizing="false"
+                                      startHour="10:00" endHour="19:15"
+                                      workDays="new int[] {1, 2, 3, 4, 5}"
+                                      cellClick="onCellClick2" showQuickInfo="false">
+                            <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
+                            <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
+                        </ejs-schedule>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
 
     <!-- JavaScript to Handle Both Modals -->
     <script>
@@ -851,6 +913,8 @@
                 args.cancel = true;
             }
         }
+
+
 
         document.addEventListener('DOMContentLoaded', function () {
             var scheduleObj2 = document.getElementById('schedulerss2').ej2_instances[0];
@@ -930,7 +994,6 @@
                 var appointmentId = $("#AppoinmentId").val();
                 var statusId = $("#StatusId").val();
                 var appointmentDateTime = $("#pi-resched").val();
-                var reason = $("#pi-ReasonRe").val();
                 var selectedDate = appointmentDateTime;
                 var currentDate = new Date(); // Current date-time
                 var formattedCurrentDate = formatDate(currentDate); // Format the current date
@@ -943,20 +1006,13 @@
                 else {
                     $("#AptDatetime-reson").text(""); // Clear error if input is valid
                 }
-                if (reason === "") {
-                    $("#Aptreosan-reson").text("Reason is required.");
-                    return; // Stop further execution
-                } else {
-                    $("#Aptreosan-reson").text(""); // Clear error if input is valid
-                }
                 var formattedDate = convertDateFormat(appointmentDateTime);
 
 
                 var requestData = {
                     Id: appointmentId,
                     StatusId: statusId,
-                    AppointmentStartTime: formattedDate,
-                    Comment: reason
+                    AppointmentStartTime: formattedDate
                 };
 
                 $.ajax({
@@ -1039,42 +1095,20 @@
 
     <!-- Add Appointment - Modal -->
     <div class="modal fade" id="app-add">
-        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="mb-0">Add Appointment</h3>
+                    <h3 class="mb-0">
+                        Appointment for Consultation
+                    </h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <input type="hidden" id="OCStatusId" value="74" name="medicalPatientSignature" class="custom-field-height" />
                 <div class="modal-body">
-                    <div class="container-fluid ius-form">
-                        <div class="row">
-                            <input type="hidden" id="AddPatientId" asp-for="PatientData.Id" name="medicalPatientSignature" class="custom-field-height" />
-
-                            @*    <div class="col-md-6">
-                                <label for="app-type" class="form-label">Type of Appointment</label>
-                                <ejs-dropdownlist class="form-control" id="app-with" DataSource="AppointmentWith" placeholder="Select Doctor"></ejs-dropdownlist>
-                            </div> *@
-                            <div class="col-md-6">
-                                <label for="app-form" class="form-label">Form of Appointment*</label>
-                                <div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="Inclinic" name="FormofAppointment" value="Inclinic" checked>
-                                        <label class="form-check-label" for="Inclinic">Inclinic</label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="Video" name="FormofAppointment" value="Video">
-                                        <label class="form-check-label" for="Video">Video</label>
-                                    </div>
-                                </div>
-                                <span id="AptAddformapt" class="text-danger"></span>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="app-datetime" class="form-label">Appointment Date Time*</label>
-                                <ejs-datetimepicker id="app-datetim" class="form-control" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern" readonly></ejs-datetimepicker>
-                                <span id="AptaddDatetime" class="text-danger"></span>
-                            </div>
-                        </div>
+                    <div class="">
+                        <label for="OC-resched" class="form-label">Appointment Date Time*</label>
+                        <ejs-datetimepicker id="app-datetim" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                        <span id="AptDatetime-reson" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="modal-footer border-0 justify-content-center">
@@ -1098,14 +1132,6 @@
     </script>
     <script>
         $(document).ready(function () {
-            $("input[name='FormofAppointment']").on("change", function () {
-                if ($(this).is(":checked")) {
-                    $("input[name='FormofAppointment']").not(this).prop("checked", false); // Uncheck others
-                }
-                if (!$("input[name='FormofAppointment']:checked").length) {
-                    $(this).prop("checked", true); // If none is selected, reselect current
-                }
-            });
             $("#SubmitAppointment").click(function () {
                 var patietId = $("#AddPatientId").val();
                 // var formofappt = $("#app-form").val();
@@ -1113,7 +1139,6 @@
                 var selectedDate = appointmentDateTime;
                 var currentDate = new Date(); // Current date-time
                 var formattedCurrentDate = formatDate(currentDate); // Format the current date
-                var formofappt = $("input[name='FormofAppointment']:checked").val(); // Checkbox value
                 var isValid = true;
 
                 if (appointmentDateTime === "") {
@@ -1123,13 +1148,6 @@
                 else {
                     $("#AptaddDatetime").text(""); // Clear error if input is valid
                 }
-                if (formofappt === "") {
-                    $("#AptAddformapt").text("Form of Appointment is required.");
-                    isValid = false; // Stop further execution
-                } else {
-                    $("#AptAddformapt").text(""); // Clear error if input is valid
-                }
-
                 if(!isValid)
                 {
                     return;
@@ -1139,7 +1157,6 @@
 
                 var requestData = {
                     PatientId: patietId,
-                    AppointmentForm: formofappt,
                     AppointmentStartTime: formattedDate
                 };
 
@@ -1375,7 +1392,7 @@
             } else {
                 var dobDate = new Date(dobValue.split('/').reverse().join('-')); // Convert dd/MM/yyyy to yyyy-MM-dd
                 var currentDate = new Date();
-                currentDate.setFullYear(currentDate.getFullYear() - 1); // Subtract 1 year from today
+                currentDate.setFullYear(currentDate.getFullYear()); // Subtract 1 year from today
                 var minDate = new Date();
                 minDate.setFullYear(currentDate.getFullYear() - 99); // Minimum 99 years allowed
 
@@ -1531,7 +1548,7 @@
                                                 <span class="appinfo-form">${appointment.appointmentForm || 'N/A'}</span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="ius-ctrls">
                                     ${appointment.statusName !== "Cancelled" ? `
                                         <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
@@ -1608,7 +1625,7 @@
         appearance: radio; /* Makes checkbox look like radio button */
     }
 
-    
+
     a.marginleft {
         margin-left: 5px;
     }
@@ -1657,13 +1674,6 @@
         display: none;
     }
 
-    /* Saturday & Sunday cells ko grey color dena aur click disable karna */
-    .e-work-cells:nth-child(7), /* Saturday */
-    .e-work-cells:nth-child(1), /* Sunday */
-    .e-work-hours:nth-child(7), /* Saturday header */
-    .e-work-hours:nth-child(1) { /* Sunday header */
-        background-color: #e0e0e0 !important; /* Light Grey */
-        pointer-events: none; /* Click disable */
-    }
+
 
 </style>
