@@ -8,6 +8,7 @@ namespace Patientportal.Model
         public int? DoctoreId { get; set; }
         public int? SourceId { get; set; }
         public DateTime? AppointmentStartTime { get; set; }
+        public string? FormofAppointment { get; set; }
         public DateTime? AppointmentEndDateTime { get; set; }
 
         public int? StatusId { get; set; }

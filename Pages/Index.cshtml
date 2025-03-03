@@ -50,7 +50,7 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-phoneno" class="form-label">Phone Number</label>
-                            <input type="text" name="phoneno" asp-for="PatientData.Mobile" class="form-control" id="pi-phoneno"  disabled>
+                            <input type="text" name="phoneno" asp-for="PatientData.Mobile" class="form-control" id="pi-phoneno" disabled>
                             <span asp-validation-for="PatientData.Mobile" class="text-danger"></span>
                         </div>
 
@@ -62,7 +62,7 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-age" class="form-label">Age</label>
-                            <input type="number" name="age" asp-for="PatientData.Age" maxlength="2" class="form-control" id="pi-age" >
+                            <input type="number" name="age" asp-for="PatientData.Age" maxlength="2" class="form-control" id="pi-age">
                             <span asp-validation-for="PatientData.Age" class="text-danger"></span>
                         </div>
 
@@ -149,7 +149,7 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-city" class="form-label">City</label>
-                            <input type="text" id="pi-city" class="form-control" name="city" asp-for="PatientData.CityName"  readonly>
+                            <input type="text" id="pi-city" class="form-control" name="city" asp-for="PatientData.CityName" readonly>
                             <span asp-validation-for="PatientData.City" class="text-danger"></span>
 
                         </div>
@@ -160,7 +160,7 @@
                             <span asp-validation-for="PatientData.State" class="text-danger"></span>
 
                             @*  <ejs-dropdownlist ID="pi-state" class="form-control"  TValue="string" DataSource="StateList" Placeholder="Select State"></ejs-dropdownlist>
- *@
+                            *@
                         </div>
 
                         <div class="col-md-6 col-xl-4">
@@ -180,19 +180,19 @@
             </div>
             @if (Model.ChangeRequests.Count > 0 && Model.ChangeRequests != null)
             {
-                    <div class="ius-block ius-card ius-notes">
-                        <h2 class="mb-2 pb-1 text--red">Changes Requested</h2>
-                        <ol>
+                <div class="ius-block ius-card ius-notes">
+                    <h2 class="mb-2 pb-1 text--red">Changes Requested</h2>
+                    <ol>
                         @foreach (var change in Model.ChangeRequests)
                         {
-                                    <li>@change</li>
+                            <li>@change</li>
                         }
-                        </ol>
-                    </div>
+                    </ol>
+                </div>
 
             }
-                <div class="ius-block ius-card ius-notes">
-                    <h2 class="mb-2 pb-1 text--red">Notes</h2>
+            <div class="ius-block ius-card ius-notes">
+                <h2 class="mb-2 pb-1 text--red">Notes</h2>
                 <ol>
                     <li>Appointment  will be booked for consultation with Dr. Sejal Saheta.</li>
                     <li>For an appointment with an aesthetician for cosmetic procedures please call Clinic - <a href="tel:+91-9639639630" title="91-9639639630">9639639630</a></li>
@@ -232,47 +232,46 @@
 
                 <!-- Only for desktop : Syncfusion -->
                 <div class="ius-table d-none d-lg-block table-responsive">
-                        <ejs-grid id="GridAppointments"
-                                  allowResizing="true"
-                                  allowExcelExport="true"
-                                  allowFiltering="false"
-                                  allowPaging="true"
-                                   allowSorting="false"
-                                  allowSelection="true"
-                                  allowReordering="true"
-                                  enableHeaderFocus="true"
-                                  enablePersistence="true"
-                                  enableHover="true"
-                                  autoFit="true"
-                                  height="200"
-                                  showColumnChooser="true"
-                                  rowHeight="38"
-                                  toolbar=toolbarItems
+                    <ejs-grid id="GridAppointments"
+                              allowResizing="true"
+                              allowExcelExport="true"
+                              allowFiltering="false"
+                              allowPaging="true"
+                              allowSorting="false"
+                              allowSelection="true"
+                              allowReordering="true"
+                              enableHeaderFocus="true"
+                              enablePersistence="true"
+                              enableHover="true"
+                              autoFit="true"
+                              height="200"
+                              showColumnChooser="true"
+                              rowHeight="38"
+                              toolbar=toolbarItems
                               queryCellInfo="onQueryCellInfo"
-                                  toolbarClick="toolbarClick">
+                              toolbarClick="toolbarClick">
 
-                            <e-data-manager url="/Index?handler=AppointmentView" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
+                        <e-data-manager url="/Index?handler=AppointmentView" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
 
-                        <e-grid-searchsettings fields="@(new string[] {"AppoinmentType","DoctorName","AppointmentForm","AppointmentStartTime","StatusName"})"></e-grid-searchsettings>
+                        <e-grid-searchsettings fields="@(new string[] {"AppoinmentType","DoctorName","AppointmentStartTime","StatusName"})"></e-grid-searchsettings>
 
-                            <e-grid-filtersettings type="Excel"></e-grid-filtersettings>
-                            <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
-                            <e-grid-pagesettings pageCount="15" pageSize="15" pageSizes="@(new string[] { "All","12","15","25","50"})"></e-grid-pagesettings>
-                            <e-grid-selectionsettings type="Single"></e-grid-selectionsettings>
+                        <e-grid-filtersettings type="Excel"></e-grid-filtersettings>
+                        <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
+                        <e-grid-pagesettings pageCount="15" pageSize="15" pageSizes="@(new string[] { "All","12","15","25","50"})"></e-grid-pagesettings>
+                        <e-grid-selectionsettings type="Single"></e-grid-selectionsettings>
 
-                            <e-grid-columns>
+                        <e-grid-columns>
 
-                                <e-grid-column headerText="Actions" width="120" textAlign="Center" template="#actionTemplate"></e-grid-column>
-                                <e-grid-column field="Id" headerText="Id" width="200" visible="false"></e-grid-column>
+                            <e-grid-column headerText="Actions" width="120" textAlign="Center" template="#actionTemplate"></e-grid-column>
+                            <e-grid-column field="Id" headerText="Id" width="200" visible="false"></e-grid-column>
                             <e-grid-column field="AppoinmentType" headerText="Type of Appointment" width="200"></e-grid-column>
-                                <e-grid-column field="DoctorName" headerText="Appointment With" width="200"></e-grid-column>
-                            <e-grid-column field="AppointmentForm" headerText="Form of Appointment" width="200"></e-grid-column>
+                            <e-grid-column field="DoctorName" headerText="Appointment With" width="200"></e-grid-column>
                             <e-grid-column field="AppointmentStartTime" headerText="Appointment Date Time" format="@Model.EjsDateTimePattern" type="dateTime" width="200"></e-grid-column>
                             <e-grid-column field="StatusName" headerText="Status" width="150"></e-grid-column>
-                            </e-grid-columns>
-                        </ejs-grid>
+                        </e-grid-columns>
+                    </ejs-grid>
                     <script id="actionTemplate" type="text/x-template">
-                        ${if(statusName !== "Cancelled")}
+                        ${if(statusName !== "Cancelled" && appoinmentType !== "Appointment Request for Online Consultation" && appoinmentType !== "Appointment Request for Procedures")}
                             <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
                                 <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
                             </a>
@@ -281,6 +280,7 @@
                             </a>
                         ${/if}
                     </script>
+
 
 
 
@@ -382,8 +382,8 @@
                             if (args.data.statusName === "Booked") {
                                 args.cell.innerHTML = `<span class="badge badge-success">Booked</span>`;
                             }
-                            else if (args.data.statusName === "Reschedule") {
-                                args.cell.innerHTML = `<span class="badge badge-secondary">Schedule</span>`;
+                            else if (args.data.statusName === "Request Sent") {
+                                args.cell.innerHTML = `<span class="badge badge-secondary">Request Sent</span>`;
                             }
                             else if (args.data.statusName === "Cancelled") {
                                 args.cell.innerHTML = `<span class="badge badge-danger">Cancelled</span>`;
@@ -498,12 +498,12 @@
                     <h3 class="mb-0">Cancel Appointment</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <input type="hidden" id="CancelPatientId"  name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="CancelPatientId" name="medicalPatientSignature" class="custom-field-height" />
                 <input type="hidden" id="StatusIds" value="79" class="custom-field-height" />
                 <div class="modal-body">
                     <div class="">
                         <label for="pi-Resason" class="form-label">Reason*</label>
-                        <input type="Text" name="Resason" class="form-control form-date"  maxlength="100" id="pi-Resason" />
+                        <input type="Text" name="Resason" class="form-control form-date" maxlength="100" id="pi-Resason" />
                         <span id="Span-reson" class="text-danger"></span>
                     </div>
                 </div>
@@ -588,15 +588,17 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="mb-0">
-                        Appointment Request for Online Consultation</h3>
+                        Appointment Request for Online Consultation
+                    </h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <input type="hidden" id="OCStatusId" value="74" name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="OCAddPatientId" asp-for="PatientData.Id" name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="OCFormofAppointment" value="Appointment Request for Online Consultation" name="medicalPatientSignature" class="custom-field-height" />
                 <div class="modal-body">
                     <div class="">
                         <label for="OC-resched" class="form-label">Appointment Date Time*</label>
                         <ejs-datetimepicker id="OC-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
-                        <span id="AptDatetime-reson" class="text-danger"></span>
+                        <span id="OC-reschedSpan" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="modal-footer border-0 justify-content-center">
@@ -604,21 +606,164 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#SubmitOnlineconsult").click(function () {
+                var patietId = $("#AddPatientId").val();
+                // var formofappt = $("#app-form").val();
+                var FormofAppointment = $("#OCFormofAppointment").val();
+                var appointmentDateTime = $("#OC-resched").val();
+                var selectedDate = appointmentDateTime;
+                var currentDate = new Date(); // Current date-time
+                var formattedCurrentDate = formatDate(currentDate); // Format the current date
+                var isValid = true;
+
+
+                var dateTimeRegex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2} [APap][Mm]$/; // Format: dd/MM/yyyy hh:mm:ss AM/PM
+                var currentDateTime = new Date();
+                var enteredDateTime;
+
+                if (appointmentDateTime === "") {
+
+                    $("#OC-reschedSpan").text("Appointment Date Time is required.");
+                    isValid = false;
+                } else if (!dateTimeRegex.test(appointmentDateTime)) {
+                    $("#OC-reschedSpan").text("Invalid Appointment Date Time format.");
+                    isValid = false;
+                } else {
+                    // Convert to Date object
+                    var parts = appointmentDateTime.split(" ");
+                    var dateParts = parts[0].split("/");
+                    var timeParts = parts[1].split(":");
+                    var meridian = parts[2];
+
+                    var hours = parseInt(timeParts[0], 10);
+                    if (meridian.toUpperCase() === "PM" && hours !== 12) {
+                        hours += 12;
+                    } else if (meridian.toUpperCase() === "AM" && hours === 12) {
+                        hours = 0;
+                    }
+
+                    enteredDateTime = new Date(
+                        dateParts[2], // Year
+                        dateParts[1] - 1, // Month (0-based index)
+                        dateParts[0], // Day
+                        hours,
+                        parseInt(timeParts[1], 10),
+                        parseInt(timeParts[2], 10)
+                    );
+
+                    if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
+                        $("#OC-reschedSpan").text("Invalid Appointment Date Time.");
+                        isValid = false;
+                    } else {
+                        $("#OC-reschedSpan").text("");
+                    }
+                }
+                if (!isValid) {
+                    return;
+                }
+                var formattedDate = convertDateFormat(appointmentDateTime);
+
+
+                var requestData = {
+                    PatientId: patietId,
+                    AppointmentStartTime: formattedDate,
+                    FormofAppointment: FormofAppointment
+                };
+
+                $.ajax({
+                    url: "/Index?handler=AddAppointmentRequest",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(requestData),
+                    success: function (response) {
+                        localStorage.setItem("showSuccessMessage", "true"); // Set flag before reload
+                        location.reload(); // Reload page
+                    },
+                    error: function () {
+                        alert("Failed to submit reschedule request.");
+                    }
+                });
+
+            });
+            function convertDateFormat(dateString) {
+                var parts = dateString.split(/[\s/:]+/); // Split date and time
+                var day = parts[0];
+                var month = parts[1];
+                var year = parts[2];
+                var hours = parseInt(parts[3]);
+                var minutes = parts[4];
+                var seconds = parts[5];
+                var meridian = parts[6];
+
+                // Convert 12-hour format to 24-hour format
+                if (meridian === "PM" && hours !== 12) {
+                    hours += 12;
+                } else if (meridian === "AM" && hours === 12) {
+                    hours = 0;
+                }
+
+                // Format into "YYYY-MM-DD HH:mm:ss"
+                return `${year}-${month}-${day} ${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+            }
+            $(document).ready(function () {
+                // Check if success message flag is set in localStorage
+                if (localStorage.getItem("showSuccessMessage") === "true") {
+                    toastr.success("Appointment Added successfully!"); // Show success message
+                    localStorage.removeItem("showSuccessMessage"); // Remove flag after showing message
+                }
+            });
+            function formatDate(date) {
+                var dd = String(date.getDate()).padStart(2, '0');
+                var MM = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                var yyyy = date.getFullYear();
+
+                var hours = date.getHours();
+                var minutes = String(date.getMinutes()).padStart(2, '0');
+                var seconds = String(date.getSeconds()).padStart(2, '0');
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12; // Convert to 12-hour format
+
+                return `${dd}/${MM}/${yyyy} ${hours}:${minutes}:${seconds} ${ampm}`;
+            }
+
+            // Function to parse dd/MM/yyyy hh:mm:ss a string to Date object
+            function parseDate(dateStr) {
+                var parts = dateStr.split(/[\s/:]+/); // Split by space, slash, or colon
+                var dd = parseInt(parts[0], 10);
+                var MM = parseInt(parts[1], 10) - 1; // Months are zero-based
+                var yyyy = parseInt(parts[2], 10);
+                var hours = parseInt(parts[3], 10);
+                var minutes = parseInt(parts[4], 10);
+                var seconds = parseInt(parts[5], 10);
+                var ampm = parts[6];
+
+                if (ampm === 'PM' && hours < 12) hours += 12;
+                if (ampm === 'AM' && hours === 12) hours = 0;
+
+                return new Date(yyyy, MM, dd, hours, minutes, seconds);
+            }
+
+        });
+
+    </script>
     <div class="modal fade" id="cosmeticProcModel">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="mb-0">
-                        Appointment Request for Procedures</h3>
+                    <h3 class="mb-0">Appointment Request for Procedures</h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <input type="hidden" id="OCStatusId" value="74" name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="RPAddPatientId" asp-for="PatientData.Id" name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="RPFormofAppointment" value="Appointment Request for Procedures" name="medicalPatientSignature" class="custom-field-height" />
+
                 <div class="modal-body">
                     <div class="">
-                        <label for="OC-resched" class="form-label">Appointment Date Time*</label>
+                        <label for="RP-resched" class="form-label">Appointment Date Time*</label>
                         <ejs-datetimepicker id="RP-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
-                        <span id="AptDatetime-reson" class="text-danger"></span>
+                        <span id="RP-reschedSpan" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="modal-footer border-0 justify-content-center">
@@ -628,95 +773,236 @@
         </div>
     </div>
     <script>
+        $(document).ready(function () {
+            $("#SubmitProceduresReuest").click(function () {
+                var patietId = $("#RPAddPatientId").val();
+                // var formofappt = $("#app-form").val();
+                var FormofAppointment = $("#RPFormofAppointment").val();
+                var appointmentDateTime = $("#RP-resched").val();
+                var selectedDate = appointmentDateTime;
+                var currentDate = new Date(); // Current date-time
+                var formattedCurrentDate = formatDate(currentDate); // Format the current date
+                var isValid = true;
+
+                var dateTimeRegex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2} [APap][Mm]$/; // Format: dd/MM/yyyy hh:mm:ss AM/PM
+                var currentDateTime = new Date();
+                var enteredDateTime;
+
+                if (appointmentDateTime === "") {
+
+                    $("#RP-reschedSpan").text("Appointment Date Time is required.");
+                    isValid = false;
+                } else if (!dateTimeRegex.test(appointmentDateTime)) {
+                    $("#RP-reschedSpan").text("Invalid Appointment Date Time format.");
+                    isValid = false;
+                } else {
+                    // Convert to Date object
+                    var parts = appointmentDateTime.split(" ");
+                    var dateParts = parts[0].split("/");
+                    var timeParts = parts[1].split(":");
+                    var meridian = parts[2];
+
+                    var hours = parseInt(timeParts[0], 10);
+                    if (meridian.toUpperCase() === "PM" && hours !== 12) {
+                        hours += 12;
+                    } else if (meridian.toUpperCase() === "AM" && hours === 12) {
+                        hours = 0;
+                    }
+
+                    enteredDateTime = new Date(
+                        dateParts[2], // Year
+                        dateParts[1] - 1, // Month (0-based index)
+                        dateParts[0], // Day
+                        hours,
+                        parseInt(timeParts[1], 10),
+                        parseInt(timeParts[2], 10)
+                    );
+
+                    if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
+                        $("#RP-reschedSpan").text("Invalid Appointment Date Time.");
+                        isValid = false;
+                    } else {
+                        $("#RP-reschedSpan").text("");
+                    }
+                }
+                if (!isValid) {
+                    return;
+                }
+                var formattedDate = convertDateFormat(appointmentDateTime);
+
+
+                var requestData = {
+                    PatientId: patietId,
+                    AppointmentStartTime: formattedDate,
+                    FormofAppointment: FormofAppointment
+                };
+
+                $.ajax({
+                    url: "/Index?handler=AddAppointmentRequest",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(requestData),
+                    success: function (response) {
+                        localStorage.setItem("showSuccessMessage", "true"); // Set flag before reload
+                        location.reload(); // Reload page
+                    },
+                    error: function () {
+                        alert("Failed to submit reschedule request.");
+                    }
+                });
+
+            });
+            function convertDateFormat(dateString) {
+                var parts = dateString.split(/[\s/:]+/); // Split date and time
+                var day = parts[0];
+                var month = parts[1];
+                var year = parts[2];
+                var hours = parseInt(parts[3]);
+                var minutes = parts[4];
+                var seconds = parts[5];
+                var meridian = parts[6];
+
+                // Convert 12-hour format to 24-hour format
+                if (meridian === "PM" && hours !== 12) {
+                    hours += 12;
+                } else if (meridian === "AM" && hours === 12) {
+                    hours = 0;
+                }
+
+                // Format into "YYYY-MM-DD HH:mm:ss"
+                return `${year}-${month}-${day} ${hours.toString().padStart(2, '0')}:${minutes}:${seconds}`;
+            }
+            $(document).ready(function () {
+                // Check if success message flag is set in localStorage
+                if (localStorage.getItem("showSuccessMessage") === "true") {
+                    toastr.success("Appointment Added successfully!"); // Show success message
+                    localStorage.removeItem("showSuccessMessage"); // Remove flag after showing message
+                }
+            });
+            function formatDate(date) {
+                var dd = String(date.getDate()).padStart(2, '0');
+                var MM = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+                var yyyy = date.getFullYear();
+
+                var hours = date.getHours();
+                var minutes = String(date.getMinutes()).padStart(2, '0');
+                var seconds = String(date.getSeconds()).padStart(2, '0');
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12 || 12; // Convert to 12-hour format
+
+                return `${dd}/${MM}/${yyyy} ${hours}:${minutes}:${seconds} ${ampm}`;
+            }
+
+            // Function to parse dd/MM/yyyy hh:mm:ss a string to Date object
+            function parseDate(dateStr) {
+                var parts = dateStr.split(/[\s/:]+/); // Split by space, slash, or colon
+                var dd = parseInt(parts[0], 10);
+                var MM = parseInt(parts[1], 10) - 1; // Months are zero-based
+                var yyyy = parseInt(parts[2], 10);
+                var hours = parseInt(parts[3], 10);
+                var minutes = parseInt(parts[4], 10);
+                var seconds = parseInt(parts[5], 10);
+                var ampm = parts[6];
+
+                if (ampm === 'PM' && hours < 12) hours += 12;
+                if (ampm === 'AM' && hours === 12) hours = 0;
+
+                return new Date(yyyy, MM, dd, hours, minutes, seconds);
+            }
+
+        });
+
+    </script>
+    <script>
         document.addEventListener("DOMContentLoaded", function () {
             var OCModalEl = document.getElementById('oConsultationModal');
 
             OCModalEl.addEventListener('hidden.bs.modal', function () {
                 let backdrop = document.querySelector('.modal-backdrop');
                 if (backdrop) {
-                    backdrop.remove(); 
+                    backdrop.remove();
                 }
             });
         });
 
     </script>
- <div class="modal fade" id="schedulerModal" tabindex="-1" aria-labelledby="schedulerModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="schedulerModalLabel">Doctor Schedule</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="control-section">
-                    <div class="schedule-wrapper">
-                        <ejs-schedule id="schedulerss" height="100%" width="100%"
-                                      selectedDate="DateTime.Today"
-                                      allowDragAndDrop="false" allowResizing="false"
-                                      startHour="10:00" endHour="19:15"
-                                      workDays="new int[] {1, 2, 3, 4, 5}"
-                                      cellClick="onCellClick" showQuickInfo="false">
-                            <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
+    <div class="modal fade" id="schedulerModal" tabindex="-1" aria-labelledby="schedulerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="schedulerModalLabel">Doctor Schedule</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="control-section">
+                        <div class="schedule-wrapper">
+                            <ejs-schedule id="schedulerss" height="100%" width="100%"
+                                          selectedDate="DateTime.Today"
+                                          allowDragAndDrop="false" allowResizing="false"
+                                          startHour="10:00" endHour="19:15"
+                                          workDays="new int[] {1, 2, 3, 4, 5}"
+                                          cellClick="onCellClick" showQuickInfo="false">
+                                <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
 
-                            <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
-                        </ejs-schedule>
+                                <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
+                            </ejs-schedule>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                $('#schedulerModal').on('shown.bs.modal', function () {
-                    loadSchedulerData(); // Modal open hone par function call hoga
-                });
+        document.addEventListener("DOMContentLoaded", function () {
+            $('#schedulerModal').on('shown.bs.modal', function () {
+                loadSchedulerData(); // Modal open hone par function call hoga
             });
+        });
 
-            function loadSchedulerData() {
-                var doctorBlockTimes = @Html.Raw(Json.Serialize(Model.Doctorblocktime));
+        function loadSchedulerData() {
+            var doctorBlockTimes = @Html.Raw(Json.Serialize(Model.Doctorblocktime));
 
             if (!doctorBlockTimes || doctorBlockTimes.length === 0) {
                 console.log("No blocked appointments found.");
-            return;
-                } else {
+                return;
+            } else {
                 console.log("Blocked Appointments:", doctorBlockTimes);
-                }
+            }
 
             setTimeout(function () {
-                    var scheduleObj = document.getElementById('schedulerss')?.ej2_instances?.[0];
+                var scheduleObj = document.getElementById('schedulerss')?.ej2_instances?.[0];
 
-            if (!scheduleObj) {
-                console.error("Scheduler instance not found.");
-            return;
-                    }
+                if (!scheduleObj) {
+                    console.error("Scheduler instance not found.");
+                    return;
+                }
 
-            // Convert data to Scheduler format
-            var blockAppointments = doctorBlockTimes.map(function (item) {
-                        return {
-                Id: item.id,
-            Subject: 'Not available',
-            StartTime: new Date(item.appointmentStartTime),
-            EndTime: new Date(item.appointmentEndDateTime),
-            IsReadonly: true,
-            ClassName: "blocked-slot" // Apply CSS for styling
-                        };
-                    });
+                // Convert data to Scheduler format
+                var blockAppointments = doctorBlockTimes.map(function (item) {
+                    return {
+                        Id: item.id,
+                        Subject: 'Not available',
+                        StartTime: new Date(item.appointmentStartTime),
+                        EndTime: new Date(item.appointmentEndDateTime),
+                        IsReadonly: true,
+                        ClassName: "blocked-slot" // Apply CSS for styling
+                    };
+                });
 
-            console.log("Final Event Data for Scheduler:", blockAppointments);
+                console.log("Final Event Data for Scheduler:", blockAppointments);
 
-            // Reset scheduler and load new data
-            scheduleObj.eventSettings.dataSource = [];
-            scheduleObj.refresh(); // First refresh to clear old data
+                // Reset scheduler and load new data
+                scheduleObj.eventSettings.dataSource = [];
+                scheduleObj.refresh(); // First refresh to clear old data
 
-                    setTimeout(() => {
-                scheduleObj.eventSettings.dataSource = blockAppointments;
-            scheduleObj.refresh(); // Second refresh to load new data
-                    }, 300); // Small delay to prevent UI issues
+                setTimeout(() => {
+                    scheduleObj.eventSettings.dataSource = blockAppointments;
+                    scheduleObj.refresh(); // Second refresh to load new data
+                }, 300); // Small delay to prevent UI issues
 
-                }, 500);
-            }
+            }, 500);
+        }
 
     </script>
 
@@ -826,37 +1112,37 @@
     </script>
 
 
- <!-- Second Scheduler Modal -->
-<div class="modal fade" id="schedulerModal2" tabindex="-1" aria-labelledby="schedulerModalLabel2" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="schedulerModalLabel">Doctor Schedule</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="control-section">
-                    <div class="schedule-wrapper">
-                        <ejs-schedule id="schedulerss2" height="100%" width="100%"
-                                       selectedDate="DateTime.Today"
-                                      allowDragAndDrop="false" allowResizing="false"
-                                      startHour="10:00" endHour="19:15"
-                                      workDays="new int[] {1, 2, 3, 4, 5}"
-                                      cellClick="onCellClick2" showQuickInfo="false">
-                            <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
-                            <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
-                        </ejs-schedule>
+    <!-- Second Scheduler Modal -->
+    <div class="modal fade" id="schedulerModal2" tabindex="-1" aria-labelledby="schedulerModalLabel2" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="schedulerModalLabel">Doctor Schedule</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="control-section">
+                        <div class="schedule-wrapper">
+                            <ejs-schedule id="schedulerss2" height="100%" width="100%"
+                                          selectedDate="DateTime.Today"
+                                          allowDragAndDrop="false" allowResizing="false"
+                                          startHour="10:00" endHour="19:15"
+                                          workDays="new int[] {1, 2, 3, 4, 5}"
+                                          cellClick="onCellClick2" showQuickInfo="false">
+                                <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
+                                <e-schedule-eventsettings dataSource="@Model.Doctorblocktime" template="#blockTemplate2"></e-schedule-eventsettings>
+                            </ejs-schedule>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 
     <!-- JavaScript to Handle Both Modals -->
     <script>
-        document.addEventListener("DOMContentLoaded", function () { 
+        document.addEventListener("DOMContentLoaded", function () {
 
             $('#schedulerModal2').on('shown.bs.modal', function () {
                 loadSchedulerData2('schedulerss2'); // Load data for second modal
@@ -864,6 +1150,7 @@
         });
 
         function loadSchedulerData2(schedulerId) {
+            debugger;
             var doctorBlockTimes = @Html.Raw(Json.Serialize(Model.Doctorblocktime));
 
             if (!doctorBlockTimes || doctorBlockTimes.length === 0) {
@@ -884,7 +1171,7 @@
                 // Convert data to Scheduler format
                 var blockAppointments = doctorBlockTimes.map(function (item) {
                     return {
-                        Id: item.id,
+                        Id: item.doctorId,
                         Subject: 'Not available',
                         StartTime: new Date(item.appointmentStartTime),
                         EndTime: new Date(item.appointmentEndDateTime),
@@ -919,8 +1206,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             var scheduleObj2 = document.getElementById('schedulerss2').ej2_instances[0];
 
-            if (scheduleObj1) {
-                scheduleObj1.popupOpen = function (args) {
+            if (scheduleObj2) {
+                scheduleObj2.popupOpen = function (args) {
                     if (args.type === "Editor" && args.data.Id === undefined) {
                         args.cancel = true;
                     }
@@ -984,8 +1271,8 @@
     </script>
 
     <!-- Blocked Slot Template -->
-    <script id="blockTemplate" type="text/x-template">
-        <div class="blocked-slot">Not available</div>
+    <script id="blockTemplate2" type="text/x-template">
+        <div class="blocked-slot2">Not available</div>
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -1103,11 +1390,13 @@
                     </h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <input type="hidden" id="OCStatusId" value="74" name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="AddPatientId" asp-for="PatientData.Id" name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="ACFormofAppointment" value="Appointment for Consultation" name="medicalPatientSignature" class="custom-field-height" />
+
                 <div class="modal-body">
                     <div class="">
                         <label for="OC-resched" class="form-label">Appointment Date Time*</label>
-                        <ejs-datetimepicker id="app-datetim" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                        <ejs-datetimepicker id="app-datetim" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern" readonly></ejs-datetimepicker>
                         <span id="AptDatetime-reson" class="text-danger"></span>
                     </div>
                 </div>
@@ -1136,6 +1425,7 @@
                 var patietId = $("#AddPatientId").val();
                 // var formofappt = $("#app-form").val();
                 var appointmentDateTime = $("#app-datetim").val();
+                var FormofAppointment = $("#ACFormofAppointment").val();
                 var selectedDate = appointmentDateTime;
                 var currentDate = new Date(); // Current date-time
                 var formattedCurrentDate = formatDate(currentDate); // Format the current date
@@ -1148,8 +1438,7 @@
                 else {
                     $("#AptaddDatetime").text(""); // Clear error if input is valid
                 }
-                if(!isValid)
-                {
+                if (!isValid) {
                     return;
                 }
                 var formattedDate = convertDateFormat(appointmentDateTime);
@@ -1157,7 +1446,8 @@
 
                 var requestData = {
                     PatientId: patietId,
-                    AppointmentStartTime: formattedDate
+                    AppointmentStartTime: formattedDate,
+                    FormofAppointment: FormofAppointment
                 };
 
                 $.ajax({
@@ -1366,7 +1656,7 @@
                 clearError("pi-phoneno");
             }
 
-           var email = $("#pi-email").val().trim();
+            var email = $("#pi-email").val().trim();
             var emailRegex = /^[\w\.-]+@@[\w\.-]+\.\w+$/; // ✅ Regex for valid email format
             if (email === "") {
                 showError("pi-email", "Email is required.");
@@ -1536,44 +1826,44 @@
                     }
                     appointment.appointmentStartTime = formatDateTime(appointment.appointmentStartTime);
                     var cardHtml = `
-                        <div class="ius-gridrow">
-                            <div class="ius-appbody">
-                                <div class="ius-appinfo">
-                                    <input type="hidden" name="appointmentId" value="${appointment.id}">
+                            <div class="ius-gridrow">
+                                <div class="ius-appbody">
+                                    <div class="ius-appinfo">
+                                        <input type="hidden" name="appointmentId" value="${appointment.id}">
 
-                                                <h3>${appointment.doctorName || 'N/A'}</h3>
-                                    <div class="ius-apptyfo">
-                                                <span class="appinfo-type">${appointment.appoinmentType || 'N/A'}</span>
-                                        <span class="appinfo-dot"></span>
-                                                <span class="appinfo-form">${appointment.appointmentForm || 'N/A'}</span>
+                                                    <h3>${appointment.doctorName || 'N/A'}</h3>
+                                        <div class="ius-apptyfo">
+                                                    <span class="appinfo-type">${appointment.appoinmentType || 'N/A'}</span>
+                                            <span class="appinfo-dot"></span>
+                                                    <span class="appinfo-form">${appointment.appointmentForm || 'N/A'}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="ius-ctrls">
+                                        ${appointment.statusName !== "Cancelled" ? `
+                                            <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
+                                                     <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
+
+                                        </a>
+                                        <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                                                        <img loading="lazy" src="@Url.Content("~/assets/delete.svg")" width = "18" height = "20" alt = "Cancel" >
+                                        </a>
+
+                                            ` : ''}
+
                                     </div>
                                 </div>
-
-                                <div class="ius-ctrls">
-                                    ${appointment.statusName !== "Cancelled" ? `
-                                        <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
-                                                 <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
-
-                                    </a>
-                                    <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
-                                                    <img loading="lazy" src="@Url.Content("~/assets/delete.svg")" width = "18" height = "20" alt = "Cancel" >
-                                    </a>
-
-                                        ` : ''}
-
+                                <div class="ius-foo">
+                                    <div class="ius-datetime">
+                                        <div class="datetime-label text-sb">Date & Time</div>
+                                                <div>${appointment.appointmentStartTime || 'N/A'}</div>
+                                    </div>
+                                    <div class="ius-status">
+                                         <div class="ius-badge ${badgeClass}">${appointment.statusName || 'N/A'}</div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="ius-foo">
-                                <div class="ius-datetime">
-                                    <div class="datetime-label text-sb">Date & Time</div>
-                                            <div>${appointment.appointmentStartTime || 'N/A'}</div>
-                                </div>
-                                <div class="ius-status">
-                                     <div class="ius-badge ${badgeClass}">${appointment.statusName || 'N/A'}</div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                        `;
                     container.append(cardHtml);
                 });
             },
@@ -1640,10 +1930,17 @@
         text-align: center;
         font-weight: bold;
     }
+    .e-appointment.blocked-slot2 {
+        background-color: red !important;
+        color: white !important;
+        text-align: center;
+        font-weight: bold;
+    }
 
     span {
         font-size: 13px;
     }
+
     .badge {
         padding: 7px 13px;
         /* border-radius: 20px; */
@@ -1666,6 +1963,7 @@
     .badge-danger {
         background-color: #dc3545; /* Red */
     }
+
     .e-appointment.e-read-only {
         width: 100% !important;
     }
@@ -1673,7 +1971,5 @@
     .e-quick-popup-wrapper.e-lib.e-popup.e-control.e-popup-open {
         display: none;
     }
-
-
 
 </style>

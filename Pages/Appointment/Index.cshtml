@@ -337,8 +337,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             var dobValue = $("#pi-dob").val().trim();
             if (dobValue === "") {
-                showError("pi-dob", "Date of Birth is required.");
-                isValid = false;
+             
             } else {
                 var dobDate = new Date(dobValue.split('/').reverse().join('-')); // Convert dd/MM/yyyy to yyyy-MM-dd
                 var currentDate = new Date();
@@ -416,7 +415,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var formData = {
                 Name: $("#pi-name").val(),
                 Email: $("#pi-email").val(),
-                AppointmentForm: $("#pi-formofappt").val(),
+                FormofAppointment: $("#pi-formofappt").val(),
                 Mobile: $("#pi-phoneno").val(),
                 Comment: $("#pi-notes").val(),
                 AppointmentStartTime: formattedAppointmentStartTime,
