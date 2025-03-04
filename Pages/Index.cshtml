@@ -551,10 +551,17 @@
             $(document).ready(function () {
                 // Check if success message flag is set in localStorage
                 if (localStorage.getItem("showCancelSuccessMessage") === "true") {
-                    toastr.success("Appointment Cancel successfully!"); // Show success message
+                    toastr.success("Appointment Cancelled successfully!"); // Show success message
                     localStorage.removeItem("showCancelSuccessMessage"); // Remove flag after showing message
                 }
             });
+            $(document).ready(function () {
+                $('#app-cancel').on('hidden.bs.modal', function () {
+                    $('#pi-Resason').val(''); // Input field ko empty karna
+                    $('#Span-reson').text(''); // Span error message ko clear karna
+                });
+            });
+
         });
     </script>
 
@@ -637,14 +644,12 @@
                 var enteredDateTime;
 
                 if (appointmentDateTime === "") {
-
                     $("#OC-reschedSpan").text("Appointment Date Time is required.");
                     isValid = false;
                 } else if (!dateTimeRegex.test(appointmentDateTime)) {
                     $("#OC-reschedSpan").text("Invalid Appointment Date Time format.");
                     isValid = false;
                 } else {
-                    // Convert to Date object
                     var parts = appointmentDateTime.split(" ");
                     var dateParts = parts[0].split("/");
                     var timeParts = parts[1].split(":");
@@ -659,7 +664,7 @@
 
                     enteredDateTime = new Date(
                         dateParts[2], // Year
-                        dateParts[1] - 1, // Month (0-based index)
+                        dateParts[1] - 1, // Month (0-based)
                         dateParts[0], // Day
                         hours,
                         parseInt(timeParts[1], 10),
@@ -669,10 +674,19 @@
                     if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
                         $("#OC-reschedSpan").text("Invalid Appointment Date Time.");
                         isValid = false;
-                    } else {
+                    }
+                    else {
+                        $("#OC-reschedSpan").text("");
+                    }
+                    if (hours < 10 || hours >= 19) {  // 10 AM se 7 PM ki validation
+                        $("#OC-reschedSpan").text("Appointment time should be between 10 AM and 7 PM.");
+                        isValid = false;
+                    }
+                    else {
                         $("#OC-reschedSpan").text("");
                     }
                 }
+
                 if (!isValid) {
                     return;
                 }
@@ -836,6 +850,13 @@
                     } else {
                         $("#RP-reschedSpan").text("");
                     }
+                    var hours = enteredDateTime.getHours();
+                    if (hours < 10 || hours >= 19) {
+                        $("#RP-reschedSpan").text("Appointment time must be between 10 AM and 7 PM.");
+                        isValid = false;
+                    } else {
+                        $("#RP-reschedSpan").text("");
+                    }
                 }
                 if (!isValid) {
                     return;
@@ -946,17 +967,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="control-section">
+                    <div class="control-section" >
                         <div class="schedule-wrapper">
-                            <ejs-schedule id="schedulerss" height="100%" width="100%" selectedDate="DateTime.Today"
+                            <ejs-schedule id="schedulerss" height="100%" width="100%"
+                                          selectedDate="DateTime.Today"
                                           allowDragAndDrop="false" allowResizing="false"
                                           startHour="10:00" endHour="19:15"
                                           workDays="new int[] {1, 2, 3, 4, 5}"
                                           cellClick="onCellClick" showQuickInfo="false">
                                 <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
+
                                 <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
                             </ejs-schedule>
-
                         </div>
                     </div>
                 </div>
@@ -1680,8 +1702,12 @@
             }
 
             // Validate Age
-            if ($("#pi-age").val().trim() === "") {
+            var ageValue = $("#pi-age").val().trim();
+            if (ageValue === "") {
                 showError("pi-age", "Age is required.");
+                isValid = false;
+            } else if (isNaN(ageValue) || ageValue < 0 || ageValue > 99) {
+                showError("pi-age", "Invalid Age.");
                 isValid = false;
             } else {
                 clearError("pi-age");

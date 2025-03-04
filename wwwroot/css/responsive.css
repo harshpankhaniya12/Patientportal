@@ -98,15 +98,7 @@
     td.e-left-indent {
         width: 60px !important;
     }
-    .e-schedule {
-        overflow-x: auto; /* Horizontal scroll */
-        min-width: 1000px; /* Calendar ka minimum width */
-    }
-
-    .modal-body {
-        overflow-x: auto; /* Modal ka bhi scroll enable kare */
-    }
-
+  
     .full-screen-schedule {
         height: 100vh; /* Full Screen */
         width: 100vw;

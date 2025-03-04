@@ -73,8 +73,7 @@ namespace Patientportal.Pages
                 }
             }
 
-            IEnumerable<object> data = appointmentsRequest.Concat(appointments)
-                                               .OrderByDescending(a => ((AppointmentListItem)a).CreatedOn);
+            IEnumerable<object> data = appointmentsRequest.Concat(appointments).AsEnumerable().OrderByDescending(x => x.CreatedOn);
             int count = data.Count();
 
             var dataOperations = new DataOperations();

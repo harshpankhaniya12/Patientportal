@@ -97,19 +97,13 @@
             return;
         }
 
-        // Get the clicked slot's start time
         let startTime = args.startTime;
 
-        // Format DateTime in Local Time (YYYY-MM-DD HH:MM:SS)
-        let formattedTime = startTime.getFullYear() + "-" +
-            ("0" + (startTime.getMonth() + 1)).slice(-2) + "-" +
-            ("0" + startTime.getDate()).slice(-2) + " " +
-            ("0" + startTime.getHours()).slice(-2) + ":" +
-            ("0" + startTime.getMinutes()).slice(-2) + ":" +
-            ("0" + startTime.getSeconds()).slice(-2);
+        // Convert DateTime to ISO Format without Encoding
+        let formattedTime = startTime.toISOString();
 
-        // Redirect to Appointment page for future date & time only
-        window.location.href = `/Appointment?SelectedDateTime=${encodeURIComponent(formattedTime)}`;
+        // Redirect to Appointment page without URL Encoding
+        window.location.href = `/Appointment?SelectedDateTime=${formattedTime}`;
     }
 
 
