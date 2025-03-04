@@ -946,18 +946,17 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="control-section" style="overflow-x: auto;">
+                    <div class="control-section">
                         <div class="schedule-wrapper">
-                            <ejs-schedule id="schedulerss" height="100%" width="100%"
-                                          selectedDate="DateTime.Today"
+                            <ejs-schedule id="schedulerss" height="100%" width="100%" selectedDate="DateTime.Today"
                                           allowDragAndDrop="false" allowResizing="false"
                                           startHour="10:00" endHour="19:15"
                                           workDays="new int[] {1, 2, 3, 4, 5}"
                                           cellClick="onCellClick" showQuickInfo="false">
                                 <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
-
                                 <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
                             </ejs-schedule>
+
                         </div>
                     </div>
                 </div>
