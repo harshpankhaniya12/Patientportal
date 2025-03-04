@@ -582,7 +582,19 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var OCModalEl = document.getElementById('app-resched');
 
+            OCModalEl.addEventListener('hidden.bs.modal', function () {
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
+            });
+        });
+
+    </script>
     <div class="modal fade" id="oConsultationModal">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
