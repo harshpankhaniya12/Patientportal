@@ -20,16 +20,7 @@
     .page-login {
         position: relative;
     }
-      td.e-left-indent {
-        width: 60px !important;
-    }
-    tbody, td, tfoot, th, thead, tr {
-        width: 100% !important;
-    }
-    .full-screen-schedule {
-        height: 100vh; /* Full Screen */
-        width: 100vw;
-    }
+
     .login-lt {
         width: 100%;
         position: absolute;
@@ -80,18 +71,6 @@
         border: 0;
         order: 1;
     }
-    td.e-left-indent {
-        width: 60px !important;
-    }
-
-    tbody, td, tfoot, th, thead, tr {
-        width: 100% !important;
-    }
-
-    .full-screen-schedule {
-        height: 100vh; /* Full Screen */
-        width: 100vw;
-    }
 
     .hcol-usr { padding: 0; padding-right: 16px; background: none; }
 
@@ -112,18 +91,6 @@
         padding: 0 15px;
         margin-bottom: 20px !important;
     }
-    td.e-left-indent {
-        width: 60px !important;
-    }
-
-    tbody, td, tfoot, th, thead, tr {
-        width: 100% !important;
-    }
-
-    .full-screen-schedule {
-        height: 100vh; /* Full Screen */
-        width: 100vw;
-    }
     .form-actions { gap: 10px; justify-content: center; }
 }
 /* Mobile ke liye responsive layout */
@@ -131,9 +98,7 @@
     td.e-left-indent {
         width: 60px !important;
     }
-    tbody, td, tfoot, th, thead, tr {
-        width: 100% !important;
-    }
+  
     .full-screen-schedule {
         height: 100vh; /* Full Screen */
         width: 100vw;
@@ -145,5 +110,13 @@
 @media screen and (max-width: 380px) {
     .ius-gridrow { padding: 12px; }
     .ius-appbody { padding-bottom: 12px; margin-bottom: 12px; }
+    td.e-left-indent {
+        width: 60px !important;
+    }
+
+    .full-screen-schedule {
+        height: 100vh; /* Full Screen */
+        width: 100vw;
+    }
 }
 /*380*/
