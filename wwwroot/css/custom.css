@@ -68,7 +68,18 @@
     padding: 0;
     overflow: hidden; /* Extra scroll hatane ke liye */
 }
-
+td.e-timeline-wrapper {
+    display: none;
+}
+.e-current-time {
+    display: none;
+}
+.e-current-timeline {
+    display: none;
+}
+.e-previous-timeline {
+    display: none;
+}
 .schedule-wrapper {
     height: 100%;
     width: 100%;

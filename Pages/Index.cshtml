@@ -992,7 +992,7 @@
                 loadSchedulerData(); // Modal open hone par function call hoga
             });
         });
-
+       
         function loadSchedulerData() {
             var doctorBlockTimes = @Html.Raw(Json.Serialize(Model.Doctorblocktime));
 
@@ -1036,7 +1036,19 @@
 
             }, 500);
         }
+        $('#schedulerModal').on('shown.bs.modal', function () {
+            loadSchedulerData2('schedulerss');
 
+            var scheduleObj = document.getElementById('schedulerss').ej2_instances[0];
+            if (window.innerWidth <= 768) { // Mobile View ke liye condition
+                scheduleObj.timeScale = {
+                    enable: true,
+                    interval: 15,
+                    slotCount: 1
+                };
+                scheduleObj.refresh(); // Refresh se naye settings apply honge
+            }
+        });
     </script>
 
     <script>
@@ -1301,6 +1313,20 @@
             var dateTimePicker = document.getElementById("app-datetim").ej2_instances[0];
             dateTimePicker.value = new Date(startTime);
         }
+        $('#schedulerModal2').on('shown.bs.modal', function () {
+            loadSchedulerData2('schedulerss2');
+
+            var scheduleObj = document.getElementById('schedulerss2').ej2_instances[0];
+            if (window.innerWidth <= 768) { // Mobile View ke liye condition
+                scheduleObj.timeScale = {
+                    enable: true,
+                    interval: 15,
+                    slotCount: 1
+                };
+                scheduleObj.refresh(); // Refresh se naye settings apply honge
+            }
+        });
+
     </script>
 
     <!-- Blocked Slot Template -->
@@ -2008,4 +2034,11 @@
         display: none;
     }
 
+    .e-current-time {
+        display: none;
+    }
+
+    .e-schedule .e-hide-childs > * {
+        display: contents !important;
+    }
 </style>
