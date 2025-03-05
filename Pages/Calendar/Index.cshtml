@@ -99,10 +99,15 @@
 
         let startTime = args.startTime;
 
-        // Convert DateTime to ISO Format without Encoding
-        let formattedTime = startTime.toISOString();
+        // Format date without converting to UTC
+        let formattedTime = startTime.getFullYear() + "-" +
+            ("0" + (startTime.getMonth() + 1)).slice(-2) + "-" +
+            ("0" + startTime.getDate()).slice(-2) + "T" +
+            ("0" + startTime.getHours()).slice(-2) + ":" +
+            ("0" + startTime.getMinutes()).slice(-2) + ":" +
+            ("0" + startTime.getSeconds()).slice(-2);
 
-        // Redirect to Appointment page without URL Encoding
+        // Redirect to Appointment page with local time
         window.location.href = `/Appointment?SelectedDateTime=${formattedTime}`;
     }
 
