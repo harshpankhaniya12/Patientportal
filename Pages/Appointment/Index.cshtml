@@ -263,6 +263,10 @@ document.addEventListener("DOMContentLoaded", function () {
    <script src="./js/custom.js"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+
    
 <script>
     $(document).ready(function () {
@@ -446,16 +450,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
-                               Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Your appointment has been added successfully.',
-            confirmButtonText: 'Thanks',
-            confirmButtonColor: '#137A5D',
-            customClass: {
-                popup: 'rounded-3',
-                title: 'text-success'
-            }
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Your appointment has been added successfully.',
+                        confirmButtonText: 'Thanks',
+                        confirmButtonColor: '#137A5D',
+                        customClass: {
+                            popup: 'rounded-3',
+                            title: 'text-success'
+                        }
         }).then((result) => {
             if (result.isConfirmed) {
                 window.location.href = "/account"; // Redirect to /account on button click
@@ -492,4 +495,10 @@ document.getElementById("cancel-btn").addEventListener("click", function (event)
     span {
         font-size: 13px;
     }
+
+    .swal2-icon.swal2-success {
+        display: flex !important; /* Force show success icon */
+    }
+
+
 </style>
