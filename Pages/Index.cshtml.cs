@@ -52,6 +52,10 @@ namespace Patientportal.Pages
                         appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
                         appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
                     }
+                    if (appointment.CreatedOn != null)
+                    {
+                        appointment.CreatedOn = appointment.CreatedOn.Value.AddHours(-5).AddMinutes(-30);
+                    }
                     if (appointment.StatusName == "Reschedule")
                     {
                         appointment.StatusName = "Booked";
