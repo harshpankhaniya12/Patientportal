@@ -253,7 +253,7 @@
 
                         <e-data-manager url="/Index?handler=AppointmentView" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
 
-                        <e-grid-searchsettings fields="@(new string[] {"AppoinmentType","DoctorName","CreatedOn","StatusName"})"></e-grid-searchsettings>
+                        <e-grid-searchsettings fields="@(new string[] {"AppoinmentType","DoctorName","AppointmentStartTime","StatusName"})"></e-grid-searchsettings>
 
                         <e-grid-filtersettings type="Excel"></e-grid-filtersettings>
                         <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
@@ -266,7 +266,7 @@
                             <e-grid-column field="Id" headerText="Id" width="200" visible="false"></e-grid-column>
                             <e-grid-column field="AppoinmentType" headerText="Type of Appointment" width="200"></e-grid-column>
                             <e-grid-column field="DoctorName" headerText="Appointment With" width="200"></e-grid-column>
-                            <e-grid-column field="CreatedOn" headerText="Appointment Date Time" format="@Model.EjsDateTimePattern" type="dateTime" width="200"></e-grid-column>
+                            <e-grid-column field="AppointmentStartTime" headerText="Appointment Date Time" format="@Model.EjsDateTimePattern" type="dateTime" width="200"></e-grid-column>
                             <e-grid-column field="StatusName" headerText="Status" width="150"></e-grid-column>
                         </e-grid-columns>
                     </ejs-grid>

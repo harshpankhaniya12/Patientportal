@@ -91,9 +91,7 @@
         padding: 0 15px;
         margin-bottom: 20px !important;
     }
-    td.e-left-indent {
-        width: 60px !important;
-    }
+
 
     .full-screen-schedule {
         height: 100vh; /* Full Screen */
@@ -103,9 +101,7 @@
 }
 /* Mobile ke liye responsive layout */
 @media (max-width: 768px) {
-    td.e-left-indent {
-        width: 60px !important;
-    }
+
   
     .full-screen-schedule {
         height: 100vh; /* Full Screen */
@@ -118,9 +114,7 @@
 @media screen and (max-width: 380px) {
     .ius-gridrow { padding: 12px; }
     .ius-appbody { padding-bottom: 12px; margin-bottom: 12px; }
-    td.e-left-indent {
-        width: 60px !important;
-    }
+ 
 
     .full-screen-schedule {
         height: 100vh; /* Full Screen */
