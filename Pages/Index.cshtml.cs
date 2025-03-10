@@ -174,11 +174,11 @@ namespace Patientportal.Pages
             string apiUrl3 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/GetAppointmentsByDoctor";
           
             Doctorblocktime = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl3, token) ?? new List<AppointmentListItem>();
-            if (Doctorblocktime != null && Doctorblocktime.Count > 0)
+            if (Doctorblocktime != null && Doctorblocktime.Count > 0 )
             {
                 foreach (var appointment in Doctorblocktime)
                 {
-                    if (appointment.AppointmentStartTime.HasValue)
+                    if (appointment.AppointmentStartTime.HasValue && appointment.AppointmentEndDateTime.HasValue)
                     {
                         appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
                         appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
