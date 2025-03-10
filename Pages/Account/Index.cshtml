@@ -39,26 +39,52 @@
 
                 <div class="container-fluid g-0">
                     <form class="login-form" action="#" method="POST">
-                        <div class="form-group">
-                            <label for="pi-phone" class="form-label text-14 text-md">Phone</label>
-                            <input type="text" name="phone" class="form-control form-input bg--lightgray" id="pi-phone" value="+91 9876543210">
-
-                            <div class="send-otp text-end mt-4 mb-4">
-                                <a href="#send-otp" class="bttn bttn-r bttn-primary w-100">Send OTP</a>
+                        <div class="form-group" id="phone">
+                            <label for="pi-phone" class="form-label text-14 text-md">Enter Mobile Number*</label>
+                            <input type="text" asp-for="Input.Mobile" id="phones" name="Phone" class="form-control form-input bg--lightgray"
+                                   placeholder="" required maxlength="13" pattern="^\d{10,13}$"
+                                   title="Please enter a valid phone number with up to 13 digits"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            <span id="mobilenumberSpan" class="text-danger"></span>
+                            <div class="send-otp text-end mt-4 mb-4" id="sendopt1">
+                                <a href="#send-otp" id="sendotp" class="bttn bttn-r bttn-primary w-100">Send OTP</a>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="pi-otp" class="form-label text-14 text-md">OTP sent to 9876543210</label>
+                            <span id="otp" style="margin-bottom: 5px;">
+                                OTP sent to  <span id="phone-display" style="margin-left: 5px; "></span> <span id="edit-phone" style="cursor: pointer;">
+                                    <i class="fas fa-edit"></i> <!-- Font Awesome Edit Icon -->
+                                </span>
+                            </span>
 
                             <div class="otp-inps">
-                                <input type="num" name="otp-1" class="form-control form-input bg--lightgray" id="otp-1">
-                                <input type="num" name="otp-2" class="form-control form-input bg--lightgray" id="otp-2">
-                                <input type="num" name="otp-3" class="form-control form-input bg--lightgray" id="otp-3">
-                                <input type="num" name="otp-4" class="form-control form-input bg--lightgray" id="otp-4">
+                                <div class="col">
+                                    @* <input type="text" class="form-control text-center"
+                                    maxlength="1" required="" placeholder="#" autocomplete="off">*@
+                                    <input type="text" asp-for="Input.OTP" id="1" class="form-control text-center otp-input" maxlength="1"
+                                           autocomplete="off" placeholder="" />
+                                </div>
+                                <div class="col">
+                                    <input type="text" asp-for="Input.OTP1" id="2" class="form-control text-center otp-input"
+                                           maxlength="1" placeholder="" autocomplete="off">
+                                </div>
+                                <div class="col">
+                                    <input type="text" asp-for="Input.OTP2" id="3" class="form-control text-center otp-input"
+                                           maxlength="1" placeholder="" autocomplete="off">
+                                </div>
+                                <div class="col">
+                                    <input type="text" asp-for="Input.OTP3" id="4" class="form-control text-center otp-input"
+                                           maxlength="1" placeholder="" autocomplete="off">
+                                </div>
+                            </div>
+                            <span id="otpspan" class="text-danger"></span>
+                            <div class="send-otp text-end mt-2 mb-2" id="sendopt12">
+                                <span id="timer" style="display:none; font-size: 14px; margin-top: 10px;"></span>
+                                <a href="#" id="resendOtp" style="display:none; font-size: 14px; color: blue; cursor: pointer;">Resend OTP</a>
                             </div>
                         </div>
 
-                        <input type="submit" class="bttn bttn-r bttn-primary mt-4 mb-4" name="Submit">
+                        <input type="submit" id="submitbutton" class="bttn bttn-r bttn-primary mt-4 mb-4" name="Submit">
                     </form>
                 </div>
             </div>
@@ -72,196 +98,92 @@
 
 </body>
 </html>
-
 <script>
-    var countdownInterval;
-    document.getElementById("sendotp").addEventListener("click", function (event) {
-        event.preventDefault();
-        handleOtpRequest(this);
-    });
+    $(document).ready(function () {
+        $("#sendotp").click(function (e) {
+            e.preventDefault();
 
-    // document.getElementById("resend-otp").addEventListener("click", function (event) {
-    //     event.preventDefault();
-    //     document.getElementById("invalidotp").style.display = "none";
-    //     clearAllOtpFields();
-    //     handleOtpRequest(this);
-    // });
+            var phoneNumber = $("#phones").val().trim();
 
-    function clearAllOtpFields() {
-        // Select all OTP input fields
-        const otpInputs = document.querySelectorAll('.otp-input');
+            $("#mobilenumberSpan").text("");
 
-        // Iterate over each input field and clear its value
-        otpInputs.forEach(input => {
-            input.value = '';
-        });
-    }
+            if (phoneNumber === "") {
+                $("#mobilenumberSpan").text("Mobile number is required.");
+                return;
+            }
 
-    // function handleOtpRequest(button) {
-    //     const phoneNumber = document.getElementById("phone").value;
-    //     const phoneValidationMessage = document.getElementById("phone-validation");
-
-    //     if (/^\d{1,13}$/.test(phoneNumber)) {
-    //         phoneValidationMessage.style.display = 'none';
-    //         button.disabled = true;
-
-    //         const formData = new FormData(document.getElementById("account"));
-    //         formData.append("Phone", phoneNumber);
-
-    //         fetch('/Account/Login?handler=SendOTP', {
-    //             method: 'POST',
-    //             body: formData,
-    //             headers: {
-    //                 'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-    //             }
-    //         })
-    //             .then(response => response.json())
-    //             .then(data => {
-    //                 if (data.success) {
-    //                     showOtpFields(phoneNumber);
-    //                     startOtpResendTimer(button);
-    //                 } else {
-    //                     showError(data.error || "An error occurred. Please try again.");
-    //                     resetSendOtpButton(button);
-    //                 }
-    //             })
-    //             .catch(error => {
-    //                 console.error('Error:', error);
-    //                 showError("An error occurred. Please try again.");
-    //                 resetSendOtpButton(button);
-    //             });
-    //     } else {
-    //         phoneValidationMessage.style.display = 'block';
-    //     }
-    // }
-
-    function handleOtpRequest(button) {
-        const phoneNumber = document.getElementById("phone").value;
-        const phoneValidationMessage = document.getElementById("phone-validation");
-        const userNotExistsMessage = document.getElementById("user-not-exists");
-        const invalidNumberMessage = document.getElementById("invalid-number");
-
-        // Hide all messages initially
-        phoneValidationMessage.style.display = 'none';
-        userNotExistsMessage.style.display = 'none';
-        invalidNumberMessage.style.display = 'none';
-
-        // Check if the phone number is empty
-        if (!phoneNumber) {
-            phoneValidationMessage.style.display = 'block'; // Show "Please enter mobile number"
-            return;
-        }
-
-        // Check if the phone number has less than 10 digits
-        if (phoneNumber.length < 10) {
-            invalidNumberMessage.style.display = 'block'; // Show "Invalid mobile number"
-            return;
-        }
-
-        // Check if the phone number is valid (between 10 and 13 digits)
-        if (/^\d{10,13}$/.test(phoneNumber)) {
-            phoneValidationMessage.style.display = 'none'; // Hide "Please enter mobile number"
-            invalidNumberMessage.style.display = 'none'; // Hide "Invalid mobile number"
-            button.disabled = true;
-
-            const formData = new FormData(document.getElementById("account"));
-            formData.append("Phone", phoneNumber);
-
-            fetch('/Account/Login?handler=SendOTP', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showOtpFields(phoneNumber);
-                        //startOtpResendTimer(button);
+            if (phoneNumber.length < 10 || phoneNumber.length > 13) {
+                $("#mobilenumberSpan").text("Please enter a valid Mobile number.");
+                return;
+            }
+            // AJAX Request to Send OTP
+            $.ajax({
+                url: "/Account/Index?handler=SendOTP",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ Mobile: phoneNumber }),
+                success: function (response) {
+                    if (response.success) {
+                        $("#phone").hide();
+                        $("#sendopt1").hide();
+                        $("#otp").show();
+                        $(".otp-inps").show().css("display", "flex");
+                        $("input[type=submit]").show();
+                        $("#phone-display").text(phoneNumber);
+                        initializeOtpInputs()
+                        startTimer(); // Timer start karna
                     } else {
-                        showError(data.error || "User with the given mobile number does not exist.");
-                        //resetSendOtpButton(button);
+                        alert(response.message || "Failed to send OTP.");
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showError("An error occurred. Please try again.");
-                    //resetSendOtpButton(button);
-                });
-        } else {
-            userNotExistsMessage.style.display = 'none'; // Hide "User does not exist" message
-            phoneValidationMessage.style.display = 'block'; // Show "Please enter mobile number"
-        }
-    }
-
-    function showError(message) {
-        const userNotExistsMessage = document.getElementById("user-not-exists");
-        userNotExistsMessage.textContent = message;
-        userNotExistsMessage.style.display = 'block';
-    }
+                },
+                error: function () {
+                    alert("Error sending OTP. Please try again.");
+                }
+            });
+        });
+        $("#resendOtp").click(function (e) {
+            e.preventDefault();
+            $("#resendOtp").hide(); // Resend OTP link hide karein
+            $("#sendotp").click();  // Send OTP ka click event trigger karein
+        });
 
 
-
-    function showOtpFields(phoneNumber) {
-        document.getElementById("OTPtext").style.display = 'flex';
-        document.getElementById("LoginButton").style.display = 'flex';
-        document.getElementById("otp-resend-timer").style.display = 'none';
-        document.getElementById("phone-display").textContent = phoneNumber;
-        document.getElementById("mobilenumber").style.display = "none";
-        document.getElementById("sendopt1").style.display = "none"; // Hide the Send OTP button
-        //document.getElementById("resend-otp").style.display = 'none'; // Hide the resend OTP link initially
-        document.getElementById("otp-error-message").style.display = "none";
-        document.getElementById("invalidotp").style.display = "none";
-        initializeOtpInputs();
-    }
-
-    document.getElementById("edit-phone").addEventListener("click", function (event) {
-        event.preventDefault();
-
-        document.getElementById("OTPtext").style.display = 'none';
-        document.getElementById("LoginButton").style.display = 'none';
-        document.getElementById("otp-resend-timer").style.display = 'none';
-        document.getElementById("mobilenumber").style.display = "block";
-        document.getElementById("sendopt1").style.display = "block"; // Show the Send OTP button
-        //document.getElementById("resend-otp").style.display = 'none'; // Hide the resend OTP link initially
-        document.getElementById("edit-phone").style.display = 'block'; // Hide the back arrow
-        document.getElementById("otp-error-message").style.display = "none";
+        // Stop Timer on Edit Phone Click
+        $("#edit-phone").click(function () {
+            clearInterval(timerInterval); // Stop the timer
+            $("#timer").text("Resend OTP in 0s").hide(); // Hide and reset timer
+            $("#phone").show();
+            $("#sendopt1").show();
+            $("#sendotp").show();
+            $("#otp").hide();
+            $("#resendOtp").hide();
+            $(".otp-inps").hide().css("display", "none");
+            $("input[type=submit]").hide();
+        });
     });
 
 
-    function startOtpResendTimer(button) {
-        let timeLeft = 30;
-        const timerMessage = document.getElementById("otp-timer-message");
 
-        // Hide the resend OTP link during the countdown
-        document.getElementById("resend-otp").style.display = 'none';
-        document.getElementById("edit-phone").style.display = 'block'; // Hide the back arrow during the countdown
 
-        if (countdownInterval) {
-            clearInterval(countdownInterval);
-            $('#otp-timer-message').html('');
-            console.log("yes interval clear");
-        }
+    let timerInterval; // Global variable to store timer
 
-        countdownInterval = setInterval(() => {
-            if (timeLeft > 0) {
-                timerMessage.textContent = `Resend OTP in ${timeLeft}s`;
-                timeLeft--;
-            } else {
-                clearInterval(countdownInterval);
-                enableResendOtp();
+    function startTimer() {
+        let timeLeft = 30; // 30-second timer
+        $("#sendotp").hide(); // Hide Send OTP button
+        $("#timer").show().text("Resend OTP in " + timeLeft + "s");
+
+        timerInterval = setInterval(function () {
+            timeLeft--;
+            $("#timer").text("Resend OTP in " + timeLeft + "s");
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                $("#timer").hide();
+                $("#resendOtp").show(); // Show Resend OTP button
             }
         }, 1000);
     }
 
-    function enableResendOtp() {
-        document.getElementById("otp-timer-message").textContent = ""; // Clear the timer message
-        document.getElementById("resend-otp").style.display = 'block'; // Show the resend OTP link after the countdown
-        document.getElementById("edit-phone").style.display = 'none';
-
-        // Show the back arrow after the countdown
-    }
     function initializeOtpInputs() {
         const inputs = document.querySelectorAll('.otp-input');
 
@@ -284,7 +206,7 @@
                     inputs[index + 1].focus(); // Move to the next input
                 }
 
-                updateCombinedOtp(inputs);
+                // updateCombinedOtp(inputs);
             });
 
             input.addEventListener('keydown', function (e) {
@@ -303,124 +225,81 @@
         });
     }
 
-    function updateCombinedOtp(inputs) {
-        const combinedOtp = Array.from(inputs).map(input => input.value).join('');
-        document.getElementById('combinedOtp').value = combinedOtp;
-    }
 
 
 
-    document.querySelector("form").addEventListener("submit", function (event) {
-        const combinedOtp = document.getElementById("combinedOtp").value;
+</script>
+<script>
 
-        if (combinedOtp.length !== 4) {
-            event.preventDefault();
-            document.getElementById("otp-error-message").style.display = 'block';
+    $("#submitbutton").click(function (e) {
+        e.preventDefault();
+        var phoneNumber = $("#phones").val().trim();
+        var otp1 = $("#1").val().trim();
+        var otp2 = $("#2").val().trim();
+        var otp3 = $("#3").val().trim();
+        var otp4 = $("#4").val().trim();
+
+        $("#otpspan").text(""); // Pehle error message clear kare
+
+        if (otp1 === "" || otp2 === "" || otp3 === "" || otp4 === "") {
+            $("#otpspan").text("OTP is required.");
+            return;
         }
-    });
-
-    function resetSendOtpButton(button) {
-        button.disabled = false;
-        button.textContent = "Send OTP";
-
-        // Apply styles to the button
-        button.style.marginTop = '20px';
-        button.style.backgroundColor = '#0061AB';
-        button.style.padding = '10px';
-        button.style.borderRadius = '100px';
-        button.style.color = 'white';
-        button.style.border = '2px solid #0061AB';
-        button.style.fontSize = 'medium';
-        button.style.height = '40px';
-    }
-
-    // function showError(message) {
-    //     const userNotExistsMessage = document.getElementById("user-not-exists");
-    //     userNotExistsMessage.textContent = message;
-    //     userNotExistsMessage.style.display = 'block';
-    // }
-
-    document.querySelectorAll('.otp-input').forEach(function (input) {
-        input.addEventListener('input', function () {
-            const otpInputs = document.querySelectorAll('.otp-input');
-            const otpValues = Array.from(otpInputs).map(input => input.value).join('');
-
-            if (otpValues.length === otpInputs.length) {
-                // All OTP fields are filled, trigger the login process
-                triggerOtpLogin(otpValues);
+        var otpCode = otp1 + otp2 + otp3 + otp4;
+        // AJAX Request to Send OTP
+        $.ajax({
+            url: "/Account/Index?handler=Verifyotp",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ otp: otpCode, mobile: phoneNumber }),
+            success: function (response) {
+                if (response.success) {
+                    window.location.href = "/"; // Redirect
+                } else {
+                    $("#otpspan").text("Invalid OTP. Try again.");
+                }
+            },
+            error: function () {
+                alert("Error sending OTP. Please try again.");
             }
         });
     });
 
-    function triggerOtpLogin(otpValues) {
-        const combinedOtpInput = document.getElementById("combinedOtp");
-        combinedOtpInput.value = otpValues;
-
-        const formData = new FormData(document.getElementById("account"));
-        formData.append("CombinedOtp", otpValues);
-
-        fetch('/Account/Login?handler=OtpLogin', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = '/InitializeSession' || '/'; // Redirect upon successful login
-                } else {
-                    document.getElementById("invalidotp").style.display = 'block';
-                    document.getElementById("invalidotp").textContent = data.error || "An error occurred. Please try again.";
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById("invalidotp").style.display = 'block';
-                document.getElementById("invalidotp").textContent = "An error occurred. Please try again.";
-            });
-    }
-
-
 </script>
-
-@* <style>
-    /* Style for the container holding the buttons */
-    .d-flex {
-        display: flex;
-        justify-content: space-between; /* Aligns items to both ends */
+<style>
+    #otp, .otp-inps, input[type=submit] {
+        display: none;
     }
 
-    /* Style for the individual buttons */
-    #resend-otp {
-        color: #0061AB; /* Adjust color as needed */
-        font-weight: bold;
-        font-size: 16px; /* Adjust font size as needed */
-        text-decoration: none; /* Remove underline */
+    .otp-inps {
+        justify-content: center; /* Center align */
+        gap: 10px; /* Input boxes ke beech gap */
     }
 
-    #back-arrow {
-        color: #0061AB; /* Adjust color as needed */
-        font-weight: bold;
-        font-size: 16px; /* Adjust font size as needed */
-        text-decoration: none; /* Remove underline */
-    }
-
-
-    #edit-phone {
-        margin-left: 10px;
-        color: #0061AB; /* Edit icon color */
-    }
-
-        #edit-phone:hover {
-            color: #004080; /* Darker color on hover */
+        .otp-inps input {
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            text-align: center;
+            border: 2px solid #ccc;
+            border-radius: 5px;
         }
 
-
-    #otp {
-        display: flex;
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: var(--bs-body-color) !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        background-color: var(--bs-body-bg) !important;
+        background-clip: padding-box !important;
+        border: var(--bs-border-width) solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+        transition: border-color .15sease-in-out, box-shadow .15sease-in-out;
     }
 </style>
-
- *@

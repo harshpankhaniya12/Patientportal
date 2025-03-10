@@ -10,9 +10,11 @@ using System.Text.Json;
 using Innovura.CSharp.Core;
 using System.ComponentModel.DataAnnotations;
 using Patientportal.Model;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Patientportal.Pages
 {
+    [Authorize]
     [IgnoreAntiforgeryToken(Order = 2000)]
     public class IndexModel : PageModel
     {
