@@ -9,6 +9,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<ApiService>();
 builder.Services.AddSingleton<OTPService>();
+
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+});
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -17,8 +22,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Token expires in 5 minutes
         options.SlidingExpiration = false; // Prevents automatic renewal
         options.Cookie.HttpOnly = true; // Enhances security
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use HTTPS
-        options.Cookie.SameSite = SameSiteMode.Strict; // Prevents CSRF attacks
+        options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Use HTTPS
+        options.Cookie.SameSite = SameSiteMode.Lax; // Prevents CSRF attacks
 
     });
 
