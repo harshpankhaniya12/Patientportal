@@ -14,7 +14,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Account";
         options.AccessDeniedPath = "/AccessDenied";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(120); // Token expires in 5 minutes
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Token expires in 5 minutes
         options.SlidingExpiration = false; // Prevents automatic renewal
         options.Cookie.HttpOnly = true; // Enhances security
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use HTTPS
