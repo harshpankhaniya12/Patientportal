@@ -271,7 +271,7 @@
             data: JSON.stringify({ otp: otpCode, mobile: phoneNumber }),
             success: function (response) {
                 if (response.success) {
-                    window.location.href = "/?id=" + response.patientId;
+                    window.location.href = "/Patient?id=" + response.patientId;
                 } else {
                     if (response.message !== null) {
 
