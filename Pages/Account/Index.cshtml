@@ -80,7 +80,7 @@
                             <span id="otpspan" class="text-danger"></span>
                             <div class="send-otp text-end mt-2 mb-2" id="sendopt12">
                                 <span id="timer" style="display:none; font-size: 14px; margin-top: 10px;"></span>
-                                <a href="#" id="resendOtp" style="display:none; font-size: 14px; color: blue; cursor: pointer;">Resend OTP</a>
+                                <a href="#" id="resendOtp" style="display:none; font-size: 14px; color: #0061AB; cursor: pointer;">Resend OTP</a>
                             </div>
                         </div>
 
@@ -178,12 +178,12 @@
     });
 
 
-
+        
 
     let timerInterval; // Global variable to store timer
 
     function startTimer() {
-        let timeLeft = 30; // 30-second timer
+        let timeLeft = 60; // 60-second timer
         $("#sendotp").hide(); // Hide Send OTP button
         $("#timer").show().text("Resend OTP in " + timeLeft + "s");
 
@@ -198,6 +198,7 @@
             }
         }, 1000);
     }
+
 
     function initializeOtpInputs() {
         const inputs = document.querySelectorAll('.otp-input');
@@ -263,7 +264,7 @@
         var otpCode = otp1 + otp2 + otp3 + otp4;
         // Button disable karein aur loading text set karein
         // $("#submitbutton").prop("disabled", true).css("pointer-events", "none").text("Verifying...");
-        $("#submitbutton").prop("disabled", true).css("pointer-events", "none").text("Verifying...");
+        $("#submitbutton").prop("disabled", true).val("Verify...");
         $.ajax({
             url: "/Account/Index?handler=Verifyotp",
             type: "POST",
@@ -288,7 +289,7 @@
             },
             complete: function () {
                 // Response ke baad button enable karein
-                $("#submitbutton").prop("disabled", false).css("pointer-events", "auto").text("Submit");
+                $("#submitbutton").prop("disabled", false).val("Submit");
             }
         });
     });
