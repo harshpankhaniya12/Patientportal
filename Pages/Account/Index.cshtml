@@ -116,6 +116,8 @@
                 $("#mobilenumberSpan").text("Please enter a valid Mobile number.");
                 return;
             }
+            $("#sendotp").prop("disabled", true).css("pointer-events", "none").text("Sending...");
+
             // AJAX Request to Send OTP
             $.ajax({
                 url: "/Account/Index?handler=SendOTP",
@@ -133,11 +135,24 @@
                         initializeOtpInputs()
                         startTimer(); // Timer start karna
                     } else {
-                        alert(response.message || "Failed to send OTP.");
+                        $("#phone").show();
+                        $("#sendopt1").show();
+                        $("#otp").hide();
+                        $(".otp-inps").hide();
+                        $("input[type=submit]").hide();
+                        $("#sendopt1").show();
+                        $("#sendotp").show();
+
+                        $("#phone-display").text(phoneNumber);
+                        $("#mobilenumberSpan").text(response.message); // Show error message
                     }
                 },
                 error: function () {
                     alert("Error sending OTP. Please try again.");
+                },
+                complete: function () {
+                    $("#sendotp").prop("disabled", false).css("pointer-events", "auto").text("Send OTP");
+                    console.log("Send OTP button enabled"); // Debugging
                 }
             });
         });
@@ -246,7 +261,9 @@
             return;
         }
         var otpCode = otp1 + otp2 + otp3 + otp4;
-        // AJAX Request to Send OTP
+        // Button disable karein aur loading text set karein
+        $("#submitbutton").prop("disabled", true).css("pointer-events", "none").text("Verifying...");
+
         $.ajax({
             url: "/Account/Index?handler=Verifyotp",
             type: "POST",
@@ -254,13 +271,24 @@
             data: JSON.stringify({ otp: otpCode, mobile: phoneNumber }),
             success: function (response) {
                 if (response.success) {
-                    window.location.href = "/"; // Redirect
+                    window.location.href = "/?id=" + response.patientId;
                 } else {
-                    $("#otpspan").text("Invalid OTP. Try again.");
+                    if (response.message !== null) {
+
+                        $("#otpspan").text(response.message); // Show error message
+                    }
+                    else {
+                        $("#otpspan").text("Invalid OTP. Try again.");
+
+                    }
                 }
             },
             error: function () {
                 alert("Error sending OTP. Please try again.");
+            },
+            complete: function () {
+                // Response ke baad button enable karein
+                $("#submitbutton").prop("disabled", false).css("pointer-events", "auto").text("Submit");
             }
         });
     });

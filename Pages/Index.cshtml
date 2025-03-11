@@ -251,7 +251,7 @@
                               queryCellInfo="onQueryCellInfo"
                               toolbarClick="toolbarClick">
 
-                        <e-data-manager url="/Index?handler=AppointmentView" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
+                       <e-data-manager url="/Index?handler=AppointmentView&Id=@Model.Id" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
 
                         <e-grid-searchsettings fields="@(new string[] {"AppoinmentType","DoctorName","AppointmentStartTime","StatusName"})"></e-grid-searchsettings>
 
@@ -1863,7 +1863,7 @@
 
     function loadAppointments() {
         $.ajax({
-            url: '/Index?handler=AppointmentViewCard', // URL sahi daalein
+            url: '/Index?handler=AppointmentViewCard?Id'+@Model.Id, // URL sahi daalein
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {

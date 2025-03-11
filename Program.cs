@@ -8,11 +8,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpClient<ApiService>();
+builder.Services.AddSingleton<OTPService>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Account";
         options.AccessDeniedPath = "/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(120); // Token expires in 5 minutes
+        options.SlidingExpiration = false; // Prevents automatic renewal
+        options.Cookie.HttpOnly = true; // Enhances security
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Use HTTPS
+        options.Cookie.SameSite = SameSiteMode.Strict; // Prevents CSRF attacks
+
     });
 
 builder.Services.AddAuthorization();

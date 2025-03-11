@@ -21,13 +21,15 @@ namespace Patientportal.Pages.Account
         //private readonly HttpClient _httpClient;
         private readonly HttpClient _httpClient;
         private readonly ApiService _apiService;
+        private readonly OTPService _otpService;
         [BindProperty]
         public InputModel Input { get; set; }
-        public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, ApiService apiService)
+        public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, ApiService apiService, OTPService oTPService)
         {
             _logger = logger;
             _httpClient = httpClientFactory;
             _apiService = apiService;
+            _otpService = oTPService;
         }
         public IActionResult OnGet()
         {
@@ -37,15 +39,26 @@ namespace Patientportal.Pages.Account
             }
             return Page();
         }
+
         public async Task<JsonResult> OnPostSendOTPAsync([FromBody] InputModel request)
         {
+            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/GetpatientByMobilenumber?Mobilenumber={request.Mobile}";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDUwIiwianRpIjoiMGZiNmI4NGEtNWQxNS00Y2JlLWIyY2ItODg3MjA5M2M0YTc5IiwibmJmIjoxNzQxNjMwMTcyLCJleHAiOjE3NzMxNjYxNzIsImlhdCI6MTc0MTYzMDE3MiwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.vnwTeZDidK0VS1HgdhGki_8MtMQRxyU_Hpr1QV5pwPTMqkNICMw0cczvQkJqe2_QmjUyzOfmwF56cgaIBBkqbw"; // Valid token yahan dalein
+            var PatientDetails = await _apiService.GetAsync<ProfileListItem>(apiUrl2, token);
             if (string.IsNullOrEmpty(request.Mobile) || request.Mobile.Length < 10)
             {
                 return new JsonResult(new { success = false, message = "Invalid phone number" });
             }
+            if (PatientDetails == null)
+            {
+                return new JsonResult(new { success = false, message = "This patient is not registered." });
+            }
+            if (!_otpService.CanSendOTP(request.Mobile))
+            {
+                return new JsonResult(new { success = false, message = "Maximum OTP attempts reached. Try again after 24 hours." });
+            }
 
-            string apiUrl = $"http://localhost:5165/api/v1/Account/PatientportalSendAuthToken/{request.Mobile}.json";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDUwIiwianRpIjoiMGZiNmI4NGEtNWQxNS00Y2JlLWIyY2ItODg3MjA5M2M0YTc5IiwibmJmIjoxNzQxNjMwMTcyLCJleHAiOjE3NzMxNjYxNzIsImlhdCI6MTc0MTYzMDE3MiwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.vnwTeZDidK0VS1HgdhGki_8MtMQRxyU_Hpr1QV5pwPTMqkNICMw0cczvQkJqe2_QmjUyzOfmwF56cgaIBBkqbw"; // Valid token yahan dalein
+            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Account/PatientportalSendAuthToken/{request.Mobile}.json";
 
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -55,13 +68,11 @@ namespace Patientportal.Pages.Account
 
             try
             {
-              
-                var response = await _apiService.GetAsync<List<InputModel>>(apiUrl, token);
-                //var result = await response.Content.ReadAsStringAsync();
 
-                
-                    return new JsonResult(new { success = true, message = "OTP Sent Successfully" });
-               
+                var response = await _apiService.GetAsync<List<InputModel>>(apiUrl, token);
+                _otpService.RecordOTPAttempt(request.Mobile);
+                return new JsonResult(new { success = true, message = "OTP Sent Successfully" });
+
             }
             catch (Exception ex)
             {
@@ -69,49 +80,26 @@ namespace Patientportal.Pages.Account
             }
         }
 
-
-        //public async Task<IActionResult> OnPostSendOTPAsync([FromBody] InputModel request)
-        //{
-        //    using var reader = new StreamReader(HttpContext.Request.Body);
-        //    var json = await reader.ReadToEndAsync();
-        //    InputModel viewModel = JSON.Deserialize<InputModel>(json);
-        //    if (string.IsNullOrEmpty(request.Mobile) || request.Mobile.Length < 10)
-        //    {
-        //        return new JsonResult(new { success = false, message = "Invalid phone number" });
-        //    }
-
-        //    string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/SendOTP";
-        //    string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiYjk5MDM2ZWItNTRhZS00ZWE0LWI1MjMtNThmYThlM2UzMzdkIiwibmJmIjoxNzQwNTU2NDQ1LCJleHAiOjE3NzIwOTI0NDUsImlhdCI6MTc0MDU1NjQ0NSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.yex9R3CP67Mkp715Y61FEIUIFhtiQhGJa8X01V_vEd_c9PuKw4uZbEi3_bQtpzQpwukb5uS_SPi4TN2HGh_JBQ"; // Valid token yahan dalein
-
-        //    var payload = new { phone = request.Mobile };
-        
-        //        return new JsonResult(new { success = true, message = "OTP Sent Successfully" });
-       
-        //}
-       
         public async Task<JsonResult> OnPostVerifyotpAsync([FromBody] InputModel request)
         {
-           
+
             if (string.IsNullOrEmpty(request.OTP) || request.OTP.Length < 4)
             {
-                return new JsonResult(new { success = false, message = "Invalid phone number" });
+                return new JsonResult(new { success = false, message = "Invalid OTP number" });
             }
-            if (string.IsNullOrEmpty(request.Mobile) || string.IsNullOrEmpty(request.OTP) || request.OTP.Length < 4)
-            {
-                return new JsonResult(new { success = false, error = "Invalid OTP or Mobile Number" });
-            }
-
-            string apiUrl = "http://localhost:5165/api/v1/Account/verify-otp";
+            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/GetpatientByMobilenumber?Mobilenumber={request.Mobile}";
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDUwIiwianRpIjoiMGZiNmI4NGEtNWQxNS00Y2JlLWIyY2ItODg3MjA5M2M0YTc5IiwibmJmIjoxNzQxNjMwMTcyLCJleHAiOjE3NzMxNjYxNzIsImlhdCI6MTc0MTYzMDE3MiwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.vnwTeZDidK0VS1HgdhGki_8MtMQRxyU_Hpr1QV5pwPTMqkNICMw0cczvQkJqe2_QmjUyzOfmwF56cgaIBBkqbw"; // Valid token yahan dalein
-            var payload = new { mobile = request.Mobile, otp = request.OTP};
+            var PatientDetails = await _apiService.GetAsync<ProfileListItem>(apiUrl2, token);
+            var patient = PatientDetails; 
+           
+            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Account/Patientportalverify-otp";
+            var payload = new { mobile = request.Mobile, otp = request.OTP };
             var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
             var response = await _apiService.PostAsync<InputModel, ApiResponse>(apiUrl, request, token);
-            //var result = await response..ReadAsStringAsync();
 
-            if (response.IsSuccess)
+            if (response.IsSucceeded)
             {
-                // ✅ User authenticated, create session
                 var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, request.Mobile),
@@ -123,11 +111,16 @@ namespace Patientportal.Pages.Account
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                return new JsonResult(new { success = true, message = "OTP Verified Successfully" });
+                return new JsonResult(new
+                {
+                    success = true,
+                    message = "OTP Verified Successfully",
+                    patientId = patient?.Id 
+                });
             }
             else
             {
-                return new JsonResult(new { success = false, error = response });
+                return new JsonResult(new { success = false, message = response.Message });
             }
         }
         public async Task<IActionResult> OnPostAsync()
@@ -136,66 +129,6 @@ namespace Patientportal.Pages.Account
             return new JsonResult(new { success = true }); // Success response
         }
 
-
-        //public async Task<IActionResult> OnPostVerifyotpAsync([FromBody] InputModel request)
-        //{
-        //    using var reader = new StreamReader(HttpContext.Request.Body);
-        //    var json = await reader.ReadToEndAsync();
-        //    InputModel viewModel = JSON.Deserialize<InputModel>(json);
-        //    if (string.IsNullOrEmpty(request.OTP) || request.OTP.Length < 4)
-        //    {
-        //        return new JsonResult(new { success = false, message = "Invalid phone number" });
-        //    }
-
-        //    string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/AddAppointmentbyPatientPortal";
-        //    string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiYjk5MDM2ZWItNTRhZS00ZWE0LWI1MjMtNThmYThlM2UzMzdkIiwibmJmIjoxNzQwNTU2NDQ1LCJleHAiOjE3NzIwOTI0NDUsImlhdCI6MTc0MDU1NjQ0NSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.yex9R3CP67Mkp715Y61FEIUIFhtiQhGJa8X01V_vEd_c9PuKw4uZbEi3_bQtpzQpwukb5uS_SPi4TN2HGh_JBQ"; // Valid token yahan dalein
-        //    var apiHelper = new ApiService(_httpClient);
-        //    var response = await _apiService.PostAsync<InputModel, ApiResponse>(apiUrl, viewModel, token);
-
-        //    var payload = new { OTP = request.Mobile };
-        //    //var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
-
-        //    //var response = await _httpClient.PostAsync(apiUrl, content);
-
-        //    //if (response.IsSuccessStatusCode)
-        //    //{
-        //        return new JsonResult(new { success = true, message = "OTP Sent Successfully" });
-        //    //}
-        //    //else
-        //    //{
-        //    //    return new JsonResult(new { success = false, message = "Failed to send OTP" });
-        //    //}
-        //}
-
-
-
-
-        //public async Task<JsonResult> OnPostVerifyOtpAsync()
-        //{
-        //    var apiUrl = "https://your-api.com/verify-otp"; // Replace with your API URL
-
-        //    var payload = new { mobile = MobileNumber, otp = OtpCode };
-        //    var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
-
-        //    var response = await _httpClient.PostAsync(apiUrl, content);
-        //    var result = await response.Content.ReadAsStringAsync();
-
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        // If OTP is correct, create user session
-        //        var claims = new List<Claim> { new Claim(ClaimTypes.Name, MobileNumber) };
-        //        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        //        var principal = new ClaimsPrincipal(identity);
-
-        //        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-        //        return new JsonResult(new { success = true });
-        //    }
-        //    else
-        //    {
-        //        return new JsonResult(new { success = false, error = result });
-        //    }
-        //}
     }
     public class InputModel
     {
