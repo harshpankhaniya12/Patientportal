@@ -190,17 +190,6 @@ namespace Patientportal.Pages
             {
                 Id = Convert.ToInt64(queryId);
             }
-            //else
-            //{
-            //    string patientId = HttpContext.Session.GetString("id");
-
-            //    if (!string.IsNullOrEmpty(patientId))
-            //    {
-            //        return Redirect($"/?id={patientId}");
-            //    }
-
-            //    return Page();
-            //}
 
             string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/getProfile?id={Id}";
             string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/getDetailsChangesbyId?id={Id}";

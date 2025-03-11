@@ -42,7 +42,7 @@
                         <div class="form-group" id="phone">
                             <label for="pi-phone" class="form-label text-14 text-md">Enter Mobile Number*</label>
                             <input type="text" asp-for="Input.Mobile" id="phones" name="Phone" class="form-control form-input bg--lightgray"
-                                   placeholder="" required maxlength="13" pattern="^\d{10,13}$"
+                                   placeholder="" required maxlength="10" pattern="^\d{10,13}$"
                                    title="Please enter a valid phone number with up to 13 digits"
                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             <span id="mobilenumberSpan" class="text-danger"></span>
@@ -262,8 +262,8 @@
         }
         var otpCode = otp1 + otp2 + otp3 + otp4;
         // Button disable karein aur loading text set karein
+        // $("#submitbutton").prop("disabled", true).css("pointer-events", "none").text("Verifying...");
         $("#submitbutton").prop("disabled", true).css("pointer-events", "none").text("Verifying...");
-
         $.ajax({
             url: "/Account/Index?handler=Verifyotp",
             type: "POST",
