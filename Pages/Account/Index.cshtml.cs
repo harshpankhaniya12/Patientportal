@@ -115,7 +115,8 @@ namespace Patientportal.Pages.Account
                 {
                     success = true,
                     message = "OTP Verified Successfully",
-                    patientId = patient?.Id 
+                    patientId = patient?.Id,
+                    redirectUrl = "/Patient?id=" + patient?.Id
                 });
             }
             else

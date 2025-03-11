@@ -180,7 +180,7 @@ namespace Patientportal.Pages
             return new JsonResult(new { result = data, count = dataCount });
         }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task OnGetAsync()
 
         
         {
@@ -226,7 +226,7 @@ namespace Patientportal.Pages
 
 
             ChangeRequests = await _apiService.GetAsync<List<string>>(apiUrl2, token) ?? new List<string>();
-            return Page();
+            //return Page();
         }
 
         public async Task<IActionResult> OnPostSavePatientAsync()
