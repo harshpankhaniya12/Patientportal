@@ -355,7 +355,9 @@
                                 var birthDate = new Date(birthYear, today.getMonth(), today.getDate());
                                 dobPicker.value = birthDate; // Syncfusion Datepicker me set karna
                             } else if (age === 0) {
-                                dobPicker.value = today; // Age 0 hone par current date set karna
+                               var yesterday = new Date();
+                yesterday.setDate(today.getDate() - 1); // Today - 1 day
+                dobPicker.value = yesterday; // DOB me ek din pehle ka date set karna
                             }
                         });
 

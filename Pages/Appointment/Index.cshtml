@@ -57,7 +57,7 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-phoneno" class="form-label">Phone Number*</label>
-                          <input type="text" name="phoneno" maxlength="14" class="form-control" id="pi-phoneno">
+                          <input type="text" name="phoneno" maxlength="13" class="form-control" id="pi-phoneno">
                             <span id="pi-phoneno" class="text-danger"></span>
                         </div>
 
@@ -215,38 +215,51 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-                        var ageInput = document.getElementById("pi-age");
-                        var dobPicker = document.getElementById("pi-dob").ej2_instances[0]; // Syncfusion Datepicker instance
+        var ageInput = document.getElementById("pi-age");
+        var dobPicker = document.getElementById("pi-dob").ej2_instances[0]; // Syncfusion Datepicker instance
 
-                        // Age se Date of Birth calculate karna
-                        ageInput.addEventListener("input", function () {
-                            var age = parseInt(this.value, 10);
-                            if (!isNaN(age) && age > 0) {
-                                var today = new Date();
-                                var birthYear = today.getFullYear() - age;
-                                var birthDate = new Date(birthYear, today.getMonth(), today.getDate());
-                                dobPicker.value = birthDate; // Syncfusion Datepicker me set karna
-                            }
-                        });
+        // Age se Date of Birth calculate karna
+        ageInput.addEventListener("input", function () {
+            var age = parseInt(this.value, 10);
+            var today = new Date();
 
-                        // Date of Birth se Age calculate karna
-                        dobPicker.addEventListener("change", function () {
-                            var dob = dobPicker.value;
-                            if (dob) {
-                                var today = new Date();
-                                var birthDate = new Date(dob);
-                                var age = today.getFullYear() - birthDate.getFullYear();
+            if (!isNaN(age) && age > 0) {
+                var birthYear = today.getFullYear() - age;
+                var birthDate = new Date(birthYear, today.getMonth(), today.getDate());
+                dobPicker.value = birthDate; // Syncfusion Datepicker me set karna
+            } else if (age === 0) {
+                var yesterday = new Date();
+                yesterday.setDate(today.getDate() - 1); // Today - 1 day
+                dobPicker.value = yesterday; // DOB me ek din pehle ka date set karna
+            }
+        });
 
-                                // Agar DOB ke month aur date aaj ke month aur date se aage hain, toh age -1 karna
-                                var monthDiff = today.getMonth() - birthDate.getMonth();
-                                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                                    age--;
-                                }
+        // Date of Birth se Age calculate karna
+        dobPicker.addEventListener("input", function () {
+            updateAge();
+        });
 
-                                ageInput.value = age; // Age input ko update karna
-                            }
-                        });
-                    });
+        dobPicker.addEventListener("change", function () {
+            updateAge();
+        });
+
+        function updateAge() {
+            var dob = dobPicker.value;
+            if (dob) {
+                var today = new Date();
+                var birthDate = new Date(dob);
+                var age = today.getFullYear() - birthDate.getFullYear();
+
+                // Agar DOB ke month aur date aaj ke month aur date se aage hain, toh age -1 karna
+                var monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+
+                ageInput.value = age; // Age input ko update karna
+            }
+        }
+    });
 </script>
 
 <script>
@@ -341,6 +354,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 } else {
                     clearError("pi-resched");
                 }
+            }
+            var startHour = 10;
+            var endHour = 19;
+
+            if (enteredDateTime.getHours() < startHour || enteredDateTime.getHours() >= endHour) {
+                showError("pi-resched", "Appointment time should be between 10 AM and 7 PM.");
+                isValid = false;
+            } else {
+                clearError("pi-resched");
             }
 
             var dobValue = $("#pi-dob").val().trim();
