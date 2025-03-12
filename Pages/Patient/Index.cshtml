@@ -362,7 +362,15 @@
                         });
 
                         // Date of Birth se Age calculate karna
+                         dobPicker.addEventListener("input", function () {
+                            updateAge();
+                        });
+
                         dobPicker.addEventListener("change", function () {
+                            updateAge();
+                        });
+
+                        function updateAge() {
                             var dob = dobPicker.value;
                             if (dob) {
                                 var today = new Date();
@@ -377,7 +385,7 @@
 
                                 ageInput.value = age; // Age input ko update karna
                             }
-                        });
+                        }
                     });
                 </script>
 
