@@ -210,10 +210,14 @@ namespace Patientportal.Pages
             {
                 foreach (var appointment in Doctorblocktime)
                 {
-                    if (appointment.AppointmentStartTime.HasValue && appointment.AppointmentEndDateTime.HasValue)
+                    if (appointment.AppointmentStartTime != null)
                     {
-                        appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
-                        appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
+                        appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
+                    }
+
+                    if (appointment.AppointmentEndDateTime != null)
+                    {
+                        appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
                     }
                 }
             }
