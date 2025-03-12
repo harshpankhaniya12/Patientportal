@@ -45,7 +45,7 @@
                         </div>   
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-resched" class="form-label">Appointment Date Time*</label>
-                            <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" value="@Model.SelectedDateTime"  format="@Model.EjsDateTimePattern" ></ejs-datetimepicker>
+                            <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" value="@Model.SelectedDateTime.ToString("dd/MM/yyyy hh:mm:ss tt")" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
                             <span id="pi-resched" class="text-danger"></span>
                         </div>
 
