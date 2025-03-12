@@ -1712,6 +1712,8 @@
 <script>
     $(document).ready(function () {
         $("#save-btn").click(function (e) {
+            var $button = $(this); 
+            $button.prop("disabled", true).text("Submitting..."); 
             debugger;
             e.preventDefault();
 
@@ -1802,6 +1804,7 @@
 
             // If any validation fails, stop AJAX request
             if (!isValid) {
+                $button.prop("disabled", false).text("Save");
                 return;
             }
             var genderMapping = {
