@@ -180,15 +180,17 @@ namespace Patientportal.Pages
             return new JsonResult(new { result = data, count = dataCount });
         }
 
-        public async Task OnGetAsync()
-
-        
+        public async Task<IActionResult> OnGetAsync()
         {
 
             var queryId = Request.Query["id"];
             if (queryId.Any())
             {
                 Id = Convert.ToInt64(queryId);
+            }
+            else
+            {
+                return RedirectToPage("/Account/Index"); // Ya phir Redirect("/Login");
             }
 
             string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/getProfile?id={Id}";
@@ -200,7 +202,7 @@ namespace Patientportal.Pages
             // API Response Fetch karein
             var invoiceResponse = await _apiService.GetAsync<InvoiceResponse>(apiUrl4, token);
             Doctorblocktime = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl3, token) ?? new List<AppointmentListItem>();
-            if (Doctorblocktime != null && Doctorblocktime.Count > 0 )
+            if (Doctorblocktime != null && Doctorblocktime.Count > 0)
             {
                 foreach (var appointment in Doctorblocktime)
                 {
@@ -226,7 +228,7 @@ namespace Patientportal.Pages
 
 
             ChangeRequests = await _apiService.GetAsync<List<string>>(apiUrl2, token) ?? new List<string>();
-            //return Page();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostSavePatientAsync()

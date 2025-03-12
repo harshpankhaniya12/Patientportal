@@ -189,14 +189,15 @@ namespace Patientportal.Pages.Patient
         }
 
         public async Task<IActionResult> OnGetAsync()
-
-        
         {
 
             var queryId = Request.Query["id"];
             if (queryId.Any())
             {
                 Id = Convert.ToInt64(queryId);
+            }else
+            {
+                return RedirectToPage("/Account/Index"); // Ya phir Redirect("/Login");
             }
 
             string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/getProfile?id={Id}";
