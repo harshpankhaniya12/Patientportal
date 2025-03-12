@@ -642,6 +642,9 @@
     <script>
         $(document).ready(function () {
             $("#SubmitOnlineconsult").click(function () {
+                var $button = $(this); // Button ko reference karna
+                $button.prop("disabled", true).text("Submitting..."); // Button disable aur text change karein
+
                 var patietId = $("#AddPatientId").val();
                 // var formofappt = $("#app-form").val();
                 var FormofAppointment = $("#OCFormofAppointment").val();
@@ -701,6 +704,7 @@
                 }
 
                 if (!isValid) {
+                    $button.prop("disabled", false).text("Save");
                     return;
                 }
                 var formattedDate = convertDateFormat(appointmentDateTime);
@@ -814,6 +818,9 @@
     <script>
         $(document).ready(function () {
             $("#SubmitProceduresReuest").click(function () {
+                var $button = $(this); // Button ko reference karna
+                $button.prop("disabled", true).text("Submitting..."); // Button disable aur text change karein
+
                 var patietId = $("#RPAddPatientId").val();
                 // var formofappt = $("#app-form").val();
                 var FormofAppointment = $("#RPFormofAppointment").val();
@@ -872,6 +879,7 @@
                     }
                 }
                 if (!isValid) {
+                    $button.prop("disabled", false).text("Save");
                     return;
                 }
                 var formattedDate = convertDateFormat(appointmentDateTime);
@@ -1496,6 +1504,8 @@
     <script>
         $(document).ready(function () {
             $("#SubmitAppointment").click(function () {
+                var $button = $(this); // Button ko reference karna
+                $button.prop("disabled", true).text("Submitting..."); // Button disable aur text change karein
                 var patietId = $("#AddPatientId").val();
                 // var formofappt = $("#app-form").val();
                 var appointmentDateTime = $("#app-datetim").val();
@@ -1513,6 +1523,7 @@
                     $("#AptaddDatetime").text(""); // Clear error if input is valid
                 }
                 if (!isValid) {
+                    $button.prop("disabled", false).text("Save");
                     return;
                 }
                 var formattedDate = convertDateFormat(appointmentDateTime);

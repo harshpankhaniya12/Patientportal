@@ -284,6 +284,8 @@ document.addEventListener("DOMContentLoaded", function () {
 <script>
     $(document).ready(function () {
         $("#save-btn").click(function (e) {
+            var $button = $(this); // Button ko reference karna
+            $button.prop("disabled", true).text("Submitting..."); // Button disable aur text change karein
             e.preventDefault();
 
             var isValid = true;
@@ -429,6 +431,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             // If any validation fails, stop AJAX request
             if (!isValid) {
+                $button.prop("disabled", false).text("Save");
                 return;
             }
             var genderMapping = {
