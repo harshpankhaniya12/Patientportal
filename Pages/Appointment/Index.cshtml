@@ -358,13 +358,15 @@ document.addEventListener("DOMContentLoaded", function () {
             var startHour = 10;
             var endHour = 19;
 
-            if (enteredDateTime.getHours() < startHour || enteredDateTime.getHours() >= endHour) {
+            var enteredHour = enteredDateTime.getHours();
+            var enteredMinutes = enteredDateTime.getMinutes();
+
+            if (enteredHour < startHour || (enteredHour === endHour && enteredMinutes > 0) || enteredHour > endHour) {
                 showError("pi-resched", "Appointment time should be between 10 AM and 7 PM.");
                 isValid = false;
             } else {
                 clearError("pi-resched");
             }
-
             var dobValue = $("#pi-dob").val().trim();
             if (dobValue === "") {
              
@@ -521,6 +523,5 @@ document.getElementById("cancel-btn").addEventListener("click", function (event)
     .swal2-icon.swal2-success {
         display: flex !important; /* Force show success icon */
     }
-
 
 </style>
