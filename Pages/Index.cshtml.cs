@@ -152,6 +152,10 @@ namespace Patientportal.Pages
                     {
                         appointment.StatusName = "Booked";
                     }
+                    if (appointment.AppoinmentType == "Consultation")
+                    {
+                        appointment.StatusName = "Appointment for Consultation";
+                    }
                 }
             }
             if (appointmentsRequest != null && appointmentsRequest.Count > 0)

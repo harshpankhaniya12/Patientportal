@@ -387,6 +387,10 @@
                             else if (args.data.statusName === "Cancelled") {
                                 args.cell.innerHTML = `<span class="badge badge-danger">Cancelled</span>`;
                             }
+                            else
+                            {
+                                args.cell.innerHTML = `<span class="badge" style="background-color: #a9aba8; color: white;">${args.data.statusName}</span>`;
+                            }
                         }
                     }
 
