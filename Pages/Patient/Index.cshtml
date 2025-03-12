@@ -348,11 +348,14 @@
                         // Age se Date of Birth calculate karna
                         ageInput.addEventListener("input", function () {
                             var age = parseInt(this.value, 10);
+                            var today = new Date();
+
                             if (!isNaN(age) && age > 0) {
-                                var today = new Date();
                                 var birthYear = today.getFullYear() - age;
                                 var birthDate = new Date(birthYear, today.getMonth(), today.getDate());
                                 dobPicker.value = birthDate; // Syncfusion Datepicker me set karna
+                            } else if (age === 0) {
+                                dobPicker.value = today; // Age 0 hone par current date set karna
                             }
                         });
 
@@ -375,6 +378,7 @@
                         });
                     });
                 </script>
+
                 <script>
                     function onQueryCellInfo(args) {
                         if (args.column.field === "StatusName") {
@@ -974,6 +978,10 @@
                                           startHour="10:00" endHour="19:15"
                                           workDays="new int[] {1, 2, 3, 4, 5}"
                                           cellClick="onCellClick" showQuickInfo="false">
+                                <e-schedule-views>
+                                    <e-schedule-view option="Day"></e-schedule-view>
+                                    <e-schedule-view option="Week"></e-schedule-view>
+                                </e-schedule-views>
                                 <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
 
                                 <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
@@ -1161,6 +1169,10 @@
                                           startHour="10:00" endHour="19:15"
                                           workDays="new int[] {1, 2, 3, 4, 5}"
                                           cellClick="onCellClick2" showQuickInfo="false">
+                                <e-schedule-views>
+                                    <e-schedule-view option="Day"></e-schedule-view>
+                                    <e-schedule-view option="Week"></e-schedule-view>
+                                </e-schedule-views>
                                 <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
                                 <e-schedule-eventsettings dataSource="@Model.Doctorblocktime" template="#blockTemplate2"></e-schedule-eventsettings>
                             </ejs-schedule>

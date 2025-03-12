@@ -43,15 +43,15 @@
                             <label for="pi-phone" class="form-label text-14 text-md">Enter Mobile Number*</label>
                             <input type="text" asp-for="Input.Mobile" id="phones" name="Phone" class="form-control form-input bg--lightgray"
                                    placeholder="" required maxlength="10" pattern="^\d{10,13}$"
-                                   title="Please enter a valid phone number with up to 13 digits"
+                                   title="Please enter a valid phone number with up to 10 digits"
                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             <span id="mobilenumberSpan" class="text-danger"></span>
-                            <div class="send-otp text-end mt-4 mb-4" id="sendopt1">
+                            <div class="send-otp text-end" id="sendopt1">
                                 <a href="#send-otp" id="sendotp" class="bttn bttn-r bttn-primary w-100">Send OTP</a>
                             </div>
                         </div>
                         <div class="form-group">
-                            <span id="otp" style="margin-bottom: 5px;">
+                            <span id="otp" style="margin-bottom: 15px;">
                                 OTP sent to  <span id="phone-display" style="margin-left: 5px; "></span> <span id="edit-phone" style="cursor: pointer;">
                                     <i class="fas fa-edit"></i> <!-- Font Awesome Edit Icon -->
                                 </span>
@@ -84,7 +84,7 @@
                             </div>
                         </div>
 
-                        <input type="submit" id="submitbutton" class="bttn bttn-r bttn-primary mt-4 mb-4" name="Submit">
+                        <input type="submit" id="submitbutton" class="bttn bttn-r bttn-primary mt-2 mb-2" name="Submit">
                     </form>
                 </div>
             </div>
@@ -172,6 +172,8 @@
             $("#sendotp").show();
             $("#otp").hide();
             $("#resendOtp").hide();
+            $(".otp-input").val("");
+            $("#otpspan").text("");
             $(".otp-inps").hide().css("display", "none");
             $("input[type=submit]").hide();
         });
@@ -305,6 +307,9 @@
         gap: 10px; /* Input boxes ke beech gap */
     }
 
+    main.pb-3 {
+        padding: 0px !important;
+    }
         .otp-inps input {
             width: 50px;
             height: 50px;

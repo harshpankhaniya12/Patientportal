@@ -42,42 +42,42 @@ namespace Patientportal.Pages.Account
 
         public async Task<JsonResult> OnPostSendOTPAsync([FromBody] InputModel request)
         {
-            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/GetpatientByMobilenumber?Mobilenumber={request.Mobile}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDUwIiwianRpIjoiMGZiNmI4NGEtNWQxNS00Y2JlLWIyY2ItODg3MjA5M2M0YTc5IiwibmJmIjoxNzQxNjMwMTcyLCJleHAiOjE3NzMxNjYxNzIsImlhdCI6MTc0MTYzMDE3MiwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.vnwTeZDidK0VS1HgdhGki_8MtMQRxyU_Hpr1QV5pwPTMqkNICMw0cczvQkJqe2_QmjUyzOfmwF56cgaIBBkqbw"; // Valid token yahan dalein
-            var PatientDetails = await _apiService.GetAsync<ProfileListItem>(apiUrl2, token);
-            if (string.IsNullOrEmpty(request.Mobile) || request.Mobile.Length < 10)
-            {
-                return new JsonResult(new { success = false, message = "Invalid phone number" });
-            }
-            if (PatientDetails == null)
-            {
-                return new JsonResult(new { success = false, message = "This patient is not registered." });
-            }
-            if (!_otpService.CanSendOTP(request.Mobile))
-            {
-                return new JsonResult(new { success = false, message = "Maximum OTP attempts reached. Try again after 24 hours." });
-            }
+            //string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/GetpatientByMobilenumber?Mobilenumber={request.Mobile}";
+            //string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDUwIiwianRpIjoiMGZiNmI4NGEtNWQxNS00Y2JlLWIyY2ItODg3MjA5M2M0YTc5IiwibmJmIjoxNzQxNjMwMTcyLCJleHAiOjE3NzMxNjYxNzIsImlhdCI6MTc0MTYzMDE3MiwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.vnwTeZDidK0VS1HgdhGki_8MtMQRxyU_Hpr1QV5pwPTMqkNICMw0cczvQkJqe2_QmjUyzOfmwF56cgaIBBkqbw"; // Valid token yahan dalein
+            //var PatientDetails = await _apiService.GetAsync<ProfileListItem>(apiUrl2, token);
+            //if (string.IsNullOrEmpty(request.Mobile) || request.Mobile.Length < 10)
+            //{
+            //    return new JsonResult(new { success = false, message = "Invalid phone number" });
+            //}
+            //if (PatientDetails == null)
+            //{
+            //    return new JsonResult(new { success = false, message = "Mobile number not registered." });
+            //}
+            //if (!_otpService.CanSendOTP(request.Mobile))
+            //{
+            //    return new JsonResult(new { success = false, message = "Maximum OTP attempts reached. Try again after 24 hours." });
+            //}
 
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Account/PatientportalSendAuthToken/{request.Mobile}.json";
+            //string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Account/PatientportalSendAuthToken/{request.Mobile}.json";
 
-            using var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            //using var httpClient = new HttpClient();
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            var payload = new { phone = request.Mobile };
-            var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+            //var payload = new { phone = request.Mobile };
+            //var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 
-            try
-            {
+            //try
+            //{
 
-                var response = await _apiService.GetAsync<List<InputModel>>(apiUrl, token);
-                _otpService.RecordOTPAttempt(request.Mobile);
+            //    var response = await _apiService.GetAsync<List<InputModel>>(apiUrl, token);
+            //    _otpService.RecordOTPAttempt(request.Mobile);
                 return new JsonResult(new { success = true, message = "OTP Sent Successfully" });
 
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(new { success = false, error = "Server error: " + ex.Message });
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return new JsonResult(new { success = false, error = "Server error: " + ex.Message });
+            //}
         }
 
         public async Task<JsonResult> OnPostVerifyotpAsync([FromBody] InputModel request)

@@ -48,6 +48,10 @@
                       allowDragAndDrop="false" allowResizing="false"
                       workDays="new int[] {1, 2, 3, 4, 5}"
                       cellClick="onCellClick">
+            <e-schedule-views>
+                <e-schedule-view option="Day"></e-schedule-view>
+                <e-schedule-view option="Week"></e-schedule-view>
+            </e-schedule-views>
             <e-schedule-timescale interval="15" slotCount="1"></e-schedule-timescale>
             <e-schedule-eventsettings dataSource="Model.Doctorblocktime" template="#blockTemplate"></e-schedule-eventsettings>
         </ejs-schedule>
