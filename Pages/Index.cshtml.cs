@@ -37,7 +37,7 @@ namespace Patientportal.Pages
             _apiService = apiService;
         }
         public async Task<JsonResult> OnPostAppointmentView([FromBody] DataManagerRequest dm)
-        {
+         {
             var queryId = Request.Query["id"];
             if (queryId.Any())
             {

@@ -57,7 +57,7 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-phoneno" class="form-label">Phone Number*</label>
-                          <input type="text" name="phoneno" maxlength="13" class="form-control" id="pi-phoneno">
+                          <input type="text" name="phoneno" maxlength="10" class="form-control" id="pi-phoneno">
                             <span id="pi-phoneno" class="text-danger"></span>
                         </div>
 
@@ -88,7 +88,7 @@
                         </div>
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-age" class="form-label">Age</label>
-                            <input type="number" name="age"  maxlength="2" class="form-control" id="pi-age">
+                            <input type="text" name="age" class="form-control" id="pi-age" oninput="validateAge(this)">
                             <span id="agespan" class="text-danger"></span>
                         </div>
                         <div class="col-md-6 col-xl-4">
@@ -139,6 +139,15 @@
         onAppointmentTypeChange({ value: appointmentDropdown.value });
     });
 </script>
+<script>
+function validateAge(input) {
+    input.value = input.value.replace(/[^0-9]/g, ''); // Sirf numbers allow karega
+    if (input.value.length > 2) {
+        input.value = input.value.slice(0, 2); // Max 2 digits allow karega
+    }
+}
+</script>
+
 <div class="modal fade" id="successModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content" style="margin-top: 154px; max-width: 400px; margin: auto;">
@@ -312,7 +321,40 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 clearError("pi-formofappt");
             }
+            var ageValue = $("#pi-age").val().trim();
+            if (ageValue === "") {
+                isValid = true;
+            } else if (isNaN(ageValue) || ageValue < 0 || ageValue > 99) {
+                showError("pi-age", "Invalid Age.");
+                isValid = false;
+            } else {
+                clearError("pi-age");
+            }
+            var dobValue = $("#pi-dob").val().trim();
+            if (dobValue === "") {
+                isValid = true;
+            } else {
+                var dobDate = new Date(dobValue.split('/').reverse().join('-')); // Convert dd/MM/yyyy to yyyy-MM-dd
+                var currentDate = new Date();
+                currentDate.setFullYear(currentDate.getFullYear()); // Subtract 1 year from today
+                var minDate = new Date();
+                minDate.setFullYear(currentDate.getFullYear() - 99); // Minimum 99 years allowed
 
+                if (dobDate > currentDate) {
+                    showError("pi-dob", "Invalid Date of Birth.");
+                    isValid = false;
+                } else if (dobDate < minDate) {
+                    showError("pi-dob", "Invalid Date of Birth.");
+                    isValid = false;
+                }
+                else if (dobDate == "Invalid Date") {
+                    showError("pi-dob", "Invalid Date of Birth.");
+                    isValid = false;
+                }
+                else {
+                    clearError("pi-dob");
+                }
+            }
             
             // Validate Appointment Date Time
             // Validate Appointment Date Time
@@ -335,6 +377,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 var meridian = parts[2];
 
                 var hours = parseInt(timeParts[0], 10);
+
+
                 if (meridian.toUpperCase() === "PM" && hours !== 12) {
                     hours += 12;
                 } else if (meridian.toUpperCase() === "AM" && hours === 12) {
@@ -349,26 +393,30 @@ document.addEventListener("DOMContentLoaded", function () {
                     parseInt(timeParts[1], 10),
                     parseInt(timeParts[2], 10)
                 );
+                // ❌ Check if the selected date is Saturday (6) or Sunday (0)
+                var startHour = 10;
+                var endHour = 19;
 
+                var enteredHour = enteredDateTime.getHours();
+                var enteredMinutes = enteredDateTime.getMinutes();
+
+              
                 if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
                     showError("pi-resched", "Invalid Appointment Date Time.");
                     isValid = false;
-                } else {
+                } 
+                else if (enteredDateTime.getDay() === 0 || enteredDateTime.getDay() === 6) {
+                    showError("pi-resched", "Appointments cannot be scheduled on weekends.");
+                    isValid = false;
+                } else if (enteredHour < startHour || (enteredHour === endHour && enteredMinutes > 0) || enteredHour > endHour) {
+                    showError("pi-resched", "Appointment time should be between 10 AM and 7 PM.");
+                    isValid = false;
+                }
+                else {
                     clearError("pi-resched");
                 }
             }
-            var startHour = 10;
-            var endHour = 19;
-
-            var enteredHour = enteredDateTime.getHours();
-            var enteredMinutes = enteredDateTime.getMinutes();
-
-            if (enteredHour < startHour || (enteredHour === endHour && enteredMinutes > 0) || enteredHour > endHour) {
-                showError("pi-resched", "Appointment time should be between 10 AM and 7 PM.");
-                isValid = false;
-            } else {
-                clearError("pi-resched");
-            }
+           
             var dobValue = $("#pi-dob").val().trim();
             if (dobValue === "") {
              

@@ -339,7 +339,6 @@
                         });
                     });
                 </script>
-
                 <script>
                     document.addEventListener("DOMContentLoaded", function () {
                         var ageInput = document.getElementById("pi-age");
@@ -582,7 +581,7 @@
                 <div class="modal-body">
                     <div class="">
                         <label for="pi-resched" class="form-label">Appointment Date Time*</label>
-                        <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern" readonly></ejs-datetimepicker>
+                        <ejs-datetimepicker id="pi-resched" step="15" style="height:45px;" format="@Model.EjsDateTimePattern" readonly></ejs-datetimepicker>
                         <span id="AptDatetime-reson" class="text-danger"></span>
                     </div>
                 </div>
@@ -619,7 +618,7 @@
                 <div class="modal-body">
                     <div class="">
                         <label for="OC-resched" class="form-label">Appointment Date Time*</label>
-                        <ejs-datetimepicker id="OC-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                        <ejs-datetimepicker id="OC-resched" step="15"  style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
                         <span id="OC-reschedSpan" class="text-danger"></span>
                     </div>
                 </div>
@@ -791,7 +790,7 @@
                 <div class="modal-body">
                     <div class="">
                         <label for="RP-resched" class="form-label">Appointment Date Time*</label>
-                        <ejs-datetimepicker id="RP-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                        <ejs-datetimepicker id="RP-resched" step="15"  style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
                         <span id="RP-reschedSpan" class="text-danger"></span>
                     </div>
                 </div>
@@ -947,6 +946,28 @@
             }
 
         });
+
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    var today = new Date();
+    today.setHours(0, 0, 0, 0); // आज की तारीख से पहले कोई डेट न चुन सके
+
+    var ocPicker = document.getElementById("OC-resched").ej2_instances[0];
+    var rpPicker = document.getElementById("RP-resched").ej2_instances[0];
+
+    if (ocPicker) {
+        ocPicker.min = today;
+        ocPicker.start = new Date(today.setHours(10, 0, 0));
+        ocPicker.end = new Date(today.setHours(19, 0, 0));
+    }
+
+    if (rpPicker) {
+        rpPicker.min = today;
+        rpPicker.start = new Date(today.setHours(10, 0, 0));
+        rpPicker.end = new Date(today.setHours(19, 0, 0));
+    }
+});
 
     </script>
     <script>
@@ -1460,7 +1481,7 @@
                 <div class="modal-body">
                     <div class="">
                         <label for="OC-resched" class="form-label">Appointment Date Time*</label>
-                        <ejs-datetimepicker id="app-datetim" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern" readonly></ejs-datetimepicker>
+                        <ejs-datetimepicker id="app-datetim" step="15" style="height:45px;" format="@Model.EjsDateTimePattern" readonly></ejs-datetimepicker>
                         <span id="AptDatetime-reson" class="text-danger"></span>
                     </div>
                 </div>
@@ -1874,7 +1895,7 @@
 
     function loadAppointments() {
         $.ajax({
-            url: '/Index?handler=AppointmentViewCard?Id'+@Model.Id, // URL sahi daalein
+            url: '/Index?handler=AppointmentViewCard', // URL sahi daalein
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {

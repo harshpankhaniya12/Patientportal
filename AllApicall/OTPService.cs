@@ -31,7 +31,7 @@ namespace Patientportal.AllApicall
             {
                 var (attempts, blockTime) = _otpAttempts[phoneNumber];
 
-                if (attempts >= 3)
+                if (attempts == 2)
                 {
                     _otpAttempts[phoneNumber] = (attempts, DateTime.UtcNow.AddHours(24)); // Block for 24 hours
                 }
@@ -45,5 +45,13 @@ namespace Patientportal.AllApicall
                 _otpAttempts[phoneNumber] = (1, DateTime.UtcNow);
             }
         }
+        public void ClearOTPAttempts(string phoneNumber)
+        {
+            if (_otpAttempts.ContainsKey(phoneNumber))
+            {
+                _otpAttempts.Remove(phoneNumber);
+            }
+        }
+
     }
 }

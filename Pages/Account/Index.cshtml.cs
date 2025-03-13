@@ -100,6 +100,8 @@ namespace Patientportal.Pages.Account
 
             if (response.IsSucceeded)
             {
+                _otpService.ClearOTPAttempts(request.Mobile); // OTP attempts reset
+
                 var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, request.Mobile),

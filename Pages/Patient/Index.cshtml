@@ -250,7 +250,7 @@
                               queryCellInfo="onQueryCellInfo"
                               toolbarClick="toolbarClick">
 
-                       <e-data-manager url="/Index?handler=AppointmentView&Id=@Model.Id" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
+                       <e-data-manager url="/Patient/Index?handler=AppointmentView&Id=@Model.Id" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
 
                         <e-grid-searchsettings fields="@(new string[] {"AppoinmentType","DoctorName","AppointmentStartTime","StatusName"})"></e-grid-searchsettings>
 
@@ -532,7 +532,7 @@
             $("#SubmitCancel").click(function () {
                 var appointmentId = $("#CancelPatientId").val();
                 var statusId = $("#StatusIds").val();
-                var reason = $("#pi-Resason").val();
+                var reason = $("#pi-Resason").val().trim(); // Trim spaces
 
                 if (reason === "") {
                     $("#Span-reson").text("Reason is required");
@@ -548,7 +548,7 @@
                 };
 
                 $.ajax({
-                    url: "/Index?handler=Pireschedule",
+                    url: "/Patient/Index?handler=Pireschedule",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(requestData),
@@ -629,7 +629,8 @@
                 <div class="modal-body">
                     <div class="">
                         <label for="OC-resched" class="form-label">Appointment Date Time*</label>
-                        <ejs-datetimepicker id="OC-resched" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+                        <ejs-datetimepicker id="OC-resched" step="15" style="height:45px;" min="DateTime.Now" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
+
                         <span id="OC-reschedSpan" class="text-danger"></span>
                     </div>
                 </div>
@@ -639,6 +640,21 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#oConsultationModal').on('hidden.bs.modal', function () {
+                // Reset DateTime Picker
+                var dateTimePicker = document.getElementById("OC-resched").ej2_instances[0];
+                if (dateTimePicker) {
+                    dateTimePicker.value = null; // Clear the selected value
+                }
+
+                // Clear error message
+                $('#OC-reschedSpan').text('');
+            });
+        });
+
+    </script>
     <script>
         $(document).ready(function () {
             $("#SubmitOnlineconsult").click(function () {
@@ -666,12 +682,15 @@
                     $("#OC-reschedSpan").text("Invalid Appointment Date Time format.");
                     isValid = false;
                 } else {
+                    // Convert to Date object
                     var parts = appointmentDateTime.split(" ");
                     var dateParts = parts[0].split("/");
                     var timeParts = parts[1].split(":");
                     var meridian = parts[2];
 
                     var hours = parseInt(timeParts[0], 10);
+
+
                     if (meridian.toUpperCase() === "PM" && hours !== 12) {
                         hours += 12;
                     } else if (meridian.toUpperCase() === "AM" && hours === 12) {
@@ -680,21 +699,29 @@
 
                     enteredDateTime = new Date(
                         dateParts[2], // Year
-                        dateParts[1] - 1, // Month (0-based)
+                        dateParts[1] - 1, // Month (0-based index)
                         dateParts[0], // Day
                         hours,
                         parseInt(timeParts[1], 10),
                         parseInt(timeParts[2], 10)
                     );
+                    // ❌ Check if the selected date is Saturday (6) or Sunday (0)
+                    var startHour = 10;
+                    var endHour = 19;
+
+                    var enteredHour = enteredDateTime.getHours();
+                    var enteredMinutes = enteredDateTime.getMinutes();
+
 
                     if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
                         $("#OC-reschedSpan").text("Invalid Appointment Date Time.");
                         isValid = false;
                     }
-                    else {
-                        $("#OC-reschedSpan").text("");
-                    }
-                    if (hours < 10 || hours >= 19) {  // 10 AM se 7 PM ki validation
+                    else if (enteredDateTime.getDay() === 0 || enteredDateTime.getDay() === 6) {
+
+                        $("#OC-reschedSpan").text("Appointments cannot be scheduled on weekends.");
+                        isValid = false;
+                    } else if (enteredHour < startHour || (enteredHour === endHour && enteredMinutes > 0) || enteredHour > endHour) {
                         $("#OC-reschedSpan").text("Appointment time should be between 10 AM and 7 PM.");
                         isValid = false;
                     }
@@ -717,7 +744,7 @@
                 };
 
                 $.ajax({
-                    url: "/Index?handler=AddAppointmentRequest",
+                    url: "/Patient/Index?handler=AddAppointmentRequest",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(requestData),
@@ -817,6 +844,21 @@
     </div>
     <script>
         $(document).ready(function () {
+            $('#cosmeticProcModel').on('hidden.bs.modal', function () {
+                // Reset DateTime Picker
+                var dateTimePicker = document.getElementById("RP-resched").ej2_instances[0];
+                if (dateTimePicker) {
+                    dateTimePicker.value = null; // Clear the selected value
+                }
+
+                // Clear error message
+                $('#RP-reschedSpan').text('');
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
             $("#SubmitProceduresReuest").click(function () {
                 var $button = $(this); // Button ko reference karna
                 $button.prop("disabled", true).text("Submitting..."); // Button disable aur text change karein
@@ -849,6 +891,8 @@
                     var meridian = parts[2];
 
                     var hours = parseInt(timeParts[0], 10);
+
+
                     if (meridian.toUpperCase() === "PM" && hours !== 12) {
                         hours += 12;
                     } else if (meridian.toUpperCase() === "AM" && hours === 12) {
@@ -863,18 +907,27 @@
                         parseInt(timeParts[1], 10),
                         parseInt(timeParts[2], 10)
                     );
+                    // ❌ Check if the selected date is Saturday (6) or Sunday (0)
+                    var startHour = 10;
+                    var endHour = 19;
+
+                    var enteredHour = enteredDateTime.getHours();
+                    var enteredMinutes = enteredDateTime.getMinutes();
+
 
                     if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
                         $("#RP-reschedSpan").text("Invalid Appointment Date Time.");
                         isValid = false;
-                    } else {
-                        $("#RP-reschedSpan").text("");
                     }
-                    var hours = enteredDateTime.getHours();
-                    if (hours < 10 || hours >= 19) {
-                        $("#RP-reschedSpan").text("Appointment time must be between 10 AM and 7 PM.");
+                    else if (enteredDateTime.getDay() === 0 || enteredDateTime.getDay() === 6) {
+
+                        $("#RP-reschedSpan").text("Appointments cannot be scheduled on weekends.");
                         isValid = false;
-                    } else {
+                    } else if (enteredHour < startHour || (enteredHour === endHour && enteredMinutes > 0) || enteredHour > endHour) {
+                        $("#RP-reschedSpan").text("Appointment time should be between 10 AM and 7 PM.");
+                        isValid = false;
+                    }
+                    else {
                         $("#RP-reschedSpan").text("");
                     }
                 }
@@ -892,7 +945,7 @@
                 };
 
                 $.ajax({
-                    url: "/Index?handler=AddAppointmentRequest",
+                    url: "/Patient/Index?handler=AddAppointmentRequest",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(requestData),
@@ -1385,7 +1438,7 @@
                 };
 
                 $.ajax({
-                    url: "/Index?handler=Pireschedule",
+                    url: "/Patient/Index?handler=Pireschedule",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(requestData),
@@ -1536,7 +1589,7 @@
                 };
 
                 $.ajax({
-                    url: "/Index?handler=Addaptall",
+                    url: "/Patient/Index?handler=Addaptall",
                     type: "POST",
                     contentType: "application/json",
                     data: JSON.stringify(requestData),
@@ -1841,7 +1894,7 @@
 
 
             $.ajax({
-                url: "/Index?handler=SavePatient",
+                url: "/Patient/Index?handler=SavePatient",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(formData),
@@ -1899,7 +1952,7 @@
 
     function loadAppointments() {
         $.ajax({
-            url: '/Index?handler=AppointmentViewCard?Id'+@Model.Id, // URL sahi daalein
+            url: '/Patient/Index?handler=AppointmentViewCard&id=' + '@Model.Id',
             type: 'POST',
             contentType: 'application/json',
             success: function (response) {

@@ -153,6 +153,11 @@ select:focus {
     outline: none !important;
     box-shadow: none !important;
 }
+.no-click {
+    pointer-events: none;
+    cursor: none;
+    text-decoration: none;
+}
 
 ul,
 ol {

@@ -1,15 +1,30 @@
 @media screen and (min-width: 1600px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl { max-width: calc(1560px + 30px); }
+    .login-box p {
+        font-size: 16px;
+        margin-bottom: 13px;
+        /* margin-bottom: 35px; */
+    }
 }
 /*MIN 1280 ENDS*/
 
 @media screen and (max-width: 1280px) {
     .page-login { --leftPer: 55%; }
+    .login-box p {
+        font-size: 16px;
+        margin-bottom: 13px;
+        /* margin-bottom: 35px; */
+    }
 }
 
 @media screen and (max-width: 1199px) {
     .page-login { --leftPer: 50%; }
     .login-box { padding: 30px; }
+        .login-box p {
+            font-size: 16px;
+            margin-bottom: 13px;
+            /* margin-bottom: 35px; */
+        }
 }
 
 @media screen and (max-width: 767px) {
