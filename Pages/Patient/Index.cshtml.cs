@@ -73,7 +73,7 @@ namespace Patientportal.Pages.Patient
                     }
                     if (appointment.AppoinmentType == "Consultation")
                     {
-                        appointment.StatusName = "Appointment for Consultation";
+                        appointment.AppoinmentType = "Appointment for Consultation";
                     }
                 }
             }
@@ -88,11 +88,11 @@ namespace Patientportal.Pages.Patient
                     if (appointmentes.StatusName == "Reschedule")
                     {
                         appointmentes.StatusName = "Booked";
-                    }  
-                    //if (appointmentes.AppoinmentType == "Consultation")
-                    //{
-                    //    appointmentes.StatusName = "Appointment for Consultation";
-                    //}
+                    }
+                    if (appointmentes.AppoinmentType == "Consultation")
+                    {
+                        appointmentes.AppoinmentType = "Appointment for Consultation";
+                    }
                 }
             }
 
