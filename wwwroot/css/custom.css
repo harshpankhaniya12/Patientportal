@@ -141,7 +141,6 @@ footer ul {
     padding: 0;
     list-style: none;
 }
-
 button,
 button:focus {
   outline: 0;
@@ -332,6 +331,9 @@ textarea[disabled],
 .bttn-primary-outline:hover {
     color: var(--white);
     background-color: var(--primary);
+}
+.e-header-cells {
+    pointer-events: none;
 }
 
 .bttn-alt {

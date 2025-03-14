@@ -602,19 +602,28 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var OCModalEl = document.getElementById('app-resched');
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var OCModalEl = document.getElementById('app-resched');
 
-            OCModalEl.addEventListener('hidden.bs.modal', function () {
-                let backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) {
-                    backdrop.remove();
-                }
-            });
+        OCModalEl.addEventListener('hidden.bs.modal', function () {
+            // Remove backdrop if exists
+            let backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+
+            // Reset DateTimePicker value
+            let dateTimePicker = document.getElementById('pi-resched').ej2_instances[0];
+            if (dateTimePicker) {
+                dateTimePicker.value = null;
+            }
+
+            // Clear error message
+            document.getElementById('AptDatetime-reson').textContent = '';
         });
-
-    </script>
+    });
+</script>
     <div class="modal fade" id="oConsultationModal">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
@@ -1413,21 +1422,78 @@
     <script>
         $(document).ready(function () {
             $("#SubmitRescedule").click(function () {
+                 var $button = $(this); // Button ko reference karna
+                $button.prop("disabled", true).text("Submitting..."); // Button disable aur text change karein
+
                 var appointmentId = $("#AppoinmentId").val();
                 var statusId = $("#StatusId").val();
                 var appointmentDateTime = $("#pi-resched").val();
                 var selectedDate = appointmentDateTime;
                 var currentDate = new Date(); // Current date-time
                 var formattedCurrentDate = formatDate(currentDate); // Format the current date
-
+                   var dateTimeRegex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2} [APap][Mm]$/; // Format: dd/MM/yyyy hh:mm:ss AM/PM
+                var currentDateTime = new Date();
+                var enteredDateTime;
 
                 if (appointmentDateTime === "") {
                     $("#AptDatetime-reson").text("Appointment Date Time is required.");
                     return; // Stop further execution
                 }
-                else {
-                    $("#AptDatetime-reson").text(""); // Clear error if input is valid
+                else if (!dateTimeRegex.test(appointmentDateTime)) {
+                    $("#AptDatetime-reson").text("Invalid Appointment Date Time format.");
+                    isValid = false;
+                } else {
+                    // Convert to Date object
+                    var parts = appointmentDateTime.split(" ");
+                    var dateParts = parts[0].split("/");
+                    var timeParts = parts[1].split(":");
+                    var meridian = parts[2];
+
+                    var hours = parseInt(timeParts[0], 10);
+
+
+                    if (meridian.toUpperCase() === "PM" && hours !== 12) {
+                        hours += 12;
+                    } else if (meridian.toUpperCase() === "AM" && hours === 12) {
+                        hours = 0;
+                    }
+
+                    enteredDateTime = new Date(
+                        dateParts[2], // Year
+                        dateParts[1] - 1, // Month (0-based index)
+                        dateParts[0], // Day
+                        hours,
+                        parseInt(timeParts[1], 10),
+                        parseInt(timeParts[2], 10)
+                    );
+                    // ❌ Check if the selected date is Saturday (6) or Sunday (0)
+                    var startHour = 10;
+                    var endHour = 19;
+
+                    var enteredHour = enteredDateTime.getHours();
+                    var enteredMinutes = enteredDateTime.getMinutes();
+
+
+                    if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
+                        $("#AptDatetime-reson").text("Invalid Appointment Date Time.");
+                        isValid = false;
+                    }
+                    else if (enteredDateTime.getDay() === 0 || enteredDateTime.getDay() === 6) {
+
+                        $("#AptDatetime-reson").text("Appointments cannot be scheduled on weekends.");
+                        isValid = false;
+                    } else if (enteredHour < startHour || (enteredHour === endHour && enteredMinutes > 0) || enteredHour > endHour) {
+                        $("#AptDatetime-reson").text("Appointment time should be between 10 AM and 7 PM.");
+                        isValid = false;
+                    }
+                    else {
+                        $("#AptDatetime-reson").text("");
+                    }
                 }
+                  if (!isValid) {
+      $button.prop("disabled", false).text("Save");
+      return;
+  }
                 var formattedDate = convertDateFormat(appointmentDateTime);
 
 
@@ -1532,7 +1598,7 @@
                     <div class="">
                         <label for="OC-resched" class="form-label">Appointment Date Time*</label>
                         <ejs-datetimepicker id="app-datetim" step="15" min="DateTime.Now" style="height:45px;" format="@Model.EjsDateTimePattern" readonly></ejs-datetimepicker>
-                        <span id="AptDatetime-reson" class="text-danger"></span>
+                        <span id="AptDatetimereson1" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="modal-footer border-0 justify-content-center">
@@ -1541,19 +1607,29 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var rescheduleModalEladd = document.getElementById('app-add');
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var rescheduleModalEladd = document.getElementById('app-add');
 
-            rescheduleModalEladd.addEventListener('hidden.bs.modal', function () {
-                let backdrop = document.querySelector('.modal-backdrop');
-                if (backdrop) {
-                    backdrop.remove();
-                }
-            });
+        rescheduleModalEladd.addEventListener('hidden.bs.modal', function () {
+            // Remove modal backdrop if exists
+            let backdrop = document.querySelector('.modal-backdrop');
+            if (backdrop) {
+                backdrop.remove();
+            }
+
+            // Reset DateTimePicker value
+            let dateTimePicker = document.getElementById('app-datetim');
+            if (dateTimePicker && dateTimePicker.ej2_instances) {
+                dateTimePicker.ej2_instances[0].value = null;
+            }
+
+            // Clear error message span
+            document.getElementById('AptDatetimereson1').innerText = '';
         });
+    });
+</script>
 
-    </script>
     <script>
         $(document).ready(function () {
             $("#SubmitAppointment").click(function () {
@@ -1567,14 +1643,65 @@
                 var currentDate = new Date(); // Current date-time
                 var formattedCurrentDate = formatDate(currentDate); // Format the current date
                 var isValid = true;
+                        var dateTimeRegex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2} [APap][Mm]$/; // Format: dd/MM/yyyy hh:mm:ss AM/PM
+                var currentDateTime = new Date();
+                var enteredDateTime;
 
                 if (appointmentDateTime === "") {
-                    $("#AptaddDatetime").text("Appointment Date Time is required.");
+                    $("#AptDatetimereson1").text("Appointment Date Time is required.");
                     isValid = false; // Stop further execution
+                } else if (!dateTimeRegex.test(appointmentDateTime)) {
+                    $("#AptDatetime-reson").text("Invalid Appointment Date Time format.");
+                    isValid = false;
+                } else {
+                    // Convert to Date object
+                    var parts = appointmentDateTime.split(" ");
+                    var dateParts = parts[0].split("/");
+                    var timeParts = parts[1].split(":");
+                    var meridian = parts[2];
+
+                    var hours = parseInt(timeParts[0], 10);
+
+
+                    if (meridian.toUpperCase() === "PM" && hours !== 12) {
+                        hours += 12;
+                    } else if (meridian.toUpperCase() === "AM" && hours === 12) {
+                        hours = 0;
+                    }
+
+                    enteredDateTime = new Date(
+                        dateParts[2], // Year
+                        dateParts[1] - 1, // Month (0-based index)
+                        dateParts[0], // Day
+                        hours,
+                        parseInt(timeParts[1], 10),
+                        parseInt(timeParts[2], 10)
+                    );
+                    // ❌ Check if the selected date is Saturday (6) or Sunday (0)
+                    var startHour = 10;
+                    var endHour = 19;
+
+                    var enteredHour = enteredDateTime.getHours();
+                    var enteredMinutes = enteredDateTime.getMinutes();
+
+
+                    if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
+                        $("#AptDatetimereson1").text("Invalid Appointment Date Time.");
+                        isValid = false;
+                    }
+                    else if (enteredDateTime.getDay() === 0 || enteredDateTime.getDay() === 6) {
+
+                        $("#AptDatetimereson1").text("Appointments cannot be scheduled on weekends.");
+                        isValid = false;
+                    } else if (enteredHour < startHour || (enteredHour === endHour && enteredMinutes > 0) || enteredHour > endHour) {
+                        $("#AptDatetimereson1").text("Appointment time should be between 10 AM and 7 PM.");
+                        isValid = false;
+                    }
+                    else {
+                        $("#AptDatetimereson1").text("");
+                    }
                 }
-                else {
-                    $("#AptaddDatetime").text(""); // Clear error if input is valid
-                }
+                
                 if (!isValid) {
                     $button.prop("disabled", false).text("Save");
                     return;
