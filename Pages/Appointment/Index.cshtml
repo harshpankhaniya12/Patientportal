@@ -47,6 +47,7 @@
                             <label for="pi-resched" class="form-label">Appointment Date Time*</label>
                             <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" value="@Model.SelectedDateTime.ToString("dd/MM/yyyy hh:mm:ss tt")" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
                             <span id="pi-resched" class="text-danger"></span>
+                            <span id="AppointmentDateSpan" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
@@ -289,7 +290,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
 
-   
+
 <script>
     $(document).ready(function () {
         $("#save-btn").click(function (e) {
@@ -355,7 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     clearError("pi-dob");
                 }
             }
-            
+
             // Validate Appointment Date Time
             // Validate Appointment Date Time
             var appointmentValue = $("#pi-resched").val().trim();
@@ -425,10 +426,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     clearError("pi-resched");
                 }
             }
-           
+
             var dobValue = $("#pi-dob").val().trim();
             if (dobValue === "") {
-             
+
             } else {
                 var dobDate = new Date(dobValue.split('/').reverse().join('-')); // Convert dd/MM/yyyy to yyyy-MM-dd
                 var currentDate = new Date();
@@ -461,7 +462,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 clearError("pi-notes");
             }
-       
+
 
            var email = $("#pi-email").val().trim();
             var emailRegex = /^[\w\.-]+@@[\w\.-]+\.\w+$/; // ✅ Regex for valid email format
@@ -534,6 +535,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 contentType: "application/json",
                 data: JSON.stringify(formData),
                 success: function (response) {
+                     if (!response.isSuccess) {
+                            $("#AppointmentDateSpan").text(response.errorMessage).show();
+                            $button.prop("disabled", false).text("Save");
+                        }
+                        else {
                     Swal.fire({
                         title: 'Success',
                         text: 'Your appointment has been added successfully.',
@@ -548,7 +554,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 window.location.href = "/account"; // Redirect to /account on button click
             }
         });
-
+                        }
                 },
                 error: function (xhr) {
                     alert("Error: " + xhr.responseText);

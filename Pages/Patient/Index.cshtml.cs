@@ -30,6 +30,7 @@ namespace Patientportal.Pages.Patient
        
         public List<string> ChangeRequests { get; set; } = new List<string>();
         public List<AppointmentListItem> Doctorblocktime { get; set; } = new List<AppointmentListItem>();
+        public List<Holidays> Holidays { get; set; } = new List<Holidays>();
         public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, ApiService apiService)
         {
             _logger = logger;
@@ -216,10 +217,13 @@ namespace Patientportal.Pages.Patient
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA"; // Valid token yahan dalein
             string apiUrl3 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/GetAppointmentsByDoctor";
             string apiUrl4 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/GetInvoiceAmount?id={Id}";
+            string apiUrl5 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Holiday/getHolidaysList";
+
 
             // API Response Fetch karein
             var invoiceResponse = await _apiService.GetAsync<InvoiceResponse>(apiUrl4, token);
             Doctorblocktime = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl3, token) ?? new List<AppointmentListItem>();
+            Holidays = await _apiService.GetAsync<List<Holidays>>(apiUrl5, token) ?? new List<Holidays>();
             if (Doctorblocktime != null && Doctorblocktime.Count > 0 )
             {
                 foreach (var appointment in Doctorblocktime)
@@ -272,7 +276,7 @@ namespace Patientportal.Pages.Patient
 
                 if (response != null && response.IsSuccess)
                 {
-                    return new JsonResult(new { message = "Your change request has been submitted." });
+                    return new JsonResult(new { isSuccess = true,  message = "Your change request has been submitted." });
 
                 }
                 else
@@ -300,7 +304,7 @@ namespace Patientportal.Pages.Patient
 
             if (response != null && response.IsSuccess)
             {
-                return new JsonResult(new {  message = "Your change request has been submitted." });
+                return new JsonResult(new { isSuccess = true, message = "Your change request has been submitted." });
 
             }
             else
@@ -323,7 +327,7 @@ namespace Patientportal.Pages.Patient
 
             if (response != null && response.IsSuccess)
             {
-                return new JsonResult(new {  message = "Your change request has been submitted." });
+                return new JsonResult(new { isSuccess = true, message = "Your change request has been submitted." });
 
             }
             else
@@ -340,13 +344,23 @@ namespace Patientportal.Pages.Patient
 
             string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/UpsertAppointmentRequest";
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiZWVlZTc1MWMtMzJkZi00ZTJkLTlhMWItZmEzMjM1NmI5YmVmIiwibmJmIjoxNzQwOTc4ODA0LCJleHAiOjE3NzI1MTQ4MDQsImlhdCI6MTc0MDk3ODgwNCwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.N5KM-d-Q-JFP1_NN1MH_0C4IbrTti8QhBMGvk7xshJWLMxlCM9-fnbRvEHTBPE-ihDlsvWUX6r5pzriWuKVzJg"; // Valid token yahan dalein
+            string apiUrl5 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Holiday/getHolidaysList";
 
+            Holidays = await _apiService.GetAsync<List<Holidays>>(apiUrl5, token) ?? new List<Holidays>();
+            var appointmentDate = viewModel.AppointmentStartTime.Value.ToString("dd/MM/yyyy");
+            var isHoliday = Holidays.Any(h => h.StartDate.HasValue &&
+                                              h.StartDate.Value.ToString("dd/MM/yyyy") == appointmentDate);
+
+            if (isHoliday)
+            {
+                return new JsonResult(new { isSuccess = false, errorMessage = "Appointments cannot be scheduled on holidays." });
+            }
             var apiHelper = new ApiService(_httpClient);
             var response = await _apiService.PostAsync<AppointmentListItem, ApiResponse>(apiUrl, viewModel, token);
 
             if (response != null && response.IsSuccess)
             {
-                return new JsonResult(new {  message = "Your change request has been submitted." });
+                return new JsonResult(new { isSuccess = true, message = "Your change request has been submitted." });
 
             }
             else

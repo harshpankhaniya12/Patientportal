@@ -10,13 +10,16 @@
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         var doctorBlockTimes = @Html.Raw(Json.Serialize(Model.Doctorblocktime));
+        var holidays = @Html.Raw(Json.Serialize(Model.Holidays));
 
         if (doctorBlockTimes.length === 0) {
             console.log("No blocked appointments found.");
         } else {
             console.log("Blocked Appointments:", doctorBlockTimes);
         }
-
+        var holidayDates = holidays.map(function (item) {
+            return new Date(item.startDate).toISOString().split('T')[0]; // Convert to YYYY-MM-DD
+        });
         var scheduleObj = document.getElementById('schedule').ej2_instances[0];
 
         // Convert data to Scheduler format
@@ -29,12 +32,20 @@
                 IsReadonly: true // Makes event non-editable
             };
         });
-
+        scheduleObj.renderCell = function (args) {
+            if (args.elementType === "workCells" || args.elementType === "monthCells") {
+                var cellDate = args.date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
+                if (holidayDates.includes(cellDate)) {
+                    args.element.classList.add("e-disabled", "holiday-cell"); // Apply custom class
+                }
+            }
+        };
         // Debugging output
         console.log("Final Event Data for Scheduler:", blockAppointments);
 
         // Set the scheduler events
         scheduleObj.eventSettings.dataSource = blockAppointments;
+         scheduleObj.refresh();
     });
 </script>
 
@@ -145,6 +156,12 @@
         width: 100%; /* Full width */
     }
 
+    .holiday-cell {
+        background-color: #dee2e6 !important; /* Light red */
+        color: #721c24 !important;
+        pointer-events: none; /* Disable clicks */
+        opacity: 0.6; /* Make it look inactive */
+    }
 
     .e-appointment.e-read-only {
         width: 100% !important;

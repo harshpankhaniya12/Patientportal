@@ -13,6 +13,7 @@ namespace Patientportal.Pages.Calendar
         private readonly HttpClient _httpClient;
         private readonly ApiService _apiService;
         public List<AppointmentListItem> Doctorblocktime { get; set; } = new List<AppointmentListItem>();
+        public List<Holidays> Holidays { get; set; } = new List<Holidays>();
 
 
         public string? EjsDateTimePattern = "dd/MM/yyyy hh:mm:ss a";
@@ -24,10 +25,12 @@ namespace Patientportal.Pages.Calendar
         }
         public async Task OnGet()
         {
+            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Holiday/getHolidaysList";
             string apiUrl2 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/GetAppointmentsByDoctor";
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiYjk5MDM2ZWItNTRhZS00ZWE0LWI1MjMtNThmYThlM2UzMzdkIiwibmJmIjoxNzQwNTU2NDQ1LCJleHAiOjE3NzIwOTI0NDUsImlhdCI6MTc0MDU1NjQ0NSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.yex9R3CP67Mkp715Y61FEIUIFhtiQhGJa8X01V_vEd_c9PuKw4uZbEi3_bQtpzQpwukb5uS_SPi4TN2HGh_JBQ"; // Valid token yahan dalein
 
             Doctorblocktime = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl2, token) ?? new List<AppointmentListItem>();
+            Holidays = await _apiService.GetAsync<List<Holidays>>(apiUrl, token) ?? new List<Holidays>();
             foreach (var appointment in Doctorblocktime)
             {
                 if (appointment.AppointmentStartTime != null)
@@ -41,6 +44,12 @@ namespace Patientportal.Pages.Calendar
                 }
             }
 
+        
+        
+        
+        
+        
+        
         }
         public async Task OnGetCalendarAsync()
         {

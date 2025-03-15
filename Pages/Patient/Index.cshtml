@@ -767,8 +767,14 @@
                     contentType: "application/json",
                     data: JSON.stringify(requestData),
                     success: function (response) {
-                        localStorage.setItem("showSuccessMessage", "true"); // Set flag before reload
-                        location.reload(); // Reload page
+                        if (!response.isSuccess) {
+                            $("#OC-reschedSpan").text(response.errorMessage).show();
+                            $button.prop("disabled", false).text("Save");
+                        }
+                        else {
+                            localStorage.setItem("showSuccessMessage", "true"); // Set flag before reload
+                            location.reload(); // Reload page
+                        }
                     },
                     error: function () {
                         alert("Failed to submit reschedule request.");
@@ -933,9 +939,9 @@
 
                     var enteredHour = enteredDateTime.getHours();
                     var enteredMinutes = enteredDateTime.getMinutes();
-                     var month = parseInt(dateParts[1], 10);
-                     var year = parseInt(dateParts[2], 10);
-
+                    var day = parseInt(dateParts[0], 10);
+                    var month = parseInt(dateParts[1], 10);
+                    var year = parseInt(dateParts[2], 10);
                      // Validate month and date range
                      if (month < 1 || month > 12 || day < 1 || day > 31) {
                          $("#RP-reschedSpan").text("Invalid Appointment Date Time.");
@@ -977,8 +983,15 @@
                     contentType: "application/json",
                     data: JSON.stringify(requestData),
                     success: function (response) {
-                        localStorage.setItem("showSuccessMessage", "true"); // Set flag before reload
-                        location.reload(); // Reload page
+
+                        if (!response.isSuccess) {
+                            $("#RP-reschedSpan").text(response.errorMessage).show();
+                            $button.prop("disabled", false).text("Save");
+                        }
+                        else {
+                            localStorage.setItem("showSuccessMessage", "true"); // Set flag before reload
+                            location.reload(); // Reload page
+                        }
                     },
                     error: function () {
                         alert("Failed to submit reschedule request.");
@@ -1100,7 +1113,10 @@
 
         function loadSchedulerData() {
             var doctorBlockTimes = @Html.Raw(Json.Serialize(Model.Doctorblocktime));
-
+            var holidays = @Html.Raw(Json.Serialize(Model.Holidays));
+            var holidayDates = holidays.map(function (item) {
+                return new Date(item.startDate).toISOString().split('T')[0]; // Convert to YYYY-MM-DD
+            });
             if (!doctorBlockTimes || doctorBlockTimes.length === 0) {
                 console.log("No blocked appointments found.");
                 return;
@@ -1115,7 +1131,14 @@
                     console.error("Scheduler instance not found.");
                     return;
                 }
-
+                scheduleObj.renderCell = function (args) {
+                    if (args.elementType === "workCells" || args.elementType === "monthCells") {
+                        var cellDate = args.date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
+                        if (holidayDates.includes(cellDate)) {
+                            args.element.classList.add("e-disabled", "holiday-cell"); // Apply custom class
+                        }
+                    }
+                };
                 // Convert data to Scheduler format
                 var blockAppointments = doctorBlockTimes.map(function (item) {
                     return {
@@ -1294,6 +1317,11 @@
         function loadSchedulerData2(schedulerId) {
             debugger;
             var doctorBlockTimes = @Html.Raw(Json.Serialize(Model.Doctorblocktime));
+            var holidays = @Html.Raw(Json.Serialize(Model.Holidays));
+            var holidayDates = holidays.map(function (item) {
+                return new Date(item.startDate).toISOString().split('T')[0]; // Convert to YYYY-MM-DD
+            });
+         
 
             if (!doctorBlockTimes || doctorBlockTimes.length === 0) {
                 console.log("No blocked appointments found.");
@@ -1309,7 +1337,14 @@
                     console.error("Scheduler instance not found.");
                     return;
                 }
-
+                scheduleObj.renderCell = function (args) {
+                    if (args.elementType === "workCells" || args.elementType === "monthCells") {
+                        var cellDate = args.date.toISOString().split('T')[0]; // Get YYYY-MM-DD format
+                        if (holidayDates.includes(cellDate)) {
+                            args.element.classList.add("e-disabled", "holiday-cell"); // Apply custom class
+                        }
+                    }
+                };
                 // Convert data to Scheduler format
                 var blockAppointments = doctorBlockTimes.map(function (item) {
                     return {
@@ -1321,6 +1356,7 @@
                         ClassName: "blocked-slot"
                     };
                 });
+
 
                 console.log("Final Event Data for Scheduler:", blockAppointments);
 
@@ -2190,6 +2226,12 @@
         color: black !important;
     }
 
+    .holiday-cell {
+        background-color: #dee2e6 !important; /* Light red */
+        color: #721c24 !important;
+        pointer-events: none; /* Disable clicks */
+        opacity: 0.6; /* Make it look inactive */
+    }
     .form-control:disabled, .form-control[readonly] {
         background-color: #e9ecef;
         opacity: 1;
