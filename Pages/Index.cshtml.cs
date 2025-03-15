@@ -177,11 +177,11 @@ namespace Patientportal.Pages
                 return new JsonResult(new { result = new List<object>(), count = 0 });
             }
 
-            IEnumerable<object> data = appointmentsRequest.Concat(appointments)
-                                                .OrderByDescending(a => ((AppointmentListItem)a).CreatedOn);
-            int dataCount = data.Count() + data.Count();
+            IEnumerable<object> data = appointmentsRequest.Concat(appointments).AsEnumerable().OrderByDescending(x => x.CreatedOn);
+            int count = data.Count();
 
-            return new JsonResult(new { result = data, count = dataCount });
+
+            return new JsonResult(new { result = data, count });
         }
 
         public async Task<IActionResult> OnGetAsync()

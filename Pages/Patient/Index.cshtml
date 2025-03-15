@@ -656,6 +656,7 @@
                 var dateTimePicker = document.getElementById("OC-resched").ej2_instances[0];
                 if (dateTimePicker) {
                     dateTimePicker.value = null; // Clear the selected value
+                    dateTimePicker.refresh(); // Refresh the DateTimePicker UI
                 }
 
                 // Clear error message
@@ -720,9 +721,17 @@
 
                     var enteredHour = enteredDateTime.getHours();
                     var enteredMinutes = enteredDateTime.getMinutes();
+                var day = parseInt(dateParts[0], 10);
+                    var month = parseInt(dateParts[1], 10);
+                    var year = parseInt(dateParts[2], 10);
 
+                    // Validate month and date range
+                    if (month < 1 || month > 12 || day < 1 || day > 31) {
+                        $("#OC-reschedSpan").text("Invalid Appointment Date Time.");
+                        isValid = false;
+                    } 
 
-                    if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
+                    else if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
                         $("#OC-reschedSpan").text("Invalid Appointment Date Time.");
                         isValid = false;
                     }
@@ -858,6 +867,8 @@
                 var dateTimePicker = document.getElementById("RP-resched").ej2_instances[0];
                 if (dateTimePicker) {
                     dateTimePicker.value = null; // Clear the selected value
+                                dateTimePicker.refresh(); // Refresh the DateTimePicker UI
+
                 }
 
                 // Clear error message
@@ -922,9 +933,16 @@
 
                     var enteredHour = enteredDateTime.getHours();
                     var enteredMinutes = enteredDateTime.getMinutes();
+                     var month = parseInt(dateParts[1], 10);
+                     var year = parseInt(dateParts[2], 10);
 
+                     // Validate month and date range
+                     if (month < 1 || month > 12 || day < 1 || day > 31) {
+                         $("#RP-reschedSpan").text("Invalid Appointment Date Time.");
+                         isValid = false;
+                     } 
 
-                    if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
+                   else if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
                         $("#RP-reschedSpan").text("Invalid Appointment Date Time.");
                         isValid = false;
                     }
@@ -1956,7 +1974,7 @@
                 var currentDate = new Date();
                 currentDate.setFullYear(currentDate.getFullYear()); // Subtract 1 year from today
                 var minDate = new Date();
-                minDate.setFullYear(currentDate.getFullYear() - 99); // Minimum 99 years allowed
+                minDate.setFullYear(currentDate.getFullYear() - 100); // Minimum 99 years allowed
 
                 if (dobDate > currentDate) {
                     showError("pi-dob", "Invalid Date of Birth.");

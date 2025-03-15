@@ -142,11 +142,13 @@ namespace Patientportal.Pages.Patient
             {
                 Id = Convert.ToInt64(queryId);
             }
+
+
             string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id={Id}";
             string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointmentRequest?id={Id}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA"; // सही टोकन डालें
-            var appointments =  await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
-            var appointmentsRequest =  await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl2, token);
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA";
+            var appointments = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
+            var appointmentsRequest = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl2, token);
             if (appointments != null && appointments.Count > 0)
             {
                 foreach (var appointment in appointments)
@@ -156,9 +158,18 @@ namespace Patientportal.Pages.Patient
                         appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
                         appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
                     }
+                    if (appointment.CreatedOn != null)
+                    {
+                        appointment.CreatedOn = appointment.CreatedOn.Value.AddHours(-5).AddMinutes(-30);
+                    }
+
                     if (appointment.StatusName == "Reschedule")
                     {
                         appointment.StatusName = "Booked";
+                    }
+                    if (appointment.AppoinmentType == "Consultation")
+                    {
+                        appointment.AppoinmentType = "Appointment for Consultation";
                     }
                 }
             }
@@ -174,18 +185,18 @@ namespace Patientportal.Pages.Patient
                     {
                         appointmentes.StatusName = "Booked";
                     }
+                    if (appointmentes.AppoinmentType == "Consultation")
+                    {
+                        appointmentes.AppoinmentType = "Appointment for Consultation";
+                    }
                 }
             }
-            if (appointments == null || !appointments.Any())
-            {
-                return new JsonResult(new { result = new List<object>(), count = 0 });
-            }
 
-            IEnumerable<object> data = appointmentsRequest.Concat(appointments)
-                                                .OrderByDescending(a => ((AppointmentListItem)a).CreatedOn);
-            int dataCount = data.Count() + data.Count();
+            IEnumerable<object> data = appointmentsRequest.Concat(appointments).AsEnumerable().OrderByDescending(x => x.CreatedOn);
+            int count = data.Count();
 
-            return new JsonResult(new { result = data, count = dataCount });
+
+            return new JsonResult(new { result = data, count });
         }
 
         public async Task<IActionResult> OnGetAsync()

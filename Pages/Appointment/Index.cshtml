@@ -338,7 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 var currentDate = new Date();
                 currentDate.setFullYear(currentDate.getFullYear()); // Subtract 1 year from today
                 var minDate = new Date();
-                minDate.setFullYear(currentDate.getFullYear() - 99); // Minimum 99 years allowed
+                minDate.setFullYear(currentDate.getFullYear() - 100); // Minimum 99 years allowed
 
                 if (dobDate > currentDate) {
                     showError("pi-dob", "Invalid Date of Birth.");
@@ -362,6 +362,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var dateTimeRegex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2} [APap][Mm]$/; // Format: dd/MM/yyyy hh:mm:ss AM/PM
             var currentDateTime = new Date();
             var enteredDateTime;
+
 
             if (appointmentValue === "") {
                 showError("pi-resched", "Appointment Date Time is required.");
@@ -400,8 +401,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 var enteredHour = enteredDateTime.getHours();
                 var enteredMinutes = enteredDateTime.getMinutes();
 
-              
-                if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
+               var day = parseInt(dateParts[0], 10);
+                    var month = parseInt(dateParts[1], 10);
+                    var year = parseInt(dateParts[2], 10);
+
+                    // Validate month and date range
+                    if (month < 1 || month > 12 || day < 1 || day > 31) {
+                      showError("pi-resched", "Invalid Appointment Date Time.");
+                        isValid = false;
+                    } 
+                else if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
                     showError("pi-resched", "Invalid Appointment Date Time.");
                     isValid = false;
                 } 
