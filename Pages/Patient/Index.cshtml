@@ -1424,7 +1424,7 @@
             $("#SubmitRescedule").click(function () {
                  var $button = $(this); // Button ko reference karna
                 $button.prop("disabled", true).text("Submitting..."); // Button disable aur text change karein
-
+                var isValid = true;
                 var appointmentId = $("#AppoinmentId").val();
                 var statusId = $("#StatusId").val();
                 var appointmentDateTime = $("#pi-resched").val();
