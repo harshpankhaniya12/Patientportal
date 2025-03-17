@@ -481,9 +481,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 isValid = false;
             }
             else if ($("#pi-phoneno").val().trim().length < 10) {
-    showError("pi-phoneno", "Invalid Mobile Number.");
-    isValid = false;
-}
+                showError("pi-phoneno", "Invalid Mobile Number.");
+                isValid = false;
+            }
             else {
                 clearError("pi-phoneno");
             }
