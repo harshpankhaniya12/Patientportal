@@ -46,7 +46,7 @@
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-resched" class="form-label">Appointment Date Time*</label>
                             <ejs-datetimepicker id="pi-resched" step="15" min="DateTime.Now" style="height:45px;" value="@Model.SelectedDateTime.ToString("dd/MM/yyyy hh:mm:ss tt")" format="@Model.EjsDateTimePattern"></ejs-datetimepicker>
-                            <span id="pi-resched" class="text-danger"></span>
+                        @*     <span id="pi-resched" class="text-danger"></span> *@
                             <span id="AppointmentDateSpan" class="text-danger"></span>
                         </div>
 
@@ -340,7 +340,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentDate.setFullYear(currentDate.getFullYear()); // Subtract 1 year from today
                 var minDate = new Date();
                 minDate.setFullYear(currentDate.getFullYear() - 100); // Minimum 99 years allowed
-
+               
                 if (dobDate > currentDate) {
                     showError("pi-dob", "Invalid Date of Birth.");
                     isValid = false;
@@ -366,10 +366,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             if (appointmentValue === "") {
-                showError("pi-resched", "Appointment Date Time is required.");
+                showError("AppointmentDateSpan", "Appointment Date Time is required.");
                 isValid = false;
             } else if (!dateTimeRegex.test(appointmentValue)) {
-                showError("pi-resched", "Invalid Appointment Date Time format.");
+                showError("AppointmentDateSpan", "Invalid Appointment Date Time format.");
                 isValid = false;
             } else {
                 // Convert to Date object
@@ -377,7 +377,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 var dateParts = parts[0].split("/");
                 var timeParts = parts[1].split(":");
                 var meridian = parts[2];
-
+                var maxDateTime = new Date();
+maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                 var hours = parseInt(timeParts[0], 10);
 
 
@@ -406,24 +407,27 @@ document.addEventListener("DOMContentLoaded", function () {
                     var month = parseInt(dateParts[1], 10);
                     var year = parseInt(dateParts[2], 10);
 
+               if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
+                    showError("AppointmentDateSpan", "Invalid Appointment Date Time.");
+                    isValid = false;
+                } else if (enteredDateTime > maxDateTime) { // ✅ Check max 10 years condition
+                    showError("AppointmentDateSpan", "Appointment Date Time cannot be more than 10 years from today.");
+                    isValid = false;
+                }
                     // Validate month and date range
-                    if (month < 1 || month > 12 || day < 1 || day > 31) {
-                      showError("pi-resched", "Invalid Appointment Date Time.");
+                   else if (month < 1 || month > 12 || day < 1 || day > 31) {
+                      showError("AppointmentDateSpan", "Invalid Appointment Date Time.");
                         isValid = false;
                     } 
-                else if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
-                    showError("pi-resched", "Invalid Appointment Date Time.");
-                    isValid = false;
-                } 
                 else if (enteredDateTime.getDay() === 0 || enteredDateTime.getDay() === 6) {
-                    showError("pi-resched", "Appointments cannot be scheduled on weekends.");
+                    showError("AppointmentDateSpan", "Appointments cannot be scheduled on weekends.");
                     isValid = false;
                 } else if (enteredHour < startHour || (enteredHour === endHour && enteredMinutes > 0) || enteredHour > endHour) {
-                    showError("pi-resched", "Appointment time should be between 10 AM and 7 PM.");
+                    showError("AppointmentDateSpan", "Appointment time should be between 10 AM and 7 PM.");
                     isValid = false;
                 }
                 else {
-                    clearError("pi-resched");
+                    clearError("AppointmentDateSpan");
                 }
             }
 

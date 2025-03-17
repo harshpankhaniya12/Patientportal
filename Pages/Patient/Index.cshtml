@@ -699,6 +699,8 @@
                     var meridian = parts[2];
 
                     var hours = parseInt(timeParts[0], 10);
+                     var maxDateTime = new Date();
+maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
 
 
                     if (meridian.toUpperCase() === "PM" && hours !== 12) {
@@ -725,8 +727,12 @@
                     var month = parseInt(dateParts[1], 10);
                     var year = parseInt(dateParts[2], 10);
 
+                       if (enteredDateTime > maxDateTime) { // ✅ Check max 10 years condition
+                      $("#OC-reschedSpan").text("Appointment Date Time cannot be more than 10 years from today.");
+                    isValid = false;
+                }
                     // Validate month and date range
-                    if (month < 1 || month > 12 || day < 1 || day > 31) {
+                  else  if (month < 1 || month > 12 || day < 1 || day > 31) {
                         $("#OC-reschedSpan").text("Invalid Appointment Date Time.");
                         isValid = false;
                     } 
@@ -917,6 +923,8 @@
                     var meridian = parts[2];
 
                     var hours = parseInt(timeParts[0], 10);
+                     var maxDateTime = new Date();
+maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
 
 
                     if (meridian.toUpperCase() === "PM" && hours !== 12) {
@@ -943,7 +951,11 @@
                     var month = parseInt(dateParts[1], 10);
                     var year = parseInt(dateParts[2], 10);
                      // Validate month and date range
-                     if (month < 1 || month > 12 || day < 1 || day > 31) {
+                 
+                     if (enteredDateTime > maxDateTime) { // ✅ Check max 10 years condition
+                     $("#RP-reschedSpan").text("Appointment Date Time cannot be more than 10 years from today.");
+                    isValid = false;
+                }else if (month < 1 || month > 12 || day < 1 || day > 31) {
                          $("#RP-reschedSpan").text("Invalid Appointment Date Time.");
                          isValid = false;
                      } 
