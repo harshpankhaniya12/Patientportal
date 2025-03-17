@@ -14,8 +14,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Patientportal.Pages.Patient
 {
-    [Authorize]
-    [IgnoreAntiforgeryToken(Order = 2000)]
+    //[Authorize]
+    [IgnoreAntiforgeryToken(Order = 2000)]  
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
