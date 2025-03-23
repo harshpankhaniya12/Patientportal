@@ -5,8 +5,71 @@
         margin-bottom: 13px;
         /* margin-bottom: 35px; */
     }
+
+    .login-form .form-control {
+        font-size: 16px !important;
+        height: 40px !important;
+        width: 338px !important;
+        line-height: 48px !important;
+        padding: 0 15px !important;
+        background-color: white !important;
+    }
+
+    div#sendopt1 {
+        width: 340px !important;
+    }
+
+    .otp-inps {
+        width: 340px !important;
+    }
+
+    input#submitbutton {
+        width: 340px !important;
+    }
+
+    div#sendopt12 {
+        margin-right: 100px !important;
+    }
+
+    .login-box {
+        margin-left: 50px !important;
+    }
+
 }
 /*MIN 1280 ENDS*/
+@media (min-width: 1024px) {
+    .login-form .form-control-input {
+        font-size: 16px !important;
+        height: 40px !important;
+        width: 338px !important;
+        line-height: 48px !important;
+        padding: 0 15px !important;
+        border-color: #C1C8D0 !important;
+        background-color: var(--lightgray) !important;
+    }
+
+    div#sendopt1 {
+        width: 340px !important;
+    }
+
+    .otp-inps {
+        width: 340px !important;
+    }
+
+    input#submitbutton {
+        width: 340px !important;
+    }
+
+    div#sendopt12 {
+        /* margin-right: 150px; */
+        margin-right: 100px !important;
+    }
+
+
+    .login-box {
+        margin-left: 50px !important;
+    }
+}
 
 @media screen and (max-width: 1280px) {
     .page-login { --leftPer: 55%; }
@@ -15,6 +78,39 @@
         margin-bottom: 13px;
         /* margin-bottom: 35px; */
     }
+    .login-form .form-control {
+        font-size: 16px !important;
+        height: 40px !important;
+        width: 338px !important;
+        line-height: 48px !important;
+        padding: 0 15px !important;
+        border-color: #C1C8D0 !important;
+        background-color: var(--lightgray) !important;
+    }
+
+    div#sendopt1 {
+        width: 340px !important;
+    }
+
+    .otp-inps {
+        width: 340px !important;
+    }
+
+    input#submitbutton {
+        width: 340px !important;
+    }
+
+    div#sendopt12 {
+        /* margin-right: 150px; */
+        margin-right: 100px !important;
+    }
+
+
+    .login-box {
+        margin-left: 50px !important;
+    }
+
+
 }
 
 @media screen and (max-width: 1199px) {
@@ -25,6 +121,38 @@
             margin-bottom: 13px;
             /* margin-bottom: 35px; */
         }
+    .login-form .form-control {
+        font-size: 16px !important;
+        height: 40px !important;
+        width: 338px !important;
+        line-height: 48px !important;
+        padding: 0 15px !important;
+        border-color: #C1C8D0 !important;
+        background-color: var(--lightgray) !important;
+    }
+
+    div#sendopt1 {
+        width: 340px !important;
+    }
+
+    .otp-inps {
+        width: 340px !important;
+    }
+
+    input#submitbutton {
+        width: 340px !important;
+    }
+
+    div#sendopt12 {
+        /* margin-right: 150px; */
+        margin-right: 100px !important;
+    }
+
+
+    .login-box {
+        margin-left: 50px !important;
+    }
+
 }
 
 @media screen and (max-width: 767px) {

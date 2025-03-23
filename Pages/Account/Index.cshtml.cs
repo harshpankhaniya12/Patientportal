@@ -112,13 +112,14 @@ namespace Patientportal.Pages.Account
                 var principal = new ClaimsPrincipal(identity);
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+                string encryptedId = EncryptionHelper.EncryptId(patient?.Id ?? 0);
 
                 return new JsonResult(new
                 {
                     success = true,
                     message = "OTP Verified Successfully",
-                    patientId = patient?.Id,
-                    redirectUrl = "/Patient?id=" + patient?.Id
+                    patientId = encryptedId,
+                    redirectUrl = "/Patient?id=" + encryptedId
                 });
             }
             else

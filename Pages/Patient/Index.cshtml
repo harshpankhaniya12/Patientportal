@@ -392,8 +392,10 @@
                 <script>
                     function onQueryCellInfo(args) {
                         if (args.column.field === "StatusName") {
-                            if (args.data.statusName === "Booked") {
+                            if (args.data.statusName === "Booked" ) {
                                 args.cell.innerHTML = `<span class="badge badge-success">Booked</span>`;
+                            } else if (args.data.statusName === "Completed") {
+                                args.cell.innerHTML = `<span class="badge badge-Primary">Completed</span>`;
                             }
                             else if (args.data.statusName === "Request Sent") {
                                 args.cell.innerHTML = `<span class="badge badge-secondary">Request Sent</span>`;
@@ -2298,6 +2300,9 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
 
     .badge-success {
         background-color: #28a745; /* Green */
+    } 
+    .badge-Primary {
+        background-color: #5bc0de; /* Green */
     }
 
     .badge-secondary {

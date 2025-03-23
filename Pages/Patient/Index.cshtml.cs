@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Patientportal.Pages.Patient
 {
-    //[Authorize]
+    [Authorize]
     [IgnoreAntiforgeryToken(Order = 2000)]  
     public class IndexModel : PageModel
     {
@@ -49,7 +49,7 @@ namespace Patientportal.Pages.Patient
                 return new JsonResult(new { result = new List<object>(), count = 0 });
             }
 
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id={Id}";
+            string apiUrl = $"http://localhost:5165/api/v1/Appointment/getPatientByAppointment?id={Id}";
             string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointmentRequest?id={Id}";
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA";
             var appointments = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
@@ -67,10 +67,19 @@ namespace Patientportal.Pages.Patient
                     //{
                     //    appointment.CreatedOn = appointment.CreatedOn.Value.AddHours(-5).AddMinutes(-30);
                     //}
-                    
-                    if (appointment.StatusName == "Reschedule")
+
+                    if (appointment.StatusName == "Reschedule" ||
+                     appointment.StatusName == "Check-In" ||
+                     appointment.StatusName == "ReverseCheckin" ||
+                     appointment.StatusName == "ReverseCheckout" ||
+                     appointment.StatusName == "Confirmed")
                     {
                         appointment.StatusName = "Booked";
+                    }
+                    if (appointment.StatusName == "Released" || appointment.StatusName == "Completed" ||
+                     appointment.StatusName == "Check-Out")
+                    {
+                        appointment.StatusName = "Completed";
                     }
                     if (appointment.AppoinmentType == "Consultation")
                     {
@@ -145,7 +154,7 @@ namespace Patientportal.Pages.Patient
             }
 
 
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id={Id}";
+            string apiUrl = $"http://localhost:5165/api/v1/Appointment/getPatientByAppointment?id={Id}";
             string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointmentRequest?id={Id}";
             string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA";
             var appointments = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
@@ -164,9 +173,17 @@ namespace Patientportal.Pages.Patient
                     //    appointment.CreatedOn = appointment.CreatedOn.Value.AddHours(-5).AddMinutes(-30);
                     //}
 
-                    if (appointment.StatusName == "Reschedule")
+                    if (appointment.StatusName == "Reschedule" ||
+                      appointment.StatusName == "Check-In" ||
+                      appointment.StatusName == "ReverseCheckin" ||
+                      appointment.StatusName == "ReverseCheckout" ||
+                      appointment.StatusName == "Confirmed")
                     {
                         appointment.StatusName = "Booked";
+                    }
+                    if (appointment.StatusName == "Released" || appointment.StatusName == "Completed" || appointment.StatusName == "Check-Out")
+                    {
+                        appointment.StatusName = "Completed";
                     }
                     if (appointment.AppoinmentType == "Consultation")
                     {
@@ -182,10 +199,7 @@ namespace Patientportal.Pages.Patient
                     //{
                     //    appointmentes.AppointmentStartTime = appointmentes.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
                     //}
-                    if (appointmentes.StatusName == "Reschedule")
-                    {
-                        appointmentes.StatusName = "Booked";
-                    }
+
                     if (appointmentes.AppoinmentType == "Consultation")
                     {
                         appointmentes.AppoinmentType = "Appointment for Consultation";
@@ -206,8 +220,9 @@ namespace Patientportal.Pages.Patient
             var queryId = Request.Query["id"];
             if (queryId.Any())
             {
-                Id = Convert.ToInt64(queryId);
-            }else
+                Id = Convert.ToInt64(EncryptionHelper.DecryptId(queryId));
+            }
+            else
             {
                 return RedirectToPage("/Account/Index"); // Ya phir Redirect("/Login");
             }
