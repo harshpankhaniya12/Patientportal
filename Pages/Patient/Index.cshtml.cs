@@ -58,15 +58,15 @@ namespace Patientportal.Pages.Patient
             {
                 foreach (var appointment in appointments)
                 {
-                    if (appointment.AppointmentStartTime.HasValue)
-                    {
-                        appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
-                        appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
-                    }
-                    if (appointment.CreatedOn != null)
-                    {
-                        appointment.CreatedOn = appointment.CreatedOn.Value.AddHours(-5).AddMinutes(-30);
-                    }
+                    //if (appointment.AppointmentStartTime.HasValue)
+                    //{
+                    //    appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
+                    //    appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
+                    //}
+                    //if (appointment.CreatedOn != null)
+                    //{
+                    //    appointment.CreatedOn = appointment.CreatedOn.Value.AddHours(-5).AddMinutes(-30);
+                    //}
                     
                     if (appointment.StatusName == "Reschedule")
                     {
@@ -82,10 +82,10 @@ namespace Patientportal.Pages.Patient
             {
                 foreach (var appointmentes in appointmentsRequest)
                 {
-                    if (appointmentes.AppointmentStartTime.HasValue)
-                    {
-                        appointmentes.AppointmentStartTime = appointmentes.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
-                    }
+                    //if (appointmentes.AppointmentStartTime.HasValue)
+                    //{
+                    //    appointmentes.AppointmentStartTime = appointmentes.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
+                    //}
                     if (appointmentes.StatusName == "Reschedule")
                     {
                         appointmentes.StatusName = "Booked";
@@ -154,15 +154,15 @@ namespace Patientportal.Pages.Patient
             {
                 foreach (var appointment in appointments)
                 {
-                    if (appointment.AppointmentStartTime.HasValue)
-                    {
-                        appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
-                        appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
-                    }
-                    if (appointment.CreatedOn != null)
-                    {
-                        appointment.CreatedOn = appointment.CreatedOn.Value.AddHours(-5).AddMinutes(-30);
-                    }
+                    //if (appointment.AppointmentStartTime.HasValue)
+                    //{
+                    //    appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
+                    //    appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
+                    //}
+                    //if (appointment.CreatedOn != null)
+                    //{
+                    //    appointment.CreatedOn = appointment.CreatedOn.Value.AddHours(-5).AddMinutes(-30);
+                    //}
 
                     if (appointment.StatusName == "Reschedule")
                     {
@@ -178,10 +178,10 @@ namespace Patientportal.Pages.Patient
             {
                 foreach (var appointmentes in appointmentsRequest)
                 {
-                    if (appointmentes.AppointmentStartTime.HasValue)
-                    {
-                        appointmentes.AppointmentStartTime = appointmentes.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
-                    }
+                    //if (appointmentes.AppointmentStartTime.HasValue)
+                    //{
+                    //    appointmentes.AppointmentStartTime = appointmentes.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
+                    //}
                     if (appointmentes.StatusName == "Reschedule")
                     {
                         appointmentes.StatusName = "Booked";
@@ -224,21 +224,21 @@ namespace Patientportal.Pages.Patient
             var invoiceResponse = await _apiService.GetAsync<InvoiceResponse>(apiUrl4, token);
             Doctorblocktime = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl3, token) ?? new List<AppointmentListItem>();
             Holidays = await _apiService.GetAsync<List<Holidays>>(apiUrl5, token) ?? new List<Holidays>();
-            if (Doctorblocktime != null && Doctorblocktime.Count > 0 )
-            {
-                foreach (var appointment in Doctorblocktime)
-                {
-                    if (appointment.AppointmentStartTime != null)
-                    {
-                        appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
-                    }
+            //if (Doctorblocktime != null && Doctorblocktime.Count > 0 )
+            //{
+            //    foreach (var appointment in Doctorblocktime)
+            //    {
+            //        if (appointment.AppointmentStartTime != null)
+            //        {
+            //            appointment.AppointmentStartTime = appointment.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
+            //        }
 
-                    if (appointment.AppointmentEndDateTime != null)
-                    {
-                        appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
-                    }
-                }
-            }
+            //        if (appointment.AppointmentEndDateTime != null)
+            //        {
+            //            appointment.AppointmentEndDateTime = appointment.AppointmentEndDateTime.Value.AddHours(-5).AddMinutes(-30);
+            //        }
+            //    }
+            //}
 
             PatientData = await _apiService.GetAsync<ProfileListItem>(apiUrl, token) ?? new ProfileListItem();
 
