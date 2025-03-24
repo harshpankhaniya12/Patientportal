@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Patientportal.AllApicall;
 using Syncfusion.Licensing;
@@ -19,13 +20,26 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Account";
         options.AccessDeniedPath = "/AccessDenied";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Token expires in 5 minutes
-        options.SlidingExpiration = false; // Prevents automatic renewal
-        options.Cookie.HttpOnly = true; // Enhances security
-        options.Cookie.SecurePolicy = CookieSecurePolicy.None; // Use HTTPS
-        options.Cookie.SameSite = SameSiteMode.Lax; // Prevents CSRF attacks
+        options.ExpireTimeSpan = TimeSpan.FromDays(365); // 1 ???? ??? ????????
+        options.SlidingExpiration = false;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.None;
+        options.Cookie.SameSite = SameSiteMode.Lax;
 
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnValidatePrincipal = async context =>
+            {
+                var expireTime = context.Properties?.ExpiresUtc;
+                if (expireTime.HasValue && expireTime.Value < DateTime.UtcNow)
+                {
+                    context.RejectPrincipal(); // Force logout
+                    await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                }
+            }
+        };
     });
+
 
 builder.Services.AddAuthorization();
 builder.Services.AddRazorPages();
