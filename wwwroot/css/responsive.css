@@ -24,6 +24,7 @@
     }
     input#phones {
         width: 370px !important;
+        height: 40px !important;
     }
     .form-control-input-type {
         width: 370px !important;
@@ -59,6 +60,7 @@
 
     input#phones {
         width: 370px !important;
+        height: 40px !important;
     }
     div#sendopt1 {
         width: 370px !important;
@@ -93,6 +95,7 @@
 
     input#phones {
         width: 370px !important;
+        height: 40px !important;
     }
     .login-form .form-control {
         font-size: 16px !important;
@@ -147,6 +150,7 @@
 
     input#phones {
         width: 370px !important;
+        height: 40px !important;
     }
     div#sendopt1 {
         width: 370px !important;
