@@ -15,6 +15,17 @@
     }
 
     div#sendopt1 {
+        font-size: 16px !important;
+        height: 40px !important;
+        width: 370px !important;
+        line-height: 48px !important;
+        padding: 0 15px !important;
+        background-color: white !important;
+    }
+    input#phones {
+        width: 370px !important;
+    }
+    .form-control-input-type {
         width: 370px !important;
     }
 
@@ -46,6 +57,9 @@
         background-color: var(--lightgray) !important;
     }
 
+    input#phones {
+        width: 370px !important;
+    }
     div#sendopt1 {
         width: 370px !important;
     }
@@ -75,6 +89,10 @@
         font-size: 16px;
         margin-bottom: 13px;
         /* margin-bottom: 35px; */
+    }
+
+    input#phones {
+        width: 370px !important;
     }
     .login-form .form-control {
         font-size: 16px !important;
@@ -127,6 +145,9 @@
         background-color: var(--lightgray) !important;
     }
 
+    input#phones {
+        width: 370px !important;
+    }
     div#sendopt1 {
         width: 370px !important;
     }
