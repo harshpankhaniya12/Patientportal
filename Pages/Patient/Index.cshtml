@@ -42,31 +42,31 @@
                     <input type="hidden" id="PatientId" asp-for="PatientData.Id" name="medicalPatientSignature" class="custom-field-height" />
                     <div class="row">
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-name" class="form-label">Name</label>
+                            <label for="pi-name" class="form-label">Name*</label>
                             <input type="text" name="patientname" maxlength="100" asp-for="PatientData.Name" class="form-control" id="pi-name">
                             <span asp-validation-for="PatientData.Name" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-phoneno" class="form-label">Phone Number</label>
+                            <label for="pi-phoneno" class="form-label">Phone Number*</label>
                             <input type="text" name="phoneno" asp-for="PatientData.Mobile" class="form-control" id="pi-phoneno" disabled>
                             <span asp-validation-for="PatientData.Mobile" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-email" class="form-label">Email</label>
+                            <label for="pi-email" class="form-label">Email*</label>
                             <input type="email" name="email" asp-for="PatientData.Email" maxlength="100" class="form-control" id="pi-email">
                             <span asp-validation-for="PatientData.Email" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-age" class="form-label">Age</label>
+                            <label for="pi-age" class="form-label">Age*</label>
                             <input type="number" name="age" asp-for="PatientData.Age" maxlength="2" class="form-control" id="pi-age">
                             <span asp-validation-for="PatientData.Age" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-dob" class="form-label">Date of Birth</label>
+                            <label for="pi-dob" class="form-label">Date of Birth*</label>
                             @* <input type="date" name="dob" class="form-control form-date" id="pi-dob" value="1995-09-03"> *@
                             <ejs-datepicker id="pi-dob" ejs-for="PatientData.Dob" class="form-control" format="dd/MM/yyyy" style="height: 45px;"></ejs-datepicker>
                             <span asp-validation-for="PatientData.Dob" class="text-danger"></span>
@@ -106,7 +106,7 @@
                             });
                         </script>
                         <div class="col-md-6 col-xl-4">
-                            <label class="form-label">Gender</label>
+                            <label class="form-label">Gender*</label>
 
                             <div class="btn-group" role="group">
                                 <input type="radio" class="btn-check" name="gender" id="gender-male">
@@ -122,7 +122,7 @@
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-matstat" class="form-label">Marital Status</label>
+                            <label for="pi-matstat" class="form-label">Marital Status*</label>
                             <ejs-dropdownlist Id="pi-matstat" ejs-for="PatientData.MaritalStatus" style="height: 45px;" class="form-control" TValue="string" DataSource="MaritalStatusList" Placeholder="Select Marital Status"></ejs-dropdownlist>
                             <span asp-validation-for="PatientData.MaritalStatus" class="text-danger"></span>
                         </div>
