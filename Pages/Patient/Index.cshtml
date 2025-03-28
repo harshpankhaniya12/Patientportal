@@ -400,6 +400,9 @@
                             else if (args.data.statusName === "Request Sent") {
                                 args.cell.innerHTML = `<span class="badge badge-secondary">Request Sent</span>`;
                             }
+                            else if (args.data.statusName === "Close") {
+                                args.cell.innerHTML = `<span class="badge badge-Primary">Completed</span>`;
+                            }
                             else if (args.data.statusName === "Cancelled") {
                                 args.cell.innerHTML = `<span class="badge badge-danger">Cancelled</span>`;
                             }
