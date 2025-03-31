@@ -20,7 +20,7 @@
                     @{
                         var patientName = ViewData["PatientName"]?.ToString();
                         var displayName = patientName != null && patientName.Length > 10
-                        ? patientName.Substring(0, 20) + "..."
+                        ? patientName.Substring(0, 10) + "..."
                         : patientName;
                     }
                     @displayName
