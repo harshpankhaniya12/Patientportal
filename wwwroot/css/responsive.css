@@ -1,189 +1,65 @@
 @media screen and (min-width: 1600px) {
-    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl { max-width: calc(1560px + 30px); }
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: calc(1560px + 30px);
+    }
+
     .login-box p {
         font-size: 16px;
         margin-bottom: 13px;
         /* margin-bottom: 35px; */
     }
-
-    .login-form .form-control {
-        font-size: 16px !important;
-        height: 40px !important;
-        line-height: 48px !important;
-        padding: 0 15px !important;
-        background-color: white !important;
-    }
-
-    div#sendopt1 {
-        font-size: 16px !important;
-        height: 40px !important;
-        width: 370px !important;
-        line-height: 48px !important;
-        padding: 0 15px !important;
-        background-color: white !important;
-    }
-    input#phones {
-        width: 370px !important;
-        height: 40px !important;
-    }
-    .form-control-input-type {
-        width: 370px !important;
-    }
-
-    .otp-inps {
-        width: 370px !important;
-    }
-
-    input#submitbutton {
-        width: 370px !important;
-    }
-
-    div#sendopt12 {
-        margin-right: 100px !important;
-    }
-
-    .login-box {
-        margin-left: 50px !important;
-    }
-
 }
 /*MIN 1280 ENDS*/
-@media (min-width: 1024px) {
-    .login-form .form-control-input {
-        font-size: 16px !important;
-        height: 40px !important;
-        line-height: 48px !important;
-        padding: 0 15px !important;
-        border-color: #C1C8D0 !important;
-        background-color: var(--lightgray) !important;
-    }
-
-    input#phones {
-        width: 370px !important;
-        height: 40px !important;
-    }
-    div#sendopt1 {
-        width: 370px !important;
-    }
-
-    .otp-inps {
-        width: 370px !important;
-    }
-
-    input#submitbutton {
-        width: 370px !important;
-    }
-
-    div#sendopt12 {
-        /* margin-right: 150px; */
-        margin-right: 100px !important;
-    }
-
-
-    .login-box {
-        margin-left: 50px !important;
-    }
-}
 
 @media screen and (max-width: 1280px) {
-    .page-login { --leftPer: 55%; }
+    .page-login {
+        --leftPer: 55%;
+    }
+
     .login-box p {
         font-size: 16px;
         margin-bottom: 13px;
         /* margin-bottom: 35px; */
     }
-
-    input#phones {
-        width: 370px !important;
-        height: 40px !important;
-    }
-    .login-form .form-control {
-        font-size: 16px !important;
-        height: 40px !important;
-        line-height: 48px !important;
-        padding: 0 15px !important;
-        border-color: #C1C8D0 !important;
-        background-color: var(--lightgray) !important;
-    }
-
-    div#sendopt1 {
-        width: 370px !important;
-    }
-
-    .otp-inps {
-        width: 370px !important;
-    }
-
-    input#submitbutton {
-        width: 370px !important;
-    }
-
-    div#sendopt12 {
-        /* margin-right: 150px; */
-        margin-right: 100px !important;
-    }
-
-
-    .login-box {
-        margin-left: 50px !important;
-    }
-
-
 }
 
 @media screen and (max-width: 1199px) {
-    .page-login { --leftPer: 50%; }
-    .login-box { padding: 30px; }
+    .page-login {
+        --leftPer: 50%;
+    }
+
+    .login-box {
+        padding: 30px;
+    }
+
         .login-box p {
             font-size: 16px;
             margin-bottom: 13px;
             /* margin-bottom: 35px; */
         }
-    .login-form .form-control {
-        font-size: 16px !important;
-        height: 40px !important;
-        line-height: 48px !important;
-        padding: 0 15px !important;
-        border-color: #C1C8D0 !important;
-        background-color: var(--lightgray) !important;
-    }
-
-    input#phones {
-        width: 370px !important;
-        height: 40px !important;
-    }
-    div#sendopt1 {
-        width: 370px !important;
-    }
-
-    .otp-inps {
-        width: 370px !important;
-    }
-
-    input#submitbutton {
-        width: 370px !important;
-    }
-
-    div#sendopt12 {
-        /* margin-right: 150px; */
-        margin-right: 100px !important;
-    }
-
-
-    .login-box {
-        margin-left: 50px !important;
-    }
-
 }
 
 @media screen and (max-width: 767px) {
-    .hcol-pa { padding-right: 15px; margin-right: 15px; }
-    .ius-block-head { flex-wrap: nowrap; margin-bottom: 20px; }
-    .ius-block-head h2 { flex: 1 0 auto; width: auto; margin-bottom: 10px; }
+    .hcol-pa {
+        padding-right: 15px;
+        margin-right: 15px;
+    }
+
+    .ius-block-head {
+        flex-wrap: nowrap;
+        margin-bottom: 20px;
+    }
+
+        .ius-block-head h2 {
+            flex: 1 0 auto;
+            width: auto;
+            margin-bottom: 10px;
+        }
 
     .page-login {
         position: relative;
     }
+
     .login-lt {
         width: 100%;
         position: absolute;
@@ -192,7 +68,7 @@
         height: 100%;
         z-index: 0;
     }
-    
+
     .login-rt {
         width: 100%;
         max-width: 100%;
@@ -200,14 +76,7 @@
         background: rgba(255, 255, 255, 0.84);
         z-index: 1;
     }
-    .d-none {
-        display: none !important;
-    }
 
-    .hcol-usr .dropdown-toggle {
-        flex-direction: row-reverse;
-        text-align: right;
-    }
     .login-box {
         width: 480px;
         margin: 0 auto;
@@ -215,32 +84,37 @@
         padding: 50px 30px;
     }
 
-    .login-box-head { text-align: center; }
+    .login-box-head {
+        text-align: center;
+    }
 }
-
-
 /*767*/
 
 @media screen and (max-width: 575px) {
-    h1, .h1 { font-size: 20px; line-height: 30em; }
-    h2, .h2 { font-size: 18px; line-height: 28px; }
-    h3, .h3 { font-size: 16px; line-height: 26px; }
+    h1, .h1 {
+        font-size: 20px;
+        line-height: 30em;
+    }
 
-    .ius-form .form-label { margin-bottom: 4px; }
+    h2, .h2 {
+        font-size: 18px;
+        line-height: 28px;
+    }
+
+    h3, .h3 {
+        font-size: 16px;
+        line-height: 26px;
+    }
+
+    .ius-form .form-label {
+        margin-bottom: 4px;
+    }
 
     .ius-header {
         flex-wrap: wrap;
         justify-content: space-between;
         padding: 9px 0 0;
         gap: 9px;
-    }
-    .d-none {
-        display: none !important;
-    }
-
-    .hcol-usr .dropdown-toggle {
-        flex-direction: row-reverse !important;
-        text-align: right !important;
     }
 
     .hcol-pa {
@@ -252,9 +126,15 @@
         order: 1;
     }
 
-    .hcol-usr { padding: 0; padding-right: 16px; background: none; }
+    .hcol-usr {
+        padding: 0;
+        padding-right: 16px;
+        background: none;
+    }
 
-    .hcol-logo { padding-left: 16px;}
+    .hcol-logo {
+        padding-left: 16px;
+    }
 
     .pa-row {
         display: flex;
@@ -271,31 +151,22 @@
         padding: 0 15px;
         margin-bottom: 20px !important;
     }
-    .d-none {
-        display: none !important;
-    }
 
-    .hcol-usr .dropdown-toggle {
-        flex-direction: row-reverse !important;
-        text-align: right !important;
-    }
+
     .full-screen-schedule {
         height: 100vh; /* Full Screen */
         width: 100vw;
     }
-    .form-actions { gap: 10px; justify-content: center; }
+
+    .form-actions {
+        gap: 10px;
+        justify-content: center;
+    }
 }
 /* Mobile ke liye responsive layout */
 @media (max-width: 768px) {
 
-    .d-none {
-        display: none !important;
-    }
 
-    .hcol-usr .dropdown-toggle {
-        flex-direction: row-reverse !important;
-        text-align: right !important;
-    }
     .full-screen-schedule {
         height: 100vh; /* Full Screen */
         width: 100vw;
@@ -303,11 +174,22 @@
 }
 
 /*459*/
+@media (min-width: 1024px) { /* Ye media query sirf laptop/computer view ke liye lagegi */
+    form.login-form {
+        width: 70%;
+    }
+}
 
 @media screen and (max-width: 380px) {
-    .ius-gridrow { padding: 12px; }
-    .ius-appbody { padding-bottom: 12px; margin-bottom: 12px; }
- 
+    .ius-gridrow {
+        padding: 12px;
+    }
+
+    .ius-appbody {
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+    }
+
 
     .full-screen-schedule {
         height: 100vh; /* Full Screen */

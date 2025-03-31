@@ -16,7 +16,16 @@
             </div>
             <div class="ius-useri  d-sm-block">
                 <div class="text-md">Welcome</div>
-                <div id="ius_head_user" class="text-14">@ViewData["PatientName"]</div>
+                <div id="ius_head_user" class="text-14" title="@ViewData["PatientName"]">
+                    @{
+                        var patientName = ViewData["PatientName"]?.ToString();
+                        var displayName = patientName != null && patientName.Length > 10
+                        ? patientName.Substring(0, 20) + "..."
+                        : patientName;
+                    }
+                    @displayName
+                </div>
+
 
             </div>
         </button>
