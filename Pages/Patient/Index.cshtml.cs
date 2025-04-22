@@ -266,7 +266,10 @@ namespace Patientportal.Pages.Patient
             {
                 ViewData["Invoice"] = invoiceResponse?.Invoice;
             }
-
+             if (PatientData != null)
+            {
+                ViewData["ProfileId"] = PatientData?.ProfileId;
+            }
 
             ChangeRequests = await _apiService.GetAsync<List<string>>(apiUrl2, token) ?? new List<string>();
             return Page();

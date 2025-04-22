@@ -34,7 +34,111 @@
     <main class="page">
         <div class="container container-x">
             <h1 class="page-title text-28">Patient Portal</h1>
+            <div class="ius-block ius-card ius-appdata">
+                <div class="ius-block-head">
+                    <h2>Appointment Information</h2>
 
+                    <div class="ius-grid-filters">
+                        <div class="dropdown">
+                            <a class="bttn-add" href="#" data-bs-toggle="dropdown" title="Add Appointment">
+                                <img loading="lazy" src="~/assets/plus.svg" width="19" height="19" alt="Add">
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#schedulerModal2">
+                                        Appointment for Consultation
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#oConsultationModal">
+                                        Appointment Request for Online Consultation
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#cosmeticProcModel">
+                                        Appointment Request for Procedures
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Only for desktop : Syncfusion -->
+                <div class="ius-table d-none d-lg-block table-responsive">
+                    <ejs-grid id="GridAppointments"
+                              allowResizing="true"
+                              allowExcelExport="true"
+                              allowFiltering="false"
+                              allowPaging="true"
+                              allowSorting="false"
+                              allowSelection="true"
+                              allowReordering="true"
+                              enableHeaderFocus="true"
+                              enablePersistence="true"
+                              enableHover="true"
+                              autoFit="true"
+                              height="200"
+                              showColumnChooser="true"
+                              rowHeight="38"
+                              toolbar=toolbarItems
+                              queryCellInfo="onQueryCellInfo"
+                              toolbarClick="toolbarClick">
+
+                        <e-data-manager url="/Patient/Index?handler=AppointmentView&Id=@Model.Id" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
+
+                        <e-grid-searchsettings fields="@(new string[] {"AppoinmentType","DoctorName","AppointmentStartTime","StatusName"})"></e-grid-searchsettings>
+
+                        <e-grid-filtersettings type="Excel"></e-grid-filtersettings>
+                        <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
+                        <e-grid-pagesettings pageCount="15" pageSize="15" pageSizes="@(new string[] { "All","12","15","25","50"})"></e-grid-pagesettings>
+                        <e-grid-selectionsettings type="Single"></e-grid-selectionsettings>
+
+                        <e-grid-columns>
+
+                            <e-grid-column headerText="Actions" width="120" textAlign="Center" template="#actionTemplate"></e-grid-column>
+                            <e-grid-column field="Id" headerText="Id" width="200" visible="false"></e-grid-column>
+                            <e-grid-column field="AppoinmentType" headerText="Type of Appointment" width="200"></e-grid-column>
+                            <e-grid-column field="DoctorName" headerText="Appointment With" width="200"></e-grid-column>
+                            <e-grid-column field="AppointmentStartTime" headerText="Appointment Date Time" format="@Model.EjsDateTimePattern" type="dateTime" width="200"></e-grid-column>
+                            <e-grid-column field="StatusName" headerText="Status" width="150"></e-grid-column>
+                        </e-grid-columns>
+                    </ejs-grid>
+                    <script id="actionTemplate" type="text/x-template">
+                        ${if(statusName !== "Cancelled" && appoinmentType !== "Appointment Request for Online Consultation" && appoinmentType !== "Appointment Request for Procedures")}
+                            <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
+                                <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
+                            </a>
+                            <a href="#app-cancel" class="marginleft" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                                <img loading="lazy" src="@Url.Content("~/assets/delete.svg")" width="18" height="20" alt="Cancel">
+                            </a>
+                        ${/if}
+                    </script>
+
+                </div>
+            </div>
+
+            @if (Model.ChangeRequests.Count > 0 && Model.ChangeRequests != null)
+            {
+                <div class="ius-block ius-card ius-notes">
+                    <h2 class="mb-2 pb-1 text--red">Changes Requested</h2>
+                    <ol>
+                        @foreach (var change in Model.ChangeRequests)
+                        {
+                            <li>@change</li>
+                        }
+                    </ol>
+                </div>
+
+            }
+            <div class="ius-block ius-card ius-notes">
+                <h2 class="mb-2 pb-1 text--red">Note</h2>
+                <ol>
+                    @* <li>Appointment  will be booked for consultation with Dr. Sejal Saheta.</li> *@
+                    <li>In case a calendar slot is not available as per your convinence please call <a href="tel:+91-9819286930" title="91-9819286930">+91 9819286930</a> / <a href="tel:+91-9326028277" title="91-9326028277">+91 9326028277</a></li>
+                </ol>
+            </div>
             <div class="ius-block ius-card">
                 <h2>Patient Information</h2>
 
@@ -129,33 +233,33 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-pincode" class="form-label">Pincode</label>
-                            <input type="number" name="pincode" id="pi-pincode" asp-for="PatientData.Pincode" class="form-control" readonly>
+                            <input type="number" name="pincode" id="pi-pincode" asp-for="PatientData.Pincode" class="form-control">
                             <span asp-validation-for="PatientData.Pincode" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-locality" class="form-label">Locality</label>
-                            <input type="text" name="locality" id="pi-locality" asp-for="PatientData.Locality" class="form-control" readonly>
+                            <input type="text" name="locality" id="pi-locality" asp-for="PatientData.Locality" class="form-control">
                             <span asp-validation-for="PatientData.Locality" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-address" class="form-label">Address</label>
-                            <textarea type="text" name="address" style="min-height:45px;" asp-for="PatientData.Address" id="pi-address" class="form-control" readonly> </textarea>
+                            <textarea type="text" name="address" style="min-height:45px;" asp-for="PatientData.Address" id="pi-address" class="form-control"> </textarea>
                             <span asp-validation-for="PatientData.Address" class="text-danger"></span>
 
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-city" class="form-label">City</label>
-                            <input type="text" id="pi-city" class="form-control" name="city" asp-for="PatientData.CityName" readonly>
+                            <input type="text" id="pi-city" class="form-control" name="city" asp-for="PatientData.CityName">
                             <span asp-validation-for="PatientData.City" class="text-danger"></span>
 
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-state" class="form-label">State</label>
-                            <input type="text" id="pi-state" class="form-control" name="state" asp-for="PatientData.StateName" readonly>
+                            <input type="text" id="pi-state" class="form-control" name="state" asp-for="PatientData.StateName" >
                             <span asp-validation-for="PatientData.State" class="text-danger"></span>
 
                             @*  <ejs-dropdownlist ID="pi-state" class="form-control"  TValue="string" DataSource="StateList" Placeholder="Select State"></ejs-dropdownlist>
@@ -164,348 +268,249 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-country" class="form-label">Country</label>
-                            <input type="text" id="pi-country" class="form-control" name="Country" asp-for="PatientData.CountryName" readonly>
+                            <input type="text" id="pi-country" class="form-control" name="Country" asp-for="PatientData.CountryName">
                             <span asp-validation-for="PatientData.CountryName" class="text-danger"></span>
                         </div>
                     </div>
 
-                    <div class="form-actions">
-                        <a href="#" class="bttn bttn-primary" id="edit-btn" title="Edit">Edit</a>
-                        <a href="#" class="bttn bttn-primary-outline" id="cancel-btn" title="Cancel" disabled>Cancel</a>
-                        <a href="#" class="bttn bttn-primary" id="save-btn" title="Save" disabled>Save</a>
+                    <div class="form-actions d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="invoice-info mb-2">
+                            <label for="invoice-amount" class="form-label me-2">Invoice Amount:</label>
+                            <span id="invoice-amount" class="pa-amt">@ViewData["Invoice"]</span>
+                        </div>
 
+                        <div class="action-buttons d-flex gap-2">
+                            <a href="#" class="bttn bttn-primary" id="edit-btn" title="Edit">Edit</a>
+                            <a href="#" class="bttn bttn-primary-outline" id="cancel-btn" title="Cancel" disabled>Cancel</a>
+                            <a href="#" class="bttn bttn-primary" id="save-btn" title="Save" disabled>Save</a>
+                        </div>
                     </div>
                 </form>
             </div>
-            @if (Model.ChangeRequests.Count > 0 && Model.ChangeRequests != null)
-            {
-                <div class="ius-block ius-card ius-notes">
-                    <h2 class="mb-2 pb-1 text--red">Changes Requested</h2>
-                    <ol>
-                        @foreach (var change in Model.ChangeRequests)
-                        {
-                            <li>@change</li>
+
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    // Event delegation for dynamically generated elements
+                    document.body.addEventListener("click", function (event) {
+                        let rescheduleBtn = event.target.closest(".app-resched");
+                        let cancelBtn = event.target.closest("[data-bs-target='#app-cancel']");
+
+                        if (rescheduleBtn) {
+                            let appointmentId;
+
+                            // Check if clicked inside the grid or a dynamically generated card
+                            let row = rescheduleBtn.closest("tr");
+                            if (row && document.getElementById("GridAppointments")) {
+                                let grid = document.getElementById("GridAppointments").ej2_instances[0];
+                                let rowData = grid.getRowInfo(row).rowData;
+                                appointmentId = rowData.id;
+                            } else {
+                                // Handle dynamically generated card
+                                let card = rescheduleBtn.closest(".ius-gridrow");
+                                if (card) {
+                                    appointmentId = card.querySelector("input[name='appointmentId']").value;
+                                }
+                            }
+
+                            // Set the appointmentId value in the hidden field inside the Reschedule Modal
+                            if (appointmentId) {
+                                document.getElementById("AppoinmentId").value = appointmentId;
+                            }
                         }
-                    </ol>
-                </div>
 
-            }
-            <div class="ius-block ius-card ius-notes">
-                <h2 class="mb-2 pb-1 text--red">Notes</h2>
-                <ol>
-                    <li>Appointment  will be booked for consultation with Dr. Sejal Saheta.</li>
-                    <li>For an appointment with an aesthetician for cosmetic procedures please call Clinic - <a href="tel:+91-9639639630" title="91-9639639630">9639639630</a></li>
-                </ol>
-            </div>
+                        if (cancelBtn) {
+                            let appointmentId;
 
-            <div class="ius-block ius-card ius-appdata">
-                <div class="ius-block-head">
-                    <h2>Appointment</h2>
-
-                    <div class="ius-grid-filters">
-                        <div class="dropdown">
-                            <a class="bttn-add" href="#" data-bs-toggle="dropdown" title="Add Appointment">
-                                <img loading="lazy" src="~/assets/plus.svg" width="19" height="19" alt="Add">
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#schedulerModal2">
-                                        Appointment for Consultation
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#oConsultationModal">
-                                        Appointment Request for Online Consultation
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#cosmeticProcModel">
-                                        Appointment Request for Procedures
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Only for desktop : Syncfusion -->
-                <div class="ius-table d-none d-lg-block table-responsive">
-                    <ejs-grid id="GridAppointments"
-                              allowResizing="true"
-                              allowExcelExport="true"
-                              allowFiltering="false"
-                              allowPaging="true"
-                              allowSorting="false"
-                              allowSelection="true"
-                              allowReordering="true"
-                              enableHeaderFocus="true"
-                              enablePersistence="true"
-                              enableHover="true"
-                              autoFit="true"
-                              height="200"
-                              showColumnChooser="true"
-                              rowHeight="38"
-                              toolbar=toolbarItems
-                              queryCellInfo="onQueryCellInfo"
-                              toolbarClick="toolbarClick">
-
-                       <e-data-manager url="/Patient/Index?handler=AppointmentView&Id=@Model.Id" adaptor="UrlAdaptor" crossDomain="true"></e-data-manager>
-
-                        <e-grid-searchsettings fields="@(new string[] {"AppoinmentType","DoctorName","AppointmentStartTime","StatusName"})"></e-grid-searchsettings>
-
-                        <e-grid-filtersettings type="Excel"></e-grid-filtersettings>
-                        <e-grid-loadingIndicator indicatorType="Shimmer"></e-grid-loadingIndicator>
-                        <e-grid-pagesettings pageCount="15" pageSize="15" pageSizes="@(new string[] { "All","12","15","25","50"})"></e-grid-pagesettings>
-                        <e-grid-selectionsettings type="Single"></e-grid-selectionsettings>
-
-                        <e-grid-columns>
-
-                            <e-grid-column headerText="Actions" width="120" textAlign="Center" template="#actionTemplate"></e-grid-column>
-                            <e-grid-column field="Id" headerText="Id" width="200" visible="false"></e-grid-column>
-                            <e-grid-column field="AppoinmentType" headerText="Type of Appointment" width="200"></e-grid-column>
-                            <e-grid-column field="DoctorName" headerText="Appointment With" width="200"></e-grid-column>
-                            <e-grid-column field="AppointmentStartTime" headerText="Appointment Date Time" format="@Model.EjsDateTimePattern" type="dateTime" width="200"></e-grid-column>
-                            <e-grid-column field="StatusName" headerText="Status" width="150"></e-grid-column>
-                        </e-grid-columns>
-                    </ejs-grid>
-                    <script id="actionTemplate" type="text/x-template">
-                        ${if(statusName !== "Cancelled" && appoinmentType !== "Appointment Request for Online Consultation" && appoinmentType !== "Appointment Request for Procedures")}
-                            <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
-                                <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
-                            </a>
-                            <a href="#app-cancel" class="marginleft" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
-                                <img loading="lazy" src="@Url.Content("~/assets/delete.svg")" width="18" height="20" alt="Cancel">
-                            </a>
-                        ${/if}
-                    </script>
-
-
-
-
-                </div>
-                <script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        // Event delegation for dynamically generated elements
-                        document.body.addEventListener("click", function (event) {
-                            let rescheduleBtn = event.target.closest(".app-resched");
-                            let cancelBtn = event.target.closest("[data-bs-target='#app-cancel']");
-
-                            if (rescheduleBtn) {
-                                let appointmentId;
-
-                                // Check if clicked inside the grid or a dynamically generated card
-                                let row = rescheduleBtn.closest("tr");
-                                if (row && document.getElementById("GridAppointments")) {
-                                    let grid = document.getElementById("GridAppointments").ej2_instances[0];
-                                    let rowData = grid.getRowInfo(row).rowData;
-                                    appointmentId = rowData.id;
-                                } else {
-                                    // Handle dynamically generated card
-                                    let card = rescheduleBtn.closest(".ius-gridrow");
-                                    if (card) {
-                                        appointmentId = card.querySelector("input[name='appointmentId']").value;
-                                    }
-                                }
-
-                                // Set the appointmentId value in the hidden field inside the Reschedule Modal
-                                if (appointmentId) {
-                                    document.getElementById("AppoinmentId").value = appointmentId;
+                            // Check if clicked inside the grid or a dynamically generated card
+                            let row = cancelBtn.closest("tr");
+                            if (row && document.getElementById("GridAppointments")) {
+                                let grid = document.getElementById("GridAppointments").ej2_instances[0];
+                                let rowData = grid.getRowInfo(row).rowData;
+                                appointmentId = rowData.id;
+                            } else {
+                                // Handle dynamically generated card
+                                let card = cancelBtn.closest(".ius-gridrow");
+                                if (card) {
+                                    appointmentId = card.querySelector("input[name='appointmentId']").value;
                                 }
                             }
 
-                            if (cancelBtn) {
-                                let appointmentId;
-
-                                // Check if clicked inside the grid or a dynamically generated card
-                                let row = cancelBtn.closest("tr");
-                                if (row && document.getElementById("GridAppointments")) {
-                                    let grid = document.getElementById("GridAppointments").ej2_instances[0];
-                                    let rowData = grid.getRowInfo(row).rowData;
-                                    appointmentId = rowData.id;
-                                } else {
-                                    // Handle dynamically generated card
-                                    let card = cancelBtn.closest(".ius-gridrow");
-                                    if (card) {
-                                        appointmentId = card.querySelector("input[name='appointmentId']").value;
-                                    }
-                                }
-
-                                // Set the appointmentId value in the hidden field inside the Cancel Modal
-                                if (appointmentId) {
-                                    document.getElementById("CancelPatientId").value = appointmentId;
-                                }
+                            // Set the appointmentId value in the hidden field inside the Cancel Modal
+                            if (appointmentId) {
+                                document.getElementById("CancelPatientId").value = appointmentId;
                             }
-                        });
+                        }
                     });
-                </script>
+                });
+            </script>
 
-                <script>
-                    document.addEventListener("DOMContentLoaded", function () {
-                        var ageInput = document.getElementById("pi-age");
-                        var dobPicker = document.getElementById("pi-dob").ej2_instances[0]; // Syncfusion Datepicker instance
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var ageInput = document.getElementById("pi-age");
+                    var dobPicker = document.getElementById("pi-dob").ej2_instances[0]; // Syncfusion Datepicker instance
 
-                        // Age se Date of Birth calculate karna
-                        ageInput.addEventListener("input", function () {
-                            var age = parseInt(this.value, 10);
+                    // Age se Date of Birth calculate karna
+                    ageInput.addEventListener("input", function () {
+                        var age = parseInt(this.value, 10);
+                        var today = new Date();
+
+                        if (!isNaN(age) && age > 0) {
+                            var birthYear = today.getFullYear() - age;
+                            var birthDate = new Date(birthYear, today.getMonth(), today.getDate());
+                            dobPicker.value = birthDate; // Syncfusion Datepicker me set karna
+                        } else if (age === 0) {
+                            var yesterday = new Date();
+                            yesterday.setDate(today.getDate() - 1); // Today - 1 day
+                            dobPicker.value = yesterday; // DOB me ek din pehle ka date set karna
+                        }
+                    });
+
+                    // Date of Birth se Age calculate karna
+                    dobPicker.addEventListener("input", function () {
+                        updateAge();
+                    });
+
+                    dobPicker.addEventListener("change", function () {
+                        updateAge();
+                    });
+
+                    function updateAge() {
+                        var dob = dobPicker.value;
+                        if (dob) {
                             var today = new Date();
+                            var birthDate = new Date(dob);
+                            var age = today.getFullYear() - birthDate.getFullYear();
 
-                            if (!isNaN(age) && age > 0) {
-                                var birthYear = today.getFullYear() - age;
-                                var birthDate = new Date(birthYear, today.getMonth(), today.getDate());
-                                dobPicker.value = birthDate; // Syncfusion Datepicker me set karna
-                            } else if (age === 0) {
-                               var yesterday = new Date();
-                yesterday.setDate(today.getDate() - 1); // Today - 1 day
-                dobPicker.value = yesterday; // DOB me ek din pehle ka date set karna
+                            // Agar DOB ke month aur date aaj ke month aur date se aage hain, toh age -1 karna
+                            var monthDiff = today.getMonth() - birthDate.getMonth();
+                            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                                age--;
                             }
-                        });
 
-                        // Date of Birth se Age calculate karna
-                         dobPicker.addEventListener("input", function () {
-                            updateAge();
-                        });
-
-                        dobPicker.addEventListener("change", function () {
-                            updateAge();
-                        });
-
-                        function updateAge() {
-                            var dob = dobPicker.value;
-                            if (dob) {
-                                var today = new Date();
-                                var birthDate = new Date(dob);
-                                var age = today.getFullYear() - birthDate.getFullYear();
-
-                                // Agar DOB ke month aur date aaj ke month aur date se aage hain, toh age -1 karna
-                                var monthDiff = today.getMonth() - birthDate.getMonth();
-                                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                                    age--;
-                                }
-
-                                ageInput.value = age; // Age input ko update karna
-                            }
-                        }
-                    });
-                </script>
-
-                <script>
-                    function onQueryCellInfo(args) {
-                        if (args.column.field === "StatusName") {
-                            if (args.data.statusName === "Booked" ) {
-                                args.cell.innerHTML = `<span class="badge badge-success">Booked</span>`;
-                            } else if (args.data.statusName === "Completed") {
-                                args.cell.innerHTML = `<span class="badge badge-Primary">Completed</span>`;
-                            }
-                            else if (args.data.statusName === "Request Sent") {
-                                args.cell.innerHTML = `<span class="badge badge-secondary">Request Sent</span>`;
-                            }
-                            else if (args.data.statusName === "Close") {
-                                args.cell.innerHTML = `<span class="badge badge-Primary">Completed</span>`;
-                            }
-                            else if (args.data.statusName === "Cancelled") {
-                                args.cell.innerHTML = `<span class="badge badge-danger">Cancelled</span>`;
-                            }
+                            ageInput.value = age; // Age input ko update karna
                         }
                     }
+                });
+            </script>
 
-                </script>
-                <!-- Only for mobile : Syncfusion -->
-                <div class="ius-grid d-lg-none text-14" id="appointments-container">
-                    <div class="ius-gridrow">
-                        <div class="ius-appbody">
-                            <div class="ius-appinfo">
-                                <h3>Dr. Sejal Saheta</h3>
-                                <div class="ius-apptyfo">
-                                    <span class="appinfo-type">Consultation</span>
-                                    <span class="appinfo-dot"></span>
-                                    <span class="appinfo-form">Inclinic</span>
-                                </div>
-                            </div>
-                            <div class="ius-ctrls">
-                                <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
-                                    <img loading="lazy" src="~/assets/calendar.svg" width="18" height="20" alt="Calendar">
-                                </a>
-                                <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
-                                    <img loading="lazy" src="~/assets/delete.svg" width="18" height="20" alt="Cancel">
-                                </a>
+            <script>
+                function onQueryCellInfo(args) {
+                    if (args.column.field === "StatusName") {
+                        if (args.data.statusName === "Booked") {
+                            args.cell.innerHTML = `<span class="badge badge-success">Booked</span>`;
+                        } else if (args.data.statusName === "Completed") {
+                            args.cell.innerHTML = `<span class="badge badge-Primary">Completed</span>`;
+                        }
+                        else if (args.data.statusName === "Request Sent") {
+                            args.cell.innerHTML = `<span class="badge badge-secondary">Request Sent</span>`;
+                        }
+                        else if (args.data.statusName === "Close") {
+                            args.cell.innerHTML = `<span class="badge badge-Primary">Completed</span>`;
+                        }
+                        else if (args.data.statusName === "Cancelled") {
+                            args.cell.innerHTML = `<span class="badge badge-danger">Cancelled</span>`;
+                        }
+                    }
+                }
+
+            </script>
+            <!-- Only for mobile : Syncfusion -->
+            <div class="ius-grid d-lg-none text-14" id="appointments-container">
+                <div class="ius-gridrow">
+                    <div class="ius-appbody">
+                        <div class="ius-appinfo">
+                            <h3>Dr. Sejal Saheta</h3>
+                            <div class="ius-apptyfo">
+                                <span class="appinfo-type">Consultation</span>
+                                <span class="appinfo-dot"></span>
+                                <span class="appinfo-form">Inclinic</span>
                             </div>
                         </div>
-                        <div class="ius-foo">
-                            <div class="ius-datetime">
-                                <div class="datetime-label text-sb">Date & Time</div>
-                                <div>1/3/2025 12:10:00</div>
-                            </div>
-
-                            <div class="ius-status">
-                                <div class="ius-badge">Reschedule</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="ius-gridrow">
-                        <div class="ius-appbody">
-                            <div class="ius-appinfo">
-                                <h3>Dr. Sejal Saheta</h3>
-                                <div class="ius-apptyfo">
-                                    <span class="appinfo-type">Consultation</span>
-                                    <span class="appinfo-dot"></span>
-                                    <span class="appinfo-form">Inclinic</span>
-                                </div>
-                            </div>
-                            <div class="ius-ctrls">
-                                <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
-                                    <img loading="lazy" src="~/assets/calendar.svg" width="18" height="20" alt="Calendar">
-                                </a>
-                                <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
-                                    <img loading="lazy" src="~/assets/delete.svg" width="18" height="20" alt="Cancel">
-                                </a>
-                            </div>
-                        </div>
-                        <div class="ius-foo">
-                            <div class="ius-datetime">
-                                <div class="datetime-label text-sb">Date & Time</div>
-                                <div>1/3/2025 12:10:00</div>
-                            </div>
-
-                            <div class="ius-status">
-                                <div class="ius-badge badge-green">Booked</div>
-                            </div>
+                        <div class="ius-ctrls">
+                            <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
+                                <img loading="lazy" src="~/assets/calendar.svg" width="18" height="20" alt="Calendar">
+                            </a>
+                            <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                                <img loading="lazy" src="~/assets/delete.svg" width="18" height="20" alt="Cancel">
+                            </a>
                         </div>
                     </div>
+                    <div class="ius-foo">
+                        <div class="ius-datetime">
+                            <div class="datetime-label text-sb">Date & Time</div>
+                            <div>1/3/2025 12:10:00</div>
+                        </div>
 
-                    <div class="ius-gridrow">
-                        <div class="ius-appbody">
-                            <div class="ius-appinfo">
-                                <h3>Dr. Sejal Saheta</h3>
-                                <div class="ius-apptyfo">
-                                    <span class="appinfo-type">Consultation</span>
-                                    <span class="appinfo-dot"></span>
-                                    <span class="appinfo-form">Inclinic</span>
-                                </div>
-                            </div>
-                            <div class="ius-ctrls">
-                                <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
-                                    <img loading="lazy" src="~/assets/calendar.svg" width="18" height="20" alt="Calendar">
-                                </a>
-                                <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
-                                    <img loading="lazy" src="~/assets/delete.svg" width="18" height="20" alt="Cancel">
-                                </a>
+                        <div class="ius-status">
+                            <div class="ius-badge">Reschedule</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ius-gridrow">
+                    <div class="ius-appbody">
+                        <div class="ius-appinfo">
+                            <h3>Dr. Sejal Saheta</h3>
+                            <div class="ius-apptyfo">
+                                <span class="appinfo-type">Consultation</span>
+                                <span class="appinfo-dot"></span>
+                                <span class="appinfo-form">Inclinic</span>
                             </div>
                         </div>
-                        <div class="ius-foo">
-                            <div class="ius-datetime">
-                                <div class="datetime-label text-sb">Date & Time</div>
-                                <div>1/3/2025 12:10:00</div>
-                            </div>
+                        <div class="ius-ctrls">
+                            <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
+                                <img loading="lazy" src="~/assets/calendar.svg" width="18" height="20" alt="Calendar">
+                            </a>
+                            <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                                <img loading="lazy" src="~/assets/delete.svg" width="18" height="20" alt="Cancel">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ius-foo">
+                        <div class="ius-datetime">
+                            <div class="datetime-label text-sb">Date & Time</div>
+                            <div>1/3/2025 12:10:00</div>
+                        </div>
 
-                            <div class="ius-status">
-                                <div class="ius-badge badge-red">Cancelled</div>
+                        <div class="ius-status">
+                            <div class="ius-badge badge-green">Booked</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ius-gridrow">
+                    <div class="ius-appbody">
+                        <div class="ius-appinfo">
+                            <h3>Dr. Sejal Saheta</h3>
+                            <div class="ius-apptyfo">
+                                <span class="appinfo-type">Consultation</span>
+                                <span class="appinfo-dot"></span>
+                                <span class="appinfo-form">Inclinic</span>
                             </div>
+                        </div>
+                        <div class="ius-ctrls">
+                            <a href="#app-resched" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#app-resched">
+                                <img loading="lazy" src="~/assets/calendar.svg" width="18" height="20" alt="Calendar">
+                            </a>
+                            <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                                <img loading="lazy" src="~/assets/delete.svg" width="18" height="20" alt="Cancel">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ius-foo">
+                        <div class="ius-datetime">
+                            <div class="datetime-label text-sb">Date & Time</div>
+                            <div>1/3/2025 12:10:00</div>
+                        </div>
+
+                        <div class="ius-status">
+                            <div class="ius-badge badge-red">Cancelled</div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </main>
     <!-- Cancel Appointment - Modal -->
@@ -607,28 +612,28 @@
             </div>
         </div>
     </div>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var OCModalEl = document.getElementById('app-resched');
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var OCModalEl = document.getElementById('app-resched');
 
-        OCModalEl.addEventListener('hidden.bs.modal', function () {
-            // Remove backdrop if exists
-            let backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.remove();
-            }
+            OCModalEl.addEventListener('hidden.bs.modal', function () {
+                // Remove backdrop if exists
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
 
-            // Reset DateTimePicker value
-            let dateTimePicker = document.getElementById('pi-resched').ej2_instances[0];
-            if (dateTimePicker) {
-                dateTimePicker.value = null;
-            }
+                // Reset DateTimePicker value
+                let dateTimePicker = document.getElementById('pi-resched').ej2_instances[0];
+                if (dateTimePicker) {
+                    dateTimePicker.value = null;
+                }
 
-            // Clear error message
-            document.getElementById('AptDatetime-reson').textContent = '';
+                // Clear error message
+                document.getElementById('AptDatetime-reson').textContent = '';
+            });
         });
-    });
-</script>
+    </script>
     <div class="modal fade" id="oConsultationModal">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
@@ -704,8 +709,8 @@
                     var meridian = parts[2];
 
                     var hours = parseInt(timeParts[0], 10);
-                     var maxDateTime = new Date();
-maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
+                    var maxDateTime = new Date();
+                    maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
 
 
                     if (meridian.toUpperCase() === "PM" && hours !== 12) {
@@ -728,19 +733,19 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
 
                     var enteredHour = enteredDateTime.getHours();
                     var enteredMinutes = enteredDateTime.getMinutes();
-                var day = parseInt(dateParts[0], 10);
+                    var day = parseInt(dateParts[0], 10);
                     var month = parseInt(dateParts[1], 10);
                     var year = parseInt(dateParts[2], 10);
 
-                       if (enteredDateTime > maxDateTime) { // ✅ Check max 10 years condition
-                      $("#OC-reschedSpan").text("Appointment Date Time cannot be more than 10 years from today.");
-                    isValid = false;
-                }
+                    if (enteredDateTime > maxDateTime) { // ✅ Check max 10 years condition
+                        $("#OC-reschedSpan").text("Appointment Date Time cannot be more than 10 years from today.");
+                        isValid = false;
+                    }
                     // Validate month and date range
-                  else  if (month < 1 || month > 12 || day < 1 || day > 31) {
+                    else if (month < 1 || month > 12 || day < 1 || day > 31) {
                         $("#OC-reschedSpan").text("Invalid Appointment Date Time.");
                         isValid = false;
-                    } 
+                    }
 
                     else if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
                         $("#OC-reschedSpan").text("Invalid Appointment Date Time.");
@@ -884,7 +889,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                 var dateTimePicker = document.getElementById("RP-resched").ej2_instances[0];
                 if (dateTimePicker) {
                     dateTimePicker.value = null; // Clear the selected value
-                                dateTimePicker.refresh(); // Refresh the DateTimePicker UI
+                    dateTimePicker.refresh(); // Refresh the DateTimePicker UI
 
                 }
 
@@ -928,8 +933,8 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                     var meridian = parts[2];
 
                     var hours = parseInt(timeParts[0], 10);
-                     var maxDateTime = new Date();
-maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
+                    var maxDateTime = new Date();
+                    maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
 
 
                     if (meridian.toUpperCase() === "PM" && hours !== 12) {
@@ -955,17 +960,17 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                     var day = parseInt(dateParts[0], 10);
                     var month = parseInt(dateParts[1], 10);
                     var year = parseInt(dateParts[2], 10);
-                     // Validate month and date range
-                 
-                     if (enteredDateTime > maxDateTime) { // ✅ Check max 10 years condition
-                     $("#RP-reschedSpan").text("Appointment Date Time cannot be more than 10 years from today.");
-                    isValid = false;
-                }else if (month < 1 || month > 12 || day < 1 || day > 31) {
-                         $("#RP-reschedSpan").text("Invalid Appointment Date Time.");
-                         isValid = false;
-                     } 
+                    // Validate month and date range
 
-                   else if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
+                    if (enteredDateTime > maxDateTime) { // ✅ Check max 10 years condition
+                        $("#RP-reschedSpan").text("Appointment Date Time cannot be more than 10 years from today.");
+                        isValid = false;
+                    } else if (month < 1 || month > 12 || day < 1 || day > 31) {
+                        $("#RP-reschedSpan").text("Invalid Appointment Date Time.");
+                        isValid = false;
+                    }
+
+                    else if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
                         $("#RP-reschedSpan").text("Invalid Appointment Date Time.");
                         isValid = false;
                     }
@@ -1098,7 +1103,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="control-section" >
+                    <div class="control-section">
                         <div class="schedule-wrapper">
                             <ejs-schedule id="schedulerss" height="100%" width="100%"
                                           selectedDate="DateTime.Today"
@@ -1120,7 +1125,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
             </div>
         </div>
     </div>
-   
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             $('#schedulerModal').on('shown.bs.modal', function () {
@@ -1338,7 +1343,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
             var holidayDates = holidays.map(function (item) {
                 return new Date(item.startDate).toISOString().split('T')[0]; // Convert to YYYY-MM-DD
             });
-         
+
 
             if (!doctorBlockTimes || doctorBlockTimes.length === 0) {
                 console.log("No blocked appointments found.");
@@ -1493,7 +1498,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
     <script>
         $(document).ready(function () {
             $("#SubmitRescedule").click(function () {
-                 var $button = $(this); // Button ko reference karna
+                var $button = $(this); // Button ko reference karna
                 $button.prop("disabled", true).text("Submitting..."); // Button disable aur text change karein
                 var isValid = true;
                 var appointmentId = $("#AppoinmentId").val();
@@ -1502,7 +1507,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                 var selectedDate = appointmentDateTime;
                 var currentDate = new Date(); // Current date-time
                 var formattedCurrentDate = formatDate(currentDate); // Format the current date
-                   var dateTimeRegex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2} [APap][Mm]$/; // Format: dd/MM/yyyy hh:mm:ss AM/PM
+                var dateTimeRegex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2} [APap][Mm]$/; // Format: dd/MM/yyyy hh:mm:ss AM/PM
                 var currentDateTime = new Date();
                 var enteredDateTime;
 
@@ -1561,10 +1566,10 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                         $("#AptDatetime-reson").text("");
                     }
                 }
-                  if (!isValid) {
-      $button.prop("disabled", false).text("Save");
-      return;
-  }
+                if (!isValid) {
+                    $button.prop("disabled", false).text("Save");
+                    return;
+                }
                 var formattedDate = convertDateFormat(appointmentDateTime);
 
 
@@ -1678,28 +1683,28 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
             </div>
         </div>
     </div>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var rescheduleModalEladd = document.getElementById('app-add');
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var rescheduleModalEladd = document.getElementById('app-add');
 
-        rescheduleModalEladd.addEventListener('hidden.bs.modal', function () {
-            // Remove modal backdrop if exists
-            let backdrop = document.querySelector('.modal-backdrop');
-            if (backdrop) {
-                backdrop.remove();
-            }
+            rescheduleModalEladd.addEventListener('hidden.bs.modal', function () {
+                // Remove modal backdrop if exists
+                let backdrop = document.querySelector('.modal-backdrop');
+                if (backdrop) {
+                    backdrop.remove();
+                }
 
-            // Reset DateTimePicker value
-            let dateTimePicker = document.getElementById('app-datetim');
-            if (dateTimePicker && dateTimePicker.ej2_instances) {
-                dateTimePicker.ej2_instances[0].value = null;
-            }
+                // Reset DateTimePicker value
+                let dateTimePicker = document.getElementById('app-datetim');
+                if (dateTimePicker && dateTimePicker.ej2_instances) {
+                    dateTimePicker.ej2_instances[0].value = null;
+                }
 
-            // Clear error message span
-            document.getElementById('AptDatetimereson1').innerText = '';
+                // Clear error message span
+                document.getElementById('AptDatetimereson1').innerText = '';
+            });
         });
-    });
-</script>
+    </script>
 
     <script>
         $(document).ready(function () {
@@ -1714,7 +1719,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                 var currentDate = new Date(); // Current date-time
                 var formattedCurrentDate = formatDate(currentDate); // Format the current date
                 var isValid = true;
-                        var dateTimeRegex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2} [APap][Mm]$/; // Format: dd/MM/yyyy hh:mm:ss AM/PM
+                var dateTimeRegex = /^\d{2}\/\d{2}\/\d{4} \d{2}:\d{2}:\d{2} [APap][Mm]$/; // Format: dd/MM/yyyy hh:mm:ss AM/PM
                 var currentDateTime = new Date();
                 var enteredDateTime;
 
@@ -1772,7 +1777,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                         $("#AptDatetimereson1").text("");
                     }
                 }
-                
+
                 if (!isValid) {
                     $button.prop("disabled", false).text("Save");
                     return;
@@ -1908,7 +1913,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
 
         let fieldsToEnable = [
             "pi-name", "pi-email", "pi-age",
-            "gender-male", "gender-female", "gender-other"
+            "gender-male", "gender-female", "gender-other", "pi-matstat", "pi-pincode", "pi-locality", "pi-address", "pi-city", "pi-state", "pi-country"
         ];
 
         function toggleFields(enable) {
@@ -1963,8 +1968,8 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
 <script>
     $(document).ready(function () {
         $("#save-btn").click(function (e) {
-            var $button = $(this); 
-            $button.prop("disabled", true).text("Submitting..."); 
+            var $button = $(this);
+            $button.prop("disabled", true).text("Submitting...");
             debugger;
             e.preventDefault();
 
@@ -2170,43 +2175,43 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                     }
                     appointment.appointmentStartTime = formatDateTime(appointment.appointmentStartTime);
                     var cardHtml = `
-                            <div class="ius-gridrow">
-                                <div class="ius-appbody">
-                                    <div class="ius-appinfo">
-                                        <input type="hidden" name="appointmentId" value="${appointment.id}">
+                                <div class="ius-gridrow">
+                                    <div class="ius-appbody">
+                                        <div class="ius-appinfo">
+                                            <input type="hidden" name="appointmentId" value="${appointment.id}">
 
-                                                    <h3>${appointment.doctorName || 'N/A'}</h3>
-                                        <div class="ius-apptyfo">
-                                                    <span class="appinfo-type">${appointment.appoinmentType || 'N/A'}</span>
-                                            <span class="appinfo-dot"></span>
+                                                        <h3>${appointment.doctorName || 'N/A'}</h3>
+                                            <div class="ius-apptyfo">
+                                                        <span class="appinfo-type">${appointment.appoinmentType || 'N/A'}</span>
+                                                <span class="appinfo-dot"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="ius-ctrls">
+                                             ${appointment.statusName !== "Cancelled" && appointment.appoinmentType !== "Appointment Request for Online Consultation" && appointment.appoinmentType !== "Appointment Request for Procedures" ? `
+                                                <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
+                                                         <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
+
+                                            </a>
+                                            <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
+                                                            <img loading="lazy" src="@Url.Content("~/assets/delete.svg")" width = "18" height = "20" alt = "Cancel" >
+                                            </a>
+
+                                                ` : ''}
+
                                         </div>
                                     </div>
-
-                                    <div class="ius-ctrls">
-                                         ${appointment.statusName !== "Cancelled" && appointment.appoinmentType !== "Appointment Request for Online Consultation" && appointment.appoinmentType !== "Appointment Request for Procedures" ? `
-                                            <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
-                                                     <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
-
-                                        </a>
-                                        <a href="#app-cancel" title="Cancel" data-bs-toggle="modal" data-bs-target="#app-cancel">
-                                                        <img loading="lazy" src="@Url.Content("~/assets/delete.svg")" width = "18" height = "20" alt = "Cancel" >
-                                        </a>
-
-                                            ` : ''}
-
+                                    <div class="ius-foo">
+                                        <div class="ius-datetime">
+                                            <div class="datetime-label text-sb">Date & Time</div>
+                                                    <div>${appointment.appointmentStartTime || 'N/A'}</div>
+                                        </div>
+                                        <div class="ius-status">
+                                             <div class="ius-badge ${badgeClass}">${appointment.statusName || 'N/A'}</div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="ius-foo">
-                                    <div class="ius-datetime">
-                                        <div class="datetime-label text-sb">Date & Time</div>
-                                                <div>${appointment.appointmentStartTime || 'N/A'}</div>
-                                    </div>
-                                    <div class="ius-status">
-                                         <div class="ius-badge ${badgeClass}">${appointment.statusName || 'N/A'}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                            `;
                     container.append(cardHtml);
                 });
             },
@@ -2249,6 +2254,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
         pointer-events: none; /* Disable clicks */
         opacity: 0.6; /* Make it look inactive */
     }
+
     .form-control:disabled, .form-control[readonly] {
         background-color: #e9ecef;
         opacity: 1;
@@ -2279,6 +2285,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
         text-align: center;
         font-weight: bold;
     }
+
     .e-appointment.blocked-slot2 {
         background-color: red !important;
         color: white !important;
@@ -2303,7 +2310,8 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
 
     .badge-success {
         background-color: #28a745; /* Green */
-    } 
+    }
+
     .badge-Primary {
         background-color: #5bc0de; /* Green */
     }
@@ -2320,8 +2328,8 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
         width: 100% !important;
         left: 0 !important;
     }
-    
-    
+
+
 
     .e-quick-popup-wrapper.e-lib.e-popup.e-control.e-popup-open {
         display: none;
@@ -2332,6 +2340,6 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
     }
 
     .e-schedule .e-hide-childs > * {
-           display: contents !important;
+        display: contents !important;
     }
 </style>
