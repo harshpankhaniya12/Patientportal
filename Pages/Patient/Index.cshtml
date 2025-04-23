@@ -106,7 +106,7 @@
                         </e-grid-columns>
                     </ejs-grid>
                     <script id="actionTemplate" type="text/x-template">
-                        ${if(statusName !== "Cancelled" && appoinmentType !== "Appointment Request for Online Consultation" && appoinmentType !== "Appointment Request for Procedures")}
+                        ${if(statusName !== "Cancelled" && statusName !== "Check-In" && statusName !== "Completed" && appoinmentType !== "Appointment Request for Online Consultation" && appoinmentType !== "Appointment Request for Procedures")}
                             <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
                                 <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
                             </a>
@@ -2196,7 +2196,7 @@
                                         </div>
 
                                         <div class="ius-ctrls">
-                                             ${appointment.statusName !== "Cancelled" && appointment.appoinmentType !== "Appointment Request for Online Consultation" && appointment.appoinmentType !== "Appointment Request for Procedures" ? `
+                                                     ${appointment.statusName !== "Cancelled" && appointment.statusName !== "Check-In" && appointment.statusName !== "Completed" && appointment.appoinmentType !== "Appointment Request for Online Consultation" && appointment.appoinmentType !== "Appointment Request for Procedures" ? `
                                                 <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
                                                          <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
 
