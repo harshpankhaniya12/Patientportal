@@ -68,22 +68,30 @@ namespace Patientportal.Pages.Patient
                     //    appointment.CreatedOn = appointment.CreatedOn.Value.AddHours(-5).AddMinutes(-30);
                     //}
 
-                    if (appointment.StatusName == "Reschedule" ||
-                     appointment.StatusName == "Check-In" ||
-                     appointment.StatusName == "ReverseCheckin" ||
-                     appointment.StatusName == "ReverseCheckout" ||
-                     appointment.StatusName == "Confirmed")
+                    if (appointment.StatusName == "Reschedule" || appointment.StatusName == "Booked")
                     {
                         appointment.StatusName = "Booked";
                     }
-                    if (appointment.StatusName == "Released" || appointment.StatusName == "Completed" ||
-                     appointment.StatusName == "Check-Out")
+                    if (appointment.StatusName == "Released" || appointment.StatusName == "Completed" || appointment.StatusName == "Check-Out")
                     {
                         appointment.StatusName = "Completed";
                     }
                     if (appointment.AppoinmentType == "Consultation")
                     {
                         appointment.AppoinmentType = "Appointment for Consultation";
+                    }
+                    if (appointment.StatusName == "Confirmed" ||
+                      appointment.StatusName == "ReverseCheckin")
+                    {
+                        appointment.StatusName = "Confirmed";
+                    }
+                    if (appointment.StatusName == "Check-In" || appointment.StatusName == "ReverseCheckout")
+                    {
+                        appointment.StatusName = "Check-In";
+                    }
+                    if (appointment.StatusName == "WalkOut")
+                    {
+                        appointment.StatusName = "WalkOut";
                     }
                 }
             }
@@ -173,11 +181,7 @@ namespace Patientportal.Pages.Patient
                     //    appointment.CreatedOn = appointment.CreatedOn.Value.AddHours(-5).AddMinutes(-30);
                     //}
 
-                    if (appointment.StatusName == "Reschedule" ||
-                      appointment.StatusName == "Check-In" ||
-                      appointment.StatusName == "ReverseCheckin" ||
-                      appointment.StatusName == "ReverseCheckout" ||
-                      appointment.StatusName == "Confirmed")
+                    if (appointment.StatusName == "Reschedule" || appointment.StatusName == "Booked")
                     {
                         appointment.StatusName = "Booked";
                     }
@@ -189,7 +193,20 @@ namespace Patientportal.Pages.Patient
                     {
                         appointment.AppoinmentType = "Appointment for Consultation";
                     }
-                }
+					if (appointment.StatusName == "Confirmed" ||
+					  appointment.StatusName == "ReverseCheckin")
+					{
+						appointment.StatusName = "Confirmed";
+					}
+                    if (appointment.StatusName == "Check-In" || appointment.StatusName == "ReverseCheckout")
+					{
+						appointment.StatusName = "Check-In";
+					}
+                    if (appointment.StatusName == "WalkOut")
+					{
+						appointment.StatusName = "WalkOut";
+					}
+				}
             }
             if (appointmentsRequest != null && appointmentsRequest.Count > 0)
             {

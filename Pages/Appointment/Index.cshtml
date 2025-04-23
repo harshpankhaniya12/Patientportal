@@ -93,7 +93,7 @@
                             <span id="agespan" class="text-danger"></span>
                         </div>
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-notes" class="form-label">Notes*</label>
+                            <label for="pi-notes" class="form-label">Notes</label>
                             <textarea type="Notes" name="age" maxlength="200" id="pi-notes"></textarea>
                             <span id="notesspan" class="text-danger"></span>
                         </div>
@@ -458,13 +458,6 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                 else {
                     clearError("pi-dob");
                 }
-            }
-            // Validate Notes
-            if ($("#pi-notes").val().trim() === "") {
-                showError("pi-notes", "Notes are required.");
-                isValid = false;
-            } else {
-                clearError("pi-notes");
             }
 
 

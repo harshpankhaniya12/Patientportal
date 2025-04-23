@@ -346,6 +346,7 @@
             </script>
 
             <script>
+
                 document.addEventListener("DOMContentLoaded", function () {
                     var ageInput = document.getElementById("pi-age");
                     var dobPicker = document.getElementById("pi-dob").ej2_instances[0]; // Syncfusion Datepicker instance
@@ -404,6 +405,13 @@
                         }
                         else if (args.data.statusName === "Request Sent") {
                             args.cell.innerHTML = `<span class="badge badge-secondary">Request Sent</span>`;
+                        }
+                        else if (args.data.statusName === "Confirmed") {
+                            args.cell.innerHTML = `<span class="badge badge-info">Confirmed</span>`; // changed color
+                        } else if (args.data.statusName === "Check-In") {
+                            args.cell.innerHTML = `<span class="badge badge-warning">Check-In</span>`; // changed color
+                        } else if (args.data.statusName === "WalkOut") {
+                            args.cell.innerHTML = `<span class="badge badge-dark">WalkOut</span>`; // changed color
                         }
                         else if (args.data.statusName === "Close") {
                             args.cell.innerHTML = `<span class="badge badge-Primary">Completed</span>`;
@@ -2293,10 +2301,20 @@
         font-weight: bold;
     }
 
+    span.badge.badge-warning {
+        background-color: darkcyan;
+    }
     span {
         font-size: 13px;
     }
 
+        span.badge.badge-info {
+            background-color: darkslategray;
+        }
+
+        span.badge.badge-dark {
+            background-color: darkred;
+        }
     .badge {
         padding: 7px 13px;
         /* border-radius: 20px; */
