@@ -15,9 +15,11 @@ namespace Patientportal.Model
         [RegularExpression(@"^[\w\.-]+@[\w\.-]+\.\w+$", ErrorMessage = "Invalid email address")]
         public string? Email { get; set; }
         public string? Address { get; set; }
-
-        public string? MaritalStatus { get; set; }
+        public long? State { get; set; }
+        public long? City { get; set; }
         public long? Country { get; set; }
+        public string? MaritalStatus { get; set; }
+
 
         public string? CountryName { get; set; }
         public string? Category { get; set; }
@@ -27,9 +29,7 @@ namespace Patientportal.Model
         public string? CityName { get; set; }
 
         public string? StateName { get; set; }
-        public long? City { get; set; }
-
-        public long? State { get; set; }
+      
 
         public string? Pincode { get; set; }
         public string? Locality { get; set; }

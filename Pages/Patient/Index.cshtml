@@ -233,13 +233,13 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-pincode" class="form-label">Pincode</label>
-                            <input type="number" name="pincode" id="pi-pincode" asp-for="PatientData.Pincode" class="form-control">
+                            <input type="number" name="pincode" id="pi-pincode" asp-for="PatientData.Pincode" class="form-control" readonly>
                             <span asp-validation-for="PatientData.Pincode" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-locality" class="form-label">Locality</label>
-                            <input type="text" name="locality" id="pi-locality" asp-for="PatientData.Locality" class="form-control">
+                            <input type="text" name="locality" id="pi-locality" asp-for="PatientData.Locality" class="form-control" readonly>
                             <span asp-validation-for="PatientData.Locality" class="text-danger"></span>
                         </div>
 
@@ -252,14 +252,33 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-city" class="form-label">City</label>
-                            <input type="text" id="pi-city" class="form-control" name="city" asp-for="PatientData.CityName">
+                            <ejs-dropdownlist id="cityDropdown"
+                                              style="height: 45px;"
+                                              ejs-for="PatientData.City"
+                                              cssClass="e-multi-column"
+                                              popupHeight="300px"
+                                              showClearButton="true"
+                                              value="@Model.PatientData.City"
+                                              dataSource="@Model.CityLists">
+                                <!-- Initially disabled until a state is selected -->
+                                <e-dropdownlist-fields text="name" value="id"></e-dropdownlist-fields>
+                            </ejs-dropdownlist>
                             <span asp-validation-for="PatientData.City" class="text-danger"></span>
 
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-state" class="form-label">State</label>
-                            <input type="text" id="pi-state" class="form-control" name="state" asp-for="PatientData.StateName" >
+                            <ejs-dropdownlist id="stateDropdown"
+                                              ejs-for="PatientData.State"
+                                              style="height: 45px;"
+                                              cssClass="e-multi-column"
+                                              popupHeight="300px"
+                                              showClearButton="true"
+                                              dataSource="@Model.StateLists"
+                                              value="@Model.PatientData.State" change="onStateChange">
+                                <e-dropdownlist-fields text="name" value="id"></e-dropdownlist-fields>
+                            </ejs-dropdownlist>
                             <span asp-validation-for="PatientData.State" class="text-danger"></span>
 
                             @*  <ejs-dropdownlist ID="pi-state" class="form-control"  TValue="string" DataSource="StateList" Placeholder="Select State"></ejs-dropdownlist>
@@ -268,8 +287,18 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-country" class="form-label">Country</label>
-                            <input type="text" id="pi-country" class="form-control" name="Country" asp-for="PatientData.CountryName">
-                            <span asp-validation-for="PatientData.CountryName" class="text-danger"></span>
+                            <ejs-dropdownlist id="countryDropdown"
+                                              ejs-for="PatientData.Country"
+                                              style="height: 45px;"
+                                              cssClass="e-multi-column"
+                                              popupHeight="300px"
+                                              showClearButton="true"
+                                              dataSource="@Model.CountryLists"
+                                              change="onCountryChange">
+                                <!-- Add the change event -->
+                                <e-dropdownlist-fields text="Name" value="Id"></e-dropdownlist-fields>
+                            </ejs-dropdownlist>
+                            <span asp-validation-for="PatientData.Country" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -287,6 +316,94 @@
                     </div>
                 </form>
             </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    var countryDropdown = document.getElementById('countryDropdown').ej2_instances[0];
+                    var countryValue = countryDropdown.value;
+                    const countryValuee = "@Model.PatientData.Country";
+                    const stateValuee = "@Model.PatientData.State";
+
+                    // Call onCountryChange only if country value exists
+                    if (countryValuee) {
+                        onCountryChange({ value: countryValuee }).then(() => {
+                            // Only call onStateChange if state value exists
+                            if (stateValuee) {
+                                onStateChange({ value: stateValuee });
+                            }
+                        });
+                    }
+                    // Agar country pehle se selected hai toh uske states fetch karo
+                    if (countryValue) {
+                        onCountryChange({ value: countryValue });
+                    }
+
+                    var stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
+                    var stateValue = stateDropdown.value;
+
+                    // Agar state pehle se selected hai toh uske cities fetch karo
+                    if (stateValue) {
+                        onStateChange({ value: stateValue });
+                    }
+                });
+
+                async function onCountryChange(args) {
+                    var countryId = args.value;
+                    if (!countryId) {
+                        const stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
+                        const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
+                        // If state is null, reset both state and city
+                        cityDropdown.dataSource = [];
+                        cityDropdown.value = null;
+                        cityDropdown.refresh();
+                        stateDropdown.dataSource = [];
+                        stateDropdown.value = null;
+                        stateDropdown.refresh();
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(`/Patient?handler=States&countryId=${countryId}`);
+                        const states = await response.json();
+
+                        var stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
+                        stateDropdown.dataSource = states;
+                        stateDropdown.refresh(); // State dropdown ko update karo
+
+                        // City dropdown ko reset karo kyunki ab state change hui hai
+                        var cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
+                        cityDropdown.dataSource = [];
+                        cityDropdown.refresh();
+                    } catch (error) {
+                        console.error('Error fetching states:', error);
+                    }
+                }
+
+
+                async function onStateChange(args) {
+                    var stateId = args.value;
+
+                    if (!stateId) {
+                        const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
+                        // If state is null, reset both state and city
+                        cityDropdown.dataSource = [];
+                        cityDropdown.value = null;
+                        cityDropdown.refresh();
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(`/Patient?handler=Cities&stateId=${stateId}`);
+                        const cities = await response.json();
+
+                        var cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
+                        cityDropdown.dataSource = cities;
+                        cityDropdown.refresh(); // City dropdown ko update karo
+                    } catch (error) {
+                        console.error('Error fetching cities:', error);
+                    }
+                }
+
+            </script>
 
 
             <script>
@@ -1921,7 +2038,7 @@
 
         let fieldsToEnable = [
             "pi-name", "pi-email", "pi-age",
-            "gender-male", "gender-female", "gender-other", "pi-matstat", "pi-pincode", "pi-locality", "pi-address", "pi-city", "pi-state", "pi-country"
+            "gender-male", "gender-female", "gender-other", "pi-matstat", "pi-address"
         ];
 
         function toggleFields(enable) {
@@ -1940,6 +2057,16 @@
             let maritalDropdown = document.getElementById("pi-matstat").ej2_instances[0];
             if (maritalDropdown) {
                 maritalDropdown.enabled = enable;
+            }   
+            let cityDropdown = document.getElementById("cityDropdown").ej2_instances[0];
+            if (cityDropdown) {
+                cityDropdown.enabled = enable;
+            } let stateDropdown = document.getElementById("stateDropdown").ej2_instances[0];
+            if (stateDropdown) {
+                stateDropdown.enabled = enable;
+            } let countryDropdown = document.getElementById("countryDropdown").ej2_instances[0];
+            if (countryDropdown) {
+                countryDropdown.enabled = enable;
             }
 
             // ✅ Syncfusion DatePicker Readonly/Enable Logic
@@ -2081,7 +2208,14 @@
             var selectedGender = genderMapping[selectedGenderId] || "";
             var dobValue = $("#pi-dob").val(); // Get the date input
             var formattedDob = formatDateToMMDDYYYY(dobValue); // Convert to MM/DD/YYYY
+            var cityObj = document.getElementById("cityDropdown").ej2_instances[0];
+            var cityId = cityObj.value;
 
+            var stateObj = document.getElementById("stateDropdown").ej2_instances[0];
+            var stateId = stateObj.value;
+
+            var countryObj = document.getElementById("countryDropdown").ej2_instances[0];
+            var countryId = countryObj.value;
             var formData = {
                 Name: $("#pi-name").val(),
                 Id: $("#PatientId").val(),
@@ -2089,7 +2223,11 @@
                 Age: $("#pi-age").val(),
                 Dob: formattedDob, // Use formatted date
                 Gender: selectedGender, // Get selected gender
-                MaritalStatus: $("#pi-matstat").val()
+                MaritalStatus: $("#pi-matstat").val(),
+                Address: $("#pi-address").val(),
+                City: cityId,
+                State: stateId,
+                Country: countryId
             };
 
             // Function to convert date to MM/DD/YYYY

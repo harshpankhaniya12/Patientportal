@@ -11,6 +11,7 @@ using Innovura.CSharp.Core;
 using System.ComponentModel.DataAnnotations;
 using Patientportal.Model;
 using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics.Metrics;
 
 namespace Patientportal.Pages.Patient
 {
@@ -25,9 +26,11 @@ namespace Patientportal.Pages.Patient
         [FromQuery(Name = "id")]
         public long? Id { get; set; }
         public ProfileListItem PatientData { get; set; }
+        public List<Country> CountryLists { get; set; }
         public AppointmentListItem AppoinmentData { get; set; }
         public string? EjsDateTimePattern = "dd/MM/yyyy hh:mm:ss a";
-       
+        public IEnumerable<State> StateLists { get; set; }
+        public IEnumerable<City> CityLists { get; set; }
         public List<string> ChangeRequests { get; set; } = new List<string>();
         public List<AppointmentListItem> Doctorblocktime { get; set; } = new List<AppointmentListItem>();
         public List<Holidays> Holidays { get; set; } = new List<Holidays>();
@@ -230,7 +233,24 @@ namespace Patientportal.Pages.Patient
 
             return new JsonResult(new { result = data, count });
         }
+        public async Task<IActionResult> OnGetStatesAsync(int countryId)
+        {
 
+            string apiUrl4 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/CountryStateCity/GetStatesByCountry?countryId={countryId}";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA"; 
+
+            var states = await _apiService.GetAsync<List<State>>(apiUrl4, token) ?? new List<State>();
+            return new JsonResult(states) { StatusCode = 200 };
+        }
+        public async Task<IActionResult> OnGetCitiesAsync(int stateId)
+        {
+            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/CountryStateCity/GetCitiesByState?stateId={stateId}";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA";
+
+
+            var citiesdp = await _apiService.GetAsync<List<City>>(apiUrl, token) ?? new List<City>();
+            return new JsonResult(citiesdp) { StatusCode = 200 };
+        }
         public async Task<IActionResult> OnGetAsync()
         {
 
@@ -250,12 +270,14 @@ namespace Patientportal.Pages.Patient
             string apiUrl3 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/GetAppointmentsByDoctor";
             string apiUrl4 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/GetInvoiceAmount?id={Id}";
             string apiUrl5 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Holiday/getHolidaysList";
+            string apiUrl6 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/CountryStateCity/GetCountry";
 
 
             // API Response Fetch karein
             var invoiceResponse = await _apiService.GetAsync<InvoiceResponse>(apiUrl4, token);
             Doctorblocktime = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl3, token) ?? new List<AppointmentListItem>();
             Holidays = await _apiService.GetAsync<List<Holidays>>(apiUrl5, token) ?? new List<Holidays>();
+            CountryLists = await _apiService.GetAsync<List<Country>>(apiUrl6, token) ?? new List<Country>();
             //if (Doctorblocktime != null && Doctorblocktime.Count > 0 )
             //{
             //    foreach (var appointment in Doctorblocktime)
