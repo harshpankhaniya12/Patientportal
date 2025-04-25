@@ -106,7 +106,7 @@
                         </e-grid-columns>
                     </ejs-grid>
                     <script id="actionTemplate" type="text/x-template">
-                        ${if(statusName !== "Cancelled" && statusName !== "Check-In" && statusName !== "Completed" && appoinmentType !== "Appointment Request for Online Consultation" && appoinmentType !== "Appointment Request for Procedures")}
+                        ${if(statusName !== "Cancelled" && statusName !== "Checked-In" && statusName !== "Completed" && appoinmentType !== "Appointment Request for Online Consultation" && appoinmentType !== "Appointment Request for Procedures")}
                             <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
                                 <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
                             </a>
@@ -525,8 +525,8 @@
                         }
                         else if (args.data.statusName === "Confirmed") {
                             args.cell.innerHTML = `<span class="badge badge-info">Confirmed</span>`; // changed color
-                        } else if (args.data.statusName === "Check-In") {
-                            args.cell.innerHTML = `<span class="badge badge-warning">Check-In</span>`; // changed color
+                        } else if (args.data.statusName === "Checked-In") {
+                            args.cell.innerHTML = `<span class="badge badge-warning">Checked-In</span>`; // changed color
                         } else if (args.data.statusName === "WalkOut") {
                             args.cell.innerHTML = `<span class="badge badge-dark">WalkOut</span>`; // changed color
                         }
