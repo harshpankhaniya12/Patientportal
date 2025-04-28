@@ -318,39 +318,22 @@
             </div>
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
-                    var countryDropdown = document.getElementById('countryDropdown').ej2_instances[0];
-                    var countryValue = countryDropdown.value;
                     const countryValuee = "@Model.PatientData.Country";
                     const stateValuee = "@Model.PatientData.State";
+                    const cityValuee = "@Model.PatientData.City";
 
-                    // Call onCountryChange only if country value exists
                     if (countryValuee) {
-                        onCountryChange({ value: countryValuee }).then(() => {
-                            // Only call onStateChange if state value exists
-                            if (stateValuee) {
-                                onStateChange({ value: stateValuee }, false);
-                            }
-                        });
-                    }
-                    // Agar country pehle se selected hai toh uske states fetch karo
-                    if (countryValue) {
-                        onCountryChange({ value: countryValue }, false);
-                    }
-
-                    var stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
-                    var stateValue = stateDropdown.value;
-
-                    // Agar state pehle se selected hai toh uske cities fetch karo
-                    if (stateValue) {
-                        onStateChange({ value: stateValue }, false);
+                        onCountryChange({ value: countryValuee }, false, stateValuee, cityValuee);
                     }
                 });
 
-                async function onCountryChange(args, shouldReset = true) {
+                async function onCountryChange(args, shouldReset = true, selectedState = null, selectedCity = null) {
                     var countryId = args.value;
+
+                    const stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
+                    const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
+
                     if (shouldReset) {
-                        const stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
-                        const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
                         stateDropdown.value = null;
                         stateDropdown.dataSource = [];
                         stateDropdown.refresh();
@@ -361,15 +344,12 @@
                     }
 
                     if (!countryId) {
-                        const stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
-                        const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
-                        // If state is null, reset both state and city
-                        cityDropdown.dataSource = [];
-                        cityDropdown.value = null;
-                        cityDropdown.refresh();
                         stateDropdown.dataSource = [];
                         stateDropdown.value = null;
                         stateDropdown.refresh();
+                        cityDropdown.dataSource = [];
+                        cityDropdown.value = null;
+                        cityDropdown.refresh();
                         return;
                     }
 
@@ -377,32 +357,31 @@
                         const response = await fetch(`/Patient?handler=States&countryId=${countryId}`);
                         const states = await response.json();
 
-                        var stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
                         stateDropdown.dataSource = states;
-                        stateDropdown.refresh(); // State dropdown ko update karo
+                        stateDropdown.refresh();
 
-                        // City dropdown ko reset karo kyunki ab state change hui hai
-                        var cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
-                        cityDropdown.dataSource = [];
-                        cityDropdown.refresh();
+                        if (selectedState) {
+                            stateDropdown.value = selectedState;
+                            stateDropdown.refresh();
+                            // Now fetch cities for selected state
+                            await onStateChange({ value: selectedState }, false, selectedCity);
+                        }
                     } catch (error) {
                         console.error('Error fetching states:', error);
                     }
                 }
 
-
-                async function onStateChange(args, shouldReset = true) {
+                async function onStateChange(args, shouldReset = true, selectedCity = null) {
                     var stateId = args.value;
+                    const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
 
                     if (shouldReset) {
-                        const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
                         cityDropdown.value = null;
                         cityDropdown.dataSource = [];
                         cityDropdown.refresh();
                     }
+
                     if (!stateId) {
-                        const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
-                        // If state is null, reset both state and city
                         cityDropdown.dataSource = [];
                         cityDropdown.value = null;
                         cityDropdown.refresh();
@@ -413,9 +392,13 @@
                         const response = await fetch(`/Patient?handler=Cities&stateId=${stateId}`);
                         const cities = await response.json();
 
-                        var cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
                         cityDropdown.dataSource = cities;
-                        cityDropdown.refresh(); // City dropdown ko update karo
+                        cityDropdown.refresh();
+
+                        if (selectedCity) {
+                            cityDropdown.value = selectedCity;
+                            cityDropdown.refresh();
+                        }
                     } catch (error) {
                         console.error('Error fetching cities:', error);
                     }
