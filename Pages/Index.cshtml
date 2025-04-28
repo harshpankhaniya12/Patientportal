@@ -1044,8 +1044,8 @@
                     return {
                         Id: item.id,
                         Subject: 'Not available',
-                        StartTime: new Date(item.appointmentStartTime),
-                        EndTime: new Date(item.appointmentEndDateTime),
+                        StartTime: new Date(item.ProcedureScheduleDateTime),
+                        EndTime: new Date(item.ProcedureScheduleEndDateTime),
                         IsReadonly: true,
                         ClassName: "blocked-slot" // Apply CSS for styling
                     };
@@ -1238,8 +1238,8 @@
                     return {
                         Id: item.doctorId,
                         Subject: 'Not available',
-                        StartTime: new Date(item.appointmentStartTime),
-                        EndTime: new Date(item.appointmentEndDateTime),
+                        StartTime: new Date(item.procedureScheduleDateTime),
+                        EndTime: new Date(item.procedureScheduleEndDateTime),
                         IsReadonly: true,
                         ClassName: "blocked-slot"
                     };

@@ -8,6 +8,8 @@ namespace Patientportal.Model
         public int? DoctoreId { get; set; }
         public int? SourceId { get; set; }
         public DateTime? AppointmentStartTime { get; set; }
+        public DateTime? ProcedureScheduleDateTime { get; set; }
+        public DateTime? ProcedureScheduleEndDateTime { get; set; }
         public string? FormofAppointment { get; set; }
         public string? Name { get; set; }
         public DateTime? AppointmentEndDateTime { get; set; }
@@ -43,6 +45,7 @@ namespace Patientportal.Model
         public string? Comment { get; set; }
         public string? SourceName { get; set; }
         public string? DoctorName { get; set; }
+        public bool? IsPatientAppointment { get; set; }
 
 
         //[NotMapped]
