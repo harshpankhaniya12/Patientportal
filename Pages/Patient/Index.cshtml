@@ -328,13 +328,13 @@
                         onCountryChange({ value: countryValuee }).then(() => {
                             // Only call onStateChange if state value exists
                             if (stateValuee) {
-                                onStateChange({ value: stateValuee });
+                                onStateChange({ value: stateValuee }, false);
                             }
                         });
                     }
                     // Agar country pehle se selected hai toh uske states fetch karo
                     if (countryValue) {
-                        onCountryChange({ value: countryValue });
+                        onCountryChange({ value: countryValue }, false);
                     }
 
                     var stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
@@ -342,12 +342,24 @@
 
                     // Agar state pehle se selected hai toh uske cities fetch karo
                     if (stateValue) {
-                        onStateChange({ value: stateValue });
+                        onStateChange({ value: stateValue }, false);
                     }
                 });
 
-                async function onCountryChange(args) {
+                async function onCountryChange(args, shouldReset = true) {
                     var countryId = args.value;
+                    if (shouldReset) {
+                        const stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
+                        const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
+                        stateDropdown.value = null;
+                        stateDropdown.dataSource = [];
+                        stateDropdown.refresh();
+
+                        cityDropdown.value = null;
+                        cityDropdown.dataSource = [];
+                        cityDropdown.refresh();
+                    }
+
                     if (!countryId) {
                         const stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
                         const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
@@ -379,9 +391,15 @@
                 }
 
 
-                async function onStateChange(args) {
+                async function onStateChange(args, shouldReset = true) {
                     var stateId = args.value;
 
+                    if (shouldReset) {
+                        const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
+                        cityDropdown.value = null;
+                        cityDropdown.dataSource = [];
+                        cityDropdown.refresh();
+                    }
                     if (!stateId) {
                         const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
                         // If state is null, reset both state and city
