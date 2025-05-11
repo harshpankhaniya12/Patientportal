@@ -92,7 +92,7 @@ namespace Patientportal.Pages.Account
             var PatientDetails = await _apiService.GetAsync<ProfileListItem>(apiUrl2, token);
             var patient = PatientDetails; 
            
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Account/Patientportalverify-otp";
+            string apiUrl = "http://localhost:5165/api/v1/Account/Patientportalverify-otp";
             var payload = new { mobile = request.Mobile, otp = request.OTP };
             var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 

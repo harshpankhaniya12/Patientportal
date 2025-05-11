@@ -160,9 +160,18 @@
         });
         $("#resendOtp").click(function (e) {
             e.preventDefault();
-            $("#resendOtp").hide(); // Resend OTP link hide karein
-            $("#sendotp").click();  // Send OTP ka click event trigger karein
+
+            // Hide the resend link and trigger Send OTP again
+            $("#resendOtp").hide();
+            $("#sendotp").click();
+
+            // Clear the OTP input fields
+            $(".otp-input").val("");
+
+            // Clear the OTP error span
+            $("#otpspan").text("");
         });
+
 
 
         // Stop Timer on Edit Phone Click
