@@ -867,6 +867,10 @@
                         $("#OC-reschedSpan").text("Appointment Date Time cannot be more than 10 years from today.");
                         isValid = false;
                     }
+                    else if ((enteredDateTime.getTime() - currentDateTime.getTime()) < 30 * 60 * 1000) {
+                        $("#OC-reschedSpan").text("Appointment must be at least 30 minutes from now.");
+                        isValid = false;
+                    }
                     // Validate month and date range
                     else if (month < 1 || month > 12 || day < 1 || day > 31) {
                         $("#OC-reschedSpan").text("Invalid Appointment Date Time.");
@@ -1098,6 +1102,10 @@
 
                     else if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
                         $("#RP-reschedSpan").text("Invalid Appointment Date Time.");
+                        isValid = false;
+                    }
+                    else if ((enteredDateTime.getTime() - currentDateTime.getTime()) < 30 * 60 * 1000) {
+                        $("#RP-reschedSpan").text("Appointment must be at least 30 minutes from now.");
                         isValid = false;
                     }
                     else if (enteredDateTime.getDay() === 0 || enteredDateTime.getDay() === 6) {
@@ -1692,6 +1700,10 @@
                         $("#AptDatetime-reson").text("Invalid Appointment Date Time.");
                         isValid = false;
                     }
+                    else if ((enteredDateTime.getTime() - currentDateTime.getTime()) < 30 * 60 * 1000) {
+                        $("#AptDatetime-reson").text("Appointment must be at least 30 minutes from now.");
+                        isValid = false;
+                    }
                     else if (enteredDateTime.getDay() === 0 || enteredDateTime.getDay() === 6) {
 
                         $("#AptDatetime-reson").text("Appointments cannot be scheduled on weekends.");
@@ -1901,6 +1913,11 @@
 
                     if (enteredDateTime == "Invalid Date" || enteredDateTime < currentDateTime) {
                         $("#AptDatetimereson1").text("Invalid Appointment Date Time.");
+                        isValid = false;
+                    }
+                    else if ((enteredDateTime.getTime() - currentDateTime.getTime()) < 30 * 60 * 1000) {
+                        showError("AptDatetimereson1", "Appointment must be at least 30 minutes from now.");
+                        $("#AptDatetimereson1").text("Appointment must be at least 30 minutes from now.");
                         isValid = false;
                     }
                     else if (enteredDateTime.getDay() === 0 || enteredDateTime.getDay() === 6) {

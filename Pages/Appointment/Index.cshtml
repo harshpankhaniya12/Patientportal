@@ -368,7 +368,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (appointmentValue === "") {
                 showError("AppointmentDateSpan", "Appointment Date Time is required.");
                 isValid = false;
-            } else if (!dateTimeRegex.test(appointmentValue)) {
+            } 
+            else if (!dateTimeRegex.test(appointmentValue)) {
                 showError("AppointmentDateSpan", "Invalid Appointment Date Time format.");
                 isValid = false;
             } else {
@@ -412,6 +413,10 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                     isValid = false;
                 } else if (enteredDateTime > maxDateTime) { // ✅ Check max 10 years condition
                     showError("AppointmentDateSpan", "Appointment Date Time cannot be more than 10 years from today.");
+                    isValid = false;
+                }
+                else if ((enteredDateTime.getTime() - currentDateTime.getTime()) < 30 * 60 * 1000) {
+                    showError("AppointmentDateSpan", "Appointment must be at least 30 minutes from now.");
                     isValid = false;
                 }
                     // Validate month and date range
