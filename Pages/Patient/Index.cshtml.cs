@@ -52,9 +52,9 @@ namespace Patientportal.Pages.Patient
                 return new JsonResult(new { result = new List<object>(), count = 0 });
             }
 
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id={Id}";
-            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointmentRequest?id={Id}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA";
+            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/getPatientByAppointment?id={Id}";
+            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/getPatientByAppointmentRequest?id={Id}";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ";
             var appointments = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
             var appointmentsRequest = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl2, token);
             if (appointments != null && appointments.Count > 0)
@@ -165,9 +165,9 @@ namespace Patientportal.Pages.Patient
             }
 
 
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointment?id={Id}";
-            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/getPatientByAppointmentRequest?id={Id}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA";
+            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/getPatientByAppointment?id={Id}";
+            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/getPatientByAppointmentRequest?id={Id}";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ";
             var appointments = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
             var appointmentsRequest = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl2, token);
             if (appointments != null && appointments.Count > 0)
@@ -236,16 +236,16 @@ namespace Patientportal.Pages.Patient
         public async Task<IActionResult> OnGetStatesAsync(int countryId)
         {
 
-            string apiUrl4 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/CountryStateCity/GetStatesByCountry?countryId={countryId}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA"; 
+            string apiUrl4 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/CountryStateCity/GetStatesByCountry?countryId={countryId}";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; 
 
             var states = await _apiService.GetAsync<List<State>>(apiUrl4, token) ?? new List<State>();
             return new JsonResult(states) { StatusCode = 200 };
         }
         public async Task<IActionResult> OnGetCitiesAsync(int stateId)
         {
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/CountryStateCity/GetCitiesByState?stateId={stateId}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA";
+            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/CountryStateCity/GetCitiesByState?stateId={stateId}";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ";
 
 
             var citiesdp = await _apiService.GetAsync<List<City>>(apiUrl, token) ?? new List<City>();
@@ -264,13 +264,13 @@ namespace Patientportal.Pages.Patient
                 return RedirectToPage("/Account/Index"); // Ya phir Redirect("/Login");
             }
 
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/getProfileforpatientportal?id={Id}";
-            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/getDetailsChangesbyId?id={Id}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA"; // Valid token yahan dalein
-            string apiUrl3 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/GetAppointmentsPortalByDoctor?id={Id}";
-            string apiUrl4 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/GetInvoiceAmount?id={Id}";
-            string apiUrl5 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Holiday/getHolidaysList";
-            string apiUrl6 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/CountryStateCity/GetCountry";
+            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/Profile/getProfileforpatientportal?id={Id}";
+            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/Profile/getDetailsChangesbyId?id={Id}";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
+            string apiUrl3 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/GetAppointmentsPortalByDoctor?id={Id}";
+            string apiUrl4 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/GetInvoiceAmount?id={Id}";
+            string apiUrl5 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Holiday/getHolidaysList";
+            string apiUrl6 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/CountryStateCity/GetCountry";
 
 
             // API Response Fetch karein
@@ -325,8 +325,8 @@ namespace Patientportal.Pages.Patient
                 ProfileListItem viewModel = JSON.Deserialize<ProfileListItem>(json);
 
 
-                string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/Profile/Addpatientportalchanges";
-                string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA"; // Valid token yahan dalein
+                string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/Profile/Addpatientportalchanges";
+                string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
 
                 var apiHelper = new ApiService(_httpClient);
                 var response = await _apiService.PostAsync<ProfileListItem, ApiResponse>(apiUrl, viewModel, token);
@@ -353,8 +353,8 @@ namespace Patientportal.Pages.Patient
             AppointmentListItem viewModel = JSON.Deserialize<AppointmentListItem>(json);
 
 
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/viewAppointmentButtonPatientPortal";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA"; // Valid token yahan dalein
+            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/viewAppointmentButtonPatientPortal";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
 
             var apiHelper = new ApiService(_httpClient);
             var response = await _apiService.PostAsync<AppointmentListItem, ApiResponse>(apiUrl, viewModel, token);
@@ -376,8 +376,8 @@ namespace Patientportal.Pages.Patient
             AppointmentListItem viewModel = JSON.Deserialize<AppointmentListItem>(json);
             
 
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/AddAppointmentbyportalAppointmentbyPatientId";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiN2UwMGFhMWMtNGNkYy00ZGJhLTk2YmYtOGJhMDc3YmM3OGM2IiwibmJmIjoxNzQxNjkzNTQxLCJleHAiOjE3NzMyMjk1NDEsImlhdCI6MTc0MTY5MzU0MSwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.7dP0sq0YWwq8ldoVVa_JNK7sHlktq6KK7CCrXkGXGxtbm8c8Nmm9kUbSoKWFyQyPXxrzARH2xjdal5IQ6NsrYA"; // Valid token yahan dalein
+            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/AddAppointmentbyportalAppointmentbyPatientId";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
 
             var apiHelper = new ApiService(_httpClient);
             var response = await _apiService.PostAsync<AppointmentListItem, ApiResponse>(apiUrl, viewModel, token);
@@ -399,9 +399,9 @@ namespace Patientportal.Pages.Patient
             AppointmentListItem viewModel = JSON.Deserialize<AppointmentListItem>(json);
             
 
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Appointment/UpsertAppointmentRequest";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiZWVlZTc1MWMtMzJkZi00ZTJkLTlhMWItZmEzMjM1NmI5YmVmIiwibmJmIjoxNzQwOTc4ODA0LCJleHAiOjE3NzI1MTQ4MDQsImlhdCI6MTc0MDk3ODgwNCwiaXNzIjoiQ29ubmV0d2VsbENJUyIsImF1ZCI6IkNvbm5ldHdlbGxDSVMifQ.N5KM-d-Q-JFP1_NN1MH_0C4IbrTti8QhBMGvk7xshJWLMxlCM9-fnbRvEHTBPE-ihDlsvWUX6r5pzriWuKVzJg"; // Valid token yahan dalein
-            string apiUrl5 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8888/api/v1/Holiday/getHolidaysList";
+            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/UpsertAppointmentRequest";
+            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
+            string apiUrl5 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Holiday/getHolidaysList";
 
             Holidays = await _apiService.GetAsync<List<Holidays>>(apiUrl5, token) ?? new List<Holidays>();
             var appointmentDate = viewModel.AppointmentStartTime.Value.ToString("dd/MM/yyyy");
