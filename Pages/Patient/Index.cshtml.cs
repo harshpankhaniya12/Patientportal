@@ -23,6 +23,7 @@ namespace Patientportal.Pages.Patient
         //private readonly HttpClient _httpClient;
         private readonly HttpClient _httpClient;
         private readonly ApiService _apiService;
+        private readonly IConfiguration _configuration;
         [FromQuery(Name = "id")]
         public long? Id { get; set; }
         public ProfileListItem PatientData { get; set; }
@@ -31,14 +32,16 @@ namespace Patientportal.Pages.Patient
         public string? EjsDateTimePattern = "dd/MM/yyyy hh:mm:ss a";
         public IEnumerable<State> StateLists { get; set; }
         public IEnumerable<City> CityLists { get; set; }
+        public IEnumerable<Pincode> Pincodes { get; set; }
         public List<string> ChangeRequests { get; set; } = new List<string>();
         public List<AppointmentListItem> Doctorblocktime { get; set; } = new List<AppointmentListItem>();
         public List<Holidays> Holidays { get; set; } = new List<Holidays>();
-        public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, ApiService apiService)
+        public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, ApiService apiService, IConfiguration configuration)
         {
             _logger = logger;
             _httpClient = httpClientFactory;
             _apiService = apiService;
+            _configuration = configuration;
         }
         public async Task<JsonResult> OnPostAppointmentView([FromBody] DataManagerRequest dm)
         {
@@ -51,11 +54,11 @@ namespace Patientportal.Pages.Patient
             {
                 return new JsonResult(new { result = new List<object>(), count = 0 });
             }
-
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/getPatientByAppointment?id={Id}";
-            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/getPatientByAppointmentRequest?id={Id}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ";
-            var appointments = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
+            string apiUrl = $"{baseUrl}/api/v1/Appointment/getPatientByAppointment?id={Id}";
+            string apiUrl2 = $"{baseUrl}/api/v1/Appointment/getPatientByAppointmentRequest?id={Id}";
+              var appointments = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
             var appointmentsRequest = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl2, token);
             if (appointments != null && appointments.Count > 0)
             {
@@ -163,11 +166,11 @@ namespace Patientportal.Pages.Patient
             {
                 Id = Convert.ToInt64(queryId);
             }
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
 
-
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/getPatientByAppointment?id={Id}";
-            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/getPatientByAppointmentRequest?id={Id}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ";
+            string apiUrl = $"{baseUrl}/api/v1/Appointment/getPatientByAppointment?id={Id}";
+            string apiUrl2 = $"{baseUrl}/api/v1/Appointment/getPatientByAppointmentRequest?id={Id}";
             var appointments = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl, token);
             var appointmentsRequest = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl2, token);
             if (appointments != null && appointments.Count > 0)
@@ -235,21 +238,31 @@ namespace Patientportal.Pages.Patient
         }
         public async Task<IActionResult> OnGetStatesAsync(int countryId)
         {
-
-            string apiUrl4 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/CountryStateCity/GetStatesByCountry?countryId={countryId}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; 
-
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
+            string apiUrl4 = $"{baseUrl}/api/v1/CountryStateCity/GetStatesByCountry?countryId={countryId}";
+           
             var states = await _apiService.GetAsync<List<State>>(apiUrl4, token) ?? new List<State>();
             return new JsonResult(states) { StatusCode = 200 };
         }
         public async Task<IActionResult> OnGetCitiesAsync(int stateId)
         {
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/CountryStateCity/GetCitiesByState?stateId={stateId}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ";
-
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
+            string apiUrl = $"{baseUrl}/api/v1/CountryStateCity/GetCitiesByState?stateId={stateId}";
+            
 
             var citiesdp = await _apiService.GetAsync<List<City>>(apiUrl, token) ?? new List<City>();
             return new JsonResult(citiesdp) { StatusCode = 200 };
+        }
+        public async Task<IActionResult> OnGetPincodeforleadDataSourceAsync()
+        {
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
+            string apiUrl = $"{baseUrl}/api/v1/Pincode/getpincode";
+
+            var pincodes = await _apiService.GetAsync<List<Pincode>>(apiUrl, token) ?? new List<Pincode>();
+            return new JsonResult(pincodes) { StatusCode = 200 };
         }
         public async Task<IActionResult> OnGetAsync()
         {
@@ -263,14 +276,18 @@ namespace Patientportal.Pages.Patient
             {
                 return RedirectToPage("/Account/Index"); // Ya phir Redirect("/Login");
             }
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
 
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/Profile/getProfileforpatientportal?id={Id}";
-            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/Profile/getDetailsChangesbyId?id={Id}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
-            string apiUrl3 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/GetAppointmentsPortalByDoctor?id={Id}";
-            string apiUrl4 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/GetInvoiceAmount?id={Id}";
-            string apiUrl5 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Holiday/getHolidaysList";
-            string apiUrl6 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/CountryStateCity/GetCountry";
+            string apiUrl = $"{baseUrl}/api/Profile/getProfileforpatientportal?id={Id}";
+            string apiUrl2 = $"{baseUrl}/api/Profile/getDetailsChangesbyId?id={Id}";
+
+            string apiUrl3 = $"{baseUrl}/api/v1/Appointment/GetAppointmentsPortalByDoctor?id={Id}";
+            string apiUrl4 = $"{baseUrl}/api/v1/Appointment/GetInvoiceAmount?id={Id}";
+            string apiUrl5 = $"{baseUrl}/api/v1/Holiday/getHolidaysList";
+            string apiUrl6 = $"{baseUrl}/api/v1/CountryStateCity/GetCountry";
+            string token1 = "yJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwic3ViIjoiMiIsInVuaXF1ZV9uYW1lIjoiSmFscGEiLCJlbWFpbCI6ImphbHBhQGludXJza24uaW4iLCJyb2xlIjoiRnJvbnREZXNrUHJlU2FsZXMiLCJuYmYiOjE3NTA0MDE5ODUsImV4cCI6MTc1MTAwNjc4NSwiaWF0IjoxNzUwNDAxOTg1LCJpc3MiOiJDb25uZXR3ZWxsQ0lTIiwiYXVkIjoiQ29ubmV0d2VsbENJUyJ9.xS0iiGb41T-V0kx0OXK2oOMAO5B_a-thQFx-bfHruOMp8QQUuEGqHPY04ZzjVBSJceZQq5qmokgFNbkotSSrOw";
+            string apiUrl7 = $"{baseUrl}/api/v1/Pincode/getallpincode";
 
 
             // API Response Fetch karein
@@ -278,6 +295,7 @@ namespace Patientportal.Pages.Patient
             Doctorblocktime = await _apiService.GetAsync<List<AppointmentListItem>>(apiUrl3, token) ?? new List<AppointmentListItem>();
             Holidays = await _apiService.GetAsync<List<Holidays>>(apiUrl5, token) ?? new List<Holidays>();
             CountryLists = await _apiService.GetAsync<List<Country>>(apiUrl6, token) ?? new List<Country>();
+            Pincodes = await _apiService.GetAsync<List<Pincode>>(apiUrl7, token1) ?? new List<Pincode>();
             //if (Doctorblocktime != null && Doctorblocktime.Count > 0 )
             //{
             //    foreach (var appointment in Doctorblocktime)
@@ -319,15 +337,15 @@ namespace Patientportal.Pages.Patient
             try
             {
 
-
+                string baseUrl = _configuration["ApiSettings:BaseUrl"];
+                string token = _configuration["ApiSettings:AuthToken"];
                 using var reader = new StreamReader(HttpContext.Request.Body);
                 var json = await reader.ReadToEndAsync();
                 ProfileListItem viewModel = JSON.Deserialize<ProfileListItem>(json);
 
 
-                string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/Profile/Addpatientportalchanges";
-                string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
-
+                string apiUrl = $"{baseUrl}/api/Profile/Addpatientportalchanges";
+             
                 var apiHelper = new ApiService(_httpClient);
                 var response = await _apiService.PostAsync<ProfileListItem, ApiResponse>(apiUrl, viewModel, token);
 
@@ -352,10 +370,10 @@ namespace Patientportal.Pages.Patient
             var json = await reader.ReadToEndAsync();
             AppointmentListItem viewModel = JSON.Deserialize<AppointmentListItem>(json);
 
-
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/viewAppointmentButtonPatientPortal";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
-
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
+            string apiUrl = $"{baseUrl}/api/v1/Appointment/viewAppointmentButtonPatientPortal";
+          
             var apiHelper = new ApiService(_httpClient);
             var response = await _apiService.PostAsync<AppointmentListItem, ApiResponse>(apiUrl, viewModel, token);
 
@@ -374,11 +392,12 @@ namespace Patientportal.Pages.Patient
             using var reader = new StreamReader(HttpContext.Request.Body);
             var json = await reader.ReadToEndAsync();
             AppointmentListItem viewModel = JSON.Deserialize<AppointmentListItem>(json);
+
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
+
+            string apiUrl = $"{baseUrl}/api/v1/Appointment/AddAppointmentbyportalAppointmentbyPatientId";
             
-
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/AddAppointmentbyportalAppointmentbyPatientId";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
-
             var apiHelper = new ApiService(_httpClient);
             var response = await _apiService.PostAsync<AppointmentListItem, ApiResponse>(apiUrl, viewModel, token);
 
@@ -397,11 +416,11 @@ namespace Patientportal.Pages.Patient
             using var reader = new StreamReader(HttpContext.Request.Body);
             var json = await reader.ReadToEndAsync();
             AppointmentListItem viewModel = JSON.Deserialize<AppointmentListItem>(json);
-            
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
 
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/UpsertAppointmentRequest";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
-            string apiUrl5 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Holiday/getHolidaysList";
+            string apiUrl = $"{baseUrl}/api/v1/Appointment/UpsertAppointmentRequest";
+            string apiUrl5 = $"{baseUrl}/api/v1/Holiday/getHolidaysList";
 
             Holidays = await _apiService.GetAsync<List<Holidays>>(apiUrl5, token) ?? new List<Holidays>();
             var appointmentDate = viewModel.AppointmentStartTime.Value.ToString("dd/MM/yyyy");
@@ -428,3 +447,9 @@ namespace Patientportal.Pages.Patient
 
     }
 }
+public class Pincode
+{
+    public int Id { get; set; }
+    public string Pincodes { get; set; }  // match this with what API returns
+}
+

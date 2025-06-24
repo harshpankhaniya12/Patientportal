@@ -18,18 +18,20 @@ namespace Patientportal.Pages.Account
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
+        private readonly IConfiguration _configuration;
         //private readonly HttpClient _httpClient;
         private readonly HttpClient _httpClient;
         private readonly ApiService _apiService;
         private readonly OTPService _otpService;
         [BindProperty]
         public InputModel Input { get; set; }
-        public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, ApiService apiService, OTPService oTPService)
+        public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, IConfiguration configuration, ApiService apiService, OTPService oTPService)
         {
             _logger = logger;
             _httpClient = httpClientFactory;
             _apiService = apiService;
             _otpService = oTPService;
+            _configuration = configuration;
         }
         public IActionResult OnGet()
         {
@@ -42,8 +44,9 @@ namespace Patientportal.Pages.Account
 
         public async Task<JsonResult> OnPostSendOTPAsync([FromBody] InputModel request)
         {
-            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/Profile/GetpatientByMobilenumber?Mobilenumber={request.Mobile}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
+            string apiUrl2 = $"{baseUrl}/api/Profile/GetpatientByMobilenumber?Mobilenumber={request.Mobile}";
             var PatientDetails = await _apiService.GetAsync<ProfileListItem>(apiUrl2, token);
             if (string.IsNullOrEmpty(request.Mobile) || request.Mobile.Length < 10)
             {
@@ -58,7 +61,7 @@ namespace Patientportal.Pages.Account
                 return new JsonResult(new { success = false, message = "Maximum OTP attempts reached. Try again after 24 hours." });
             }
 
-            string apiUrl = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Account/PatientportalSendAuthToken/{request.Mobile}.json";
+            string apiUrl = $"{baseUrl}/api/v1/Account/PatientportalSendAuthToken/{request.Mobile}.json";
 
             using var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -87,12 +90,13 @@ namespace Patientportal.Pages.Account
             {
                 return new JsonResult(new { success = false, message = "Invalid OTP number" });
             }
-            string apiUrl2 = $"http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/Profile/GetpatientByMobilenumber?Mobilenumber={request.Mobile}";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
+            string apiUrl2 = $"{baseUrl}/api/Profile/GetpatientByMobilenumber?Mobilenumber={request.Mobile}";
             var PatientDetails = await _apiService.GetAsync<ProfileListItem>(apiUrl2, token);
             var patient = PatientDetails; 
            
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Account/Patientportalverify-otp";
+            string apiUrl = $"{baseUrl}/api/v1/Account/Patientportalverify-otp";
             var payload = new { mobile = request.Mobile, otp = request.OTP };
             var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
 

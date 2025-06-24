@@ -14,30 +14,34 @@ namespace Patientportal.Pages.Appointment
         //private readonly HttpClient _httpClient;
         private readonly HttpClient _httpClient;
         private readonly ApiService _apiService;
+        private readonly IConfiguration _configuration;
         public AppointmentListItem AppoinmentData { get; set; }
         public List<Holidays> Holidays { get; set; } = new List<Holidays>();
         [FromQuery(Name = "selectedDateTime")]
         public DateTimeOffset SelectedDateTime { get; set; }
         public string? EjsDateTimePattern = "dd/MM/yyyy hh:mm:ss a";
-        public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, ApiService apiService)
+        public IndexModel(ILogger<IndexModel> logger, HttpClient httpClientFactory, ApiService apiService, IConfiguration configuration)
         {
             _logger = logger;
             _httpClient = httpClientFactory;
             _apiService = apiService;
+            _configuration = configuration;
+
         }
         public void OnGet()
         {
         }
         public async Task<IActionResult> OnPostPirescheduleAsync()
         {
+            string baseUrl = _configuration["ApiSettings:BaseUrl"];
+            string token = _configuration["ApiSettings:AuthToken"];
             using var reader = new StreamReader(HttpContext.Request.Body);
             var json = await reader.ReadToEndAsync();
             AppointmentListItem viewModel = JSON.Deserialize<AppointmentListItem>(json);
 
 
-            string apiUrl = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Appointment/AddAppointmentbyPatientPortal";
-            string token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNyIsInN1YiI6IjI3IiwidW5pcXVlX25hbWUiOiJNZWh1bGkiLCJlbWFpbCI6Im1laHVsdUBpbnVyc2tuLmluIiwicm9sZSI6IkZyb250RGVza0JpbGxpbmdBZG1pbiIsIm5iZiI6MTc0OTUzODYyMywiZXhwIjoxNzUwMTQzNDIzLCJpYXQiOjE3NDk1Mzg2MjMsImlzcyI6IkNvbm5ldHdlbGxDSVMiLCJhdWQiOiJDb25uZXR3ZWxsQ0lTIn0.CT-ijEQkb_OCD0m15J6olFH8WGw2T24464fFRFO-XnvPvYlU3k4hqOmBOV1FepkiErBjbWUquR_XHgWbgrARxQ"; // Valid token yahan dalein
-            string apiUrl5 = "http://ec2-13-200-161-197.ap-south-1.compute.amazonaws.com:8889/api/v1/Holiday/getHolidaysList";
+            string apiUrl = $"{baseUrl}/api/v1/Appointment/AddAppointmentbyPatientPortal";
+             string apiUrl5 = $"{baseUrl}/api/v1/Holiday/getHolidaysList";
 
             Holidays = await _apiService.GetAsync<List<Holidays>>(apiUrl5, token) ?? new List<Holidays>();
             var appointmentDate = viewModel.AppointmentStartTime.Value.ToString("dd/MM/yyyy");

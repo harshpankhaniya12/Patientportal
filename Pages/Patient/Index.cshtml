@@ -129,7 +129,7 @@
                 <div class="ius-block ius-card ius-notes">
                     <h2 class="mb-2 pb-1 text--red">Changes Requested</h2>
                     <ol>
-                        @foreach (var change in Model.ChangeRequests)
+                        @foreach (var change in Model?.ChangeRequests)
                         {
                             <li>@change</li>
                         }
@@ -236,16 +236,106 @@
                             <span asp-validation-for="PatientData.MaritalStatus" class="text-danger"></span>
                         </div>
 
-                        <div class="col-md-6 col-xl-4">
-                            <label for="pi-pincode" class="form-label">Pincode</label>
-                            <input type="number" name="pincode" id="pi-pincode" asp-for="PatientData.Pincode" class="form-control" readonly>
-                            <span asp-validation-for="PatientData.Pincode" class="text-danger"></span>
+                        <div class="col-md-6 col-xl-4" id="referencePincodeDiv">
+                            <label class="form-label">Pincode*</label>
+                            <ejs-dropdownlist id="pincodedropdown"
+                                             cssClass="e-multi-column"
+                                             allowSelection="true"
+                                             ejs-for="PatientData.PincodeId"
+                                             maximumSelectionLength="1"
+                                             allowFiltering="true"
+                                             filtering="onFiltering"
+                                             dataSource="@Model.Pincodes"
+                                             change="onPincodeChange">
+
+                                <e-dropdownlist-fields text="Pincodes" value="Id"></e-dropdownlist-fields>
+                               
+                            </ejs-dropdownlist>
+                            <span id="pincodeValidation" class="text-danger"></span>
                         </div>
 
+                        <div class="col-md-6 col-xl-4" id="customPincodeDiv" style="display: none;">
+                            <label class="form-label">Pincode*</label>
+                            <input asp-for="PatientData.Pincode"
+                                   id="custompincode"
+                                   type="text"
+                                   class="form-control"
+                                   style="height: 45px;">
+                        </div>
+
+
+                        <script>
+                            var pincodeData = [];
+
+                            function onFiltering(args) {
+                                var query = args.text.toLowerCase();
+                                args.updateData(pincodeData.filter(item => item.Pincodes.toLowerCase().includes(query)));
+
+                                setTimeout(function () {
+                                    var popup = document.getElementById("pincodedropdown_popup");
+                                    var customDiv = document.getElementById("customPincodeDiv");
+                                    var dropdownDiv = document.getElementById("referencePincodeDiv");
+
+                                    if (args.text.trim() === "") {
+                                        // If cleared, show dropdown again
+                                        customDiv.style.display = "none";
+                                        dropdownDiv.style.display = "block";
+                                        document.getElementById("custompincode").value = "";
+                                    } else if (popup && popup.querySelector(".e-nodata")) {
+                                        // Show custom input
+                                        dropdownDiv.style.display = "none";
+                                        customDiv.style.display = "block";
+
+                                        var input = document.getElementById("custompincode");
+                                        input.value = args.text;
+                                        input.focus();
+                                        input.setSelectionRange(input.value.length, input.value.length);
+                                    }
+                                }, 300);
+                            }
+
+                            function onPincodeChange(args) {
+                                if (args.value && args.value.length > 0) {
+                                    document.getElementById("referencePincodeDiv").style.display = "block";
+                                    document.getElementById("customPincodeDiv").style.display = "none";
+                                    document.getElementById("custompincode").value = "";
+                                }
+                            }
+
+                          document.addEventListener('DOMContentLoaded', function () {
+    var multiselectObj = document.getElementById("pincodedropdown").ej2_instances[0];
+    
+    // Direct assignment for array-based dataSource
+    pincodeData = multiselectObj.dataSource || [];
+
+    var customInput = document.getElementById("custompincode");
+
+    function checkCustomPincodeEmpty() {
+        if (customInput.value.trim() === "") {
+            document.getElementById("customPincodeDiv").style.display = "none";
+            document.getElementById("referencePincodeDiv").style.display = "block";
+        }
+    }
+
+    // Check on typing
+    customInput.addEventListener("keyup", checkCustomPincodeEmpty);
+
+    // Auto check every 10 seconds
+    setInterval(checkCustomPincodeEmpty, 10000);
+});
+
+
+                        </script>
+
+
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-locality" class="form-label">Locality</label>
-                            <input type="text" name="locality" id="pi-locality" asp-for="PatientData.Locality" class="form-control" readonly>
-                            <span asp-validation-for="PatientData.Locality" class="text-danger"></span>
+                            <label class="form-label">Locality</label>
+                            <input asp-for="PatientData.Locality"
+                                   id="customlocality"
+                                   type="text"
+                                   maxlength="50"
+                                   class="form-control"
+                                   style="height: 45px;">
                         </div>
 
                         <div class="col-md-6 col-xl-4">
@@ -2105,7 +2195,7 @@
 
         let fieldsToEnable = [
             "pi-name", "pi-email", "pi-age",
-            "gender-male", "gender-female", "gender-other", "pi-matstat", "pi-address"
+            "gender-male", "gender-female", "gender-other", "pi-matstat", "pi-address","customlocality",
         ];
 
         function toggleFields(enable) {
@@ -2124,6 +2214,10 @@
             let maritalDropdown = document.getElementById("pi-matstat").ej2_instances[0];
             if (maritalDropdown) {
                 maritalDropdown.enabled = enable;
+            }
+            let PincodeDropdown = document.getElementById("pincodedropdown").ej2_instances[0];
+            if (PincodeDropdown) {
+                PincodeDropdown.enabled = enable;
             }   
             let cityDropdown = document.getElementById("cityDropdown").ej2_instances[0];
             if (cityDropdown) {
@@ -2184,6 +2278,46 @@
 
             function clearError(inputId) {
                 $("#" + inputId).closest(".col-md-6").find(".text-danger").text("");
+            }
+            // Validate Pincode (only the visible one and only if it's 6-digit number)
+            var isReferenceVisible = $("#referencePincodeDiv").is(":visible");
+            var isCustomVisible = $("#customPincodeDiv").is(":visible");
+            var pincodePattern = /^[0-9]{6}$/;
+             var multiselectObj = document.getElementById("pincodedropdown").ej2_instances[0];
+            if (isReferenceVisible) {
+
+                var pincodeValue = multiselectObj.value && multiselectObj.value[0] ? multiselectObj.value[0].toString() : "";
+                    if (!pincodeValue || pincodeValue.length === 0) {
+                        $("#pincodeValidation").text("Pincode is required.");
+                        isValid = false;
+                    } 
+               else {
+                    $("#pincodeValidation").text("");
+                }
+            }
+
+            if (isCustomVisible) {
+                var customPincodeValue = $("#custompincode").val().trim();
+                   if (customPincodeValue === "") {
+                    $("#pincodeValidation").text("Pincode is required.");
+                    isValid = false;
+                } else if (!pincodePattern.test(customPincodeValue)) {
+                    $("#pincodeValidation").text("Please enter a valid 6-digit Pincode.");
+                    isValid = false;
+                }
+                 else {
+                    $("#pincodeValidation").text("");
+                }
+            }
+            // Validate Locality
+            var localityValue = $("#customlocality").val().trim();
+            var localityPattern = /^[a-zA-Z\s]+$/;
+
+             if (!localityPattern.test(localityValue)) {
+                showError("customlocality", "Only alphabets and spaces are allowed.");
+                isValid = false;
+            } else {
+                clearError("customlocality");
             }
 
             // Validate Name
@@ -2277,12 +2411,21 @@
             var formattedDob = formatDateToMMDDYYYY(dobValue); // Convert to MM/DD/YYYY
             var cityObj = document.getElementById("cityDropdown").ej2_instances[0];
             var cityId = cityObj.value;
+            var custompincode = $("#custompincode").val();
+            var selectedPincodeId = multiselectObj.value;
+            var PincodeId = selectedPincodeId && selectedPincodeId.length > 0 ? parseInt(selectedPincodeId[0]) : null;
+
+          
+
+// Get Locality
+            var localityValue = $("#customlocality").val().trim();
 
             var stateObj = document.getElementById("stateDropdown").ej2_instances[0];
             var stateId = stateObj.value;
 
             var countryObj = document.getElementById("countryDropdown").ej2_instances[0];
             var countryId = countryObj.value;
+             var multiselectObj = document.getElementById("pincodedropdown").ej2_instances[0];
             var formData = {
                 Name: $("#pi-name").val(),
                 Id: $("#PatientId").val(),
@@ -2293,6 +2436,9 @@
                 MaritalStatus: $("#pi-matstat").val(),
                 Address: $("#pi-address").val(),
                 City: cityId,
+                PincodeId :PincodeId,
+                Pincode : custompincode,
+                Locality :localityValue,
                 State: stateId,
                 Country: countryId
             };

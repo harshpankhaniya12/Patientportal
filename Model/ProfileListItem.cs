@@ -16,6 +16,7 @@ namespace Patientportal.Model
         public string? Email { get; set; }
         public string? Address { get; set; }
         public long? State { get; set; }
+        public long? PincodeId { get; set; }
         public long? City { get; set; }
         public long? Country { get; set; }
         public string? MaritalStatus { get; set; }
