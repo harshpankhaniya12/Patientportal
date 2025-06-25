@@ -191,7 +191,7 @@ namespace Patientportal.Pages.Patient
                     {
                         appointment.StatusName = "Booked";
                     }
-                    if (appointment.StatusName == "Released" || appointment.StatusName == "Completed")
+                    if (appointment.StatusName == "Released" || appointment.StatusName == "Completed" || appointment.StatusName == "Converted To Appointment")
                     {
                         appointment.StatusName = "Completed";
                     }
@@ -222,10 +222,18 @@ namespace Patientportal.Pages.Patient
                     //{
                     //    appointmentes.AppointmentStartTime = appointmentes.AppointmentStartTime.Value.AddHours(-5).AddMinutes(-30);
                     //}
+                    if (appointmentes.StatusName == "Converted To Appointment")
+                    {
+                        appointmentes.StatusName = "Completed";
+                    }
 
                     if (appointmentes.AppoinmentType == "Consultation")
                     {
                         appointmentes.AppoinmentType = "Appointment for Consultation";
+                    } 
+                    if (appointmentes.AppoinmentType == "Appointment Request for Online Consultation")
+                    {
+                        appointmentes.AppoinmentType = "Appointment Request for Online Consultation";
                     }
                 }
             }

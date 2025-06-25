@@ -153,32 +153,32 @@
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-name" class="form-label">Name*</label>
                             <input type="text" name="patientname" maxlength="100" asp-for="PatientData.Name" class="form-control" id="pi-name">
-                            <span asp-validation-for="PatientData.Name" class="text-danger"></span>
+                            <span  id="Namevalidation" asp-validation-for="PatientData.Name" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-phoneno" class="form-label">Phone Number*</label>
                             <input type="text" name="phoneno" asp-for="PatientData.Mobile" class="form-control" id="pi-phoneno" disabled>
-                            <span asp-validation-for="PatientData.Mobile" class="text-danger"></span>
+                            <span id="phonenumbervalidation" asp-validation-for="PatientData.Mobile" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-email" class="form-label">Email*</label>
                             <input type="email" name="email" asp-for="PatientData.Email" maxlength="100" class="form-control" id="pi-email">
-                            <span asp-validation-for="PatientData.Email" class="text-danger"></span>
+                            <span id="emailvalidation" asp-validation-for="PatientData.Email" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-age" class="form-label">Age*</label>
                             <input type="number" name="age" asp-for="PatientData.Age" maxlength="2" class="form-control" id="pi-age">
-                            <span asp-validation-for="PatientData.Age" class="text-danger"></span>
+                            <span id="agevalidation" asp-validation-for="PatientData.Age" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-dob" class="form-label">Date of Birth*</label>
                             @* <input type="date" name="dob" class="form-control form-date" id="pi-dob" value="1995-09-03"> *@
                             <ejs-datepicker id="pi-dob" ejs-for="PatientData.Dob" class="form-control" format="dd/MM/yyyy" style="height: 45px;"></ejs-datepicker>
-                            <span asp-validation-for="PatientData.Dob" class="text-danger"></span>
+                            <span id="dobvalidation" asp-validation-for="PatientData.Dob" class="text-danger"></span>
                         </div>
                         <script>
                             document.addEventListener("DOMContentLoaded", function () {
@@ -227,20 +227,22 @@
                                 <input type="radio" class="btn-check" name="gender" id="gender-other">
                                 <label class="btn" for="gender-other">Other</label>
                             </div>
-                            <span asp-validation-for="PatientData.Gender" class="text-danger"></span>
+                            <span id="GenderValidation" asp-validation-for="PatientData.Gender" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-matstat" class="form-label">Marital Status*</label>
                             <ejs-dropdownlist Id="pi-matstat" ejs-for="PatientData.MaritalStatus" style="height: 45px;" class="form-control" TValue="string" DataSource="MaritalStatusList" Placeholder="Select Marital Status"></ejs-dropdownlist>
-                            <span asp-validation-for="PatientData.MaritalStatus" class="text-danger"></span>
+                            <span id="MaritalStatusValidation" asp-validation-for="PatientData.MaritalStatus" class="text-danger"></span>
                         </div>
 
                         <div class="col-md-6 col-xl-4" id="referencePincodeDiv">
                             <label class="form-label">Pincode*</label>
                             <ejs-dropdownlist id="pincodedropdown"
                                              cssClass="e-multi-column"
-                                             allowSelection="true"
+                                            showClearButton="true"
+                                              style="height: 45px;"
+                                              allowSelection="true"
                                              ejs-for="PatientData.PincodeId"
                                              maximumSelectionLength="1"
                                              allowFiltering="true"
@@ -259,6 +261,8 @@
                             <input asp-for="PatientData.Pincode"
                                    id="custompincode"
                                    type="text"
+                                   maxlength="6"
+                                   
                                    class="form-control"
                                    style="height: 45px;">
                         </div>
@@ -336,6 +340,8 @@
                                    maxlength="50"
                                    class="form-control"
                                    style="height: 45px;">
+                            <span id="Localityspan" asp-validation-for="PatientData.Address" class="text-danger"></span>
+
                         </div>
 
                         <div class="col-md-6 col-xl-4">
@@ -346,7 +352,7 @@
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-city" class="form-label">City</label>
+                            <label for="pi-city" class="form-label">City<span id="cityRequired"></span></label>
                             <ejs-dropdownlist id="cityDropdown"
                                               style="height: 45px;"
                                               ejs-for="PatientData.City"
@@ -358,12 +364,12 @@
                                 <!-- Initially disabled until a state is selected -->
                                 <e-dropdownlist-fields text="name" value="id"></e-dropdownlist-fields>
                             </ejs-dropdownlist>
-                            <span asp-validation-for="PatientData.City" class="text-danger"></span>
+                            <span id="cityvalidation" asp-validation-for="PatientData.City" class="text-danger"></span>
 
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-state" class="form-label">State</label>
+                            <label for="pi-state" class="form-label">State<span id="stateRequired"></span></label>
                             <ejs-dropdownlist id="stateDropdown"
                                               ejs-for="PatientData.State"
                                               style="height: 45px;"
@@ -374,7 +380,7 @@
                                               value="@Model.PatientData.State" change="onStateChange">
                                 <e-dropdownlist-fields text="name" value="id"></e-dropdownlist-fields>
                             </ejs-dropdownlist>
-                            <span asp-validation-for="PatientData.State" class="text-danger"></span>
+                            <span id="statevalidation" asp-validation-for="PatientData.State" class="text-danger"></span>
 
                             @*  <ejs-dropdownlist ID="pi-state" class="form-control"  TValue="string" DataSource="StateList" Placeholder="Select State"></ejs-dropdownlist>
                             *@
@@ -427,7 +433,17 @@
 
                     const stateDropdown = document.getElementById('stateDropdown').ej2_instances[0];
                     const cityDropdown = document.getElementById('cityDropdown').ej2_instances[0];
+                    const countryDropdown = document.getElementById('countryDropdown')?.ej2_instances?.[0];
+                    const selectedCountryText = countryDropdown?.text ?? "";
 
+                    // Set or clear * for State and City based on Country
+                    if (selectedCountryText.toLowerCase() === "india") {
+                        $('#stateRequired').text('*');
+                        $('#cityRequired').text('*');
+                    } else {
+                        $('#stateRequired').text('');
+                        $('#cityRequired').text('');
+                    }
                     if (shouldReset) {
                         stateDropdown.value = null;
                         stateDropdown.dataSource = [];
@@ -614,6 +630,8 @@
                         if (args.data.statusName === "Booked") {
                             args.cell.innerHTML = `<span class="badge badge-success">Booked</span>`;
                         } else if (args.data.statusName === "Completed") {
+                            args.cell.innerHTML = `<span class="badge badge-Primary">Completed</span>`;
+                        } else if (args.data.statusName === "Converted To Appointment") {
                             args.cell.innerHTML = `<span class="badge badge-Primary">Completed</span>`;
                         }
                         else if (args.data.statusName === "Request Sent") {
@@ -960,6 +978,10 @@
 
                     if (enteredDateTime > maxDateTime) { // ✅ Check max 10 years condition
                         $("#OC-reschedSpan").text("Appointment Date Time cannot be more than 10 years from today.");
+                        isValid = false;
+                    }
+                    else if (enteredDateTime < currentDateTime) {
+                        $("#OC-reschedSpan").text("Appointment date and time cannot be in the past.");
                         isValid = false;
                     }
                     else if ((enteredDateTime.getTime() - currentDateTime.getTime()) < 30 * 60 * 1000) {
@@ -2280,88 +2302,134 @@
                 $("#" + inputId).closest(".col-md-6").find(".text-danger").text("");
             }
             // Validate Pincode (only the visible one and only if it's 6-digit number)
-            var isReferenceVisible = $("#referencePincodeDiv").is(":visible");
+         var isReferenceVisible = $("#referencePincodeDiv").is(":visible");
             var isCustomVisible = $("#customPincodeDiv").is(":visible");
             var pincodePattern = /^[0-9]{6}$/;
-             var multiselectObj = document.getElementById("pincodedropdown").ej2_instances[0];
+            var isValid = true;
+
             if (isReferenceVisible) {
-
-                var pincodeValue = multiselectObj.value && multiselectObj.value[0] ? multiselectObj.value[0].toString() : "";
-                    if (!pincodeValue || pincodeValue.length === 0) {
-                        $("#pincodeValidation").text("Pincode is required.");
-                        isValid = false;
-                    } 
-               else {
-                    $("#pincodeValidation").text("");
-                }
-            }
-
-            if (isCustomVisible) {
-                var customPincodeValue = $("#custompincode").val().trim();
-                   if (customPincodeValue === "") {
+                var multiselectObj = document.getElementById("pincodedropdown")?.ej2_instances?.[0].value;
+                if (!multiselectObj) {
                     $("#pincodeValidation").text("Pincode is required.");
                     isValid = false;
-                } else if (!pincodePattern.test(customPincodeValue)) {
-                    $("#pincodeValidation").text("Please enter a valid 6-digit Pincode.");
-                    isValid = false;
-                }
-                 else {
-                    $("#pincodeValidation").text("");
+                } else {
+                    if (!multiselectObj || multiselectObj === 0 || multiselectObj === "") {
+                        $("#pincodeValidation").text("Pincode is required.");
+                        isValid = false;
+                    } else {
+                        $("#pincodeValidation").text("");
+                    }
                 }
             }
+
+            if (isCustomVisible) 
+            {
+                var customPincode = $("#custompincode").val().trim();
+                if (!customPincode) {
+                    $("#pincodeValidation").text("Pincode is required.");
+                    isValid = false;
+                } else {
+                    var selectedText = customPincode.itemData?.Pincodes?.toString() ?? "";
+
+                    var pincodePattern = /^[0-9]{6}$/;
+                    if (!pincodePattern.test(selectedText)) {
+                        $("#pincodeValidation").text("Enter a valid 6-digit pincode.");
+                        isValid = false;
+                    } else {
+                        $("#pincodeValidation").text("");
+                    }
+                }
+            }
+
             // Validate Locality
             var localityValue = $("#customlocality").val().trim();
             var localityPattern = /^[a-zA-Z\s]+$/;
 
-             if (!localityPattern.test(localityValue)) {
-                showError("customlocality", "Only alphabets and spaces are allowed.");
-                isValid = false;
-            } else {
-                clearError("customlocality");
-            }
+            if (localityValue !== "") {
 
+
+                if (!localityPattern.test(localityValue)) {
+                    $("#Localityspan").text("Only alphabets and spaces are allowed.");
+                    isValid = false;
+                } else {
+                    $("#Localityspan").text("");
+                }
+            }
             // Validate Name
             if ($("#pi-name").val().trim() === "") {
-                showError("pi-name", "Name is required.");
+                $("#namevalidation").text("Name is required.");
                 isValid = false;
             } else {
-                clearError("pi-name");
+                $("#namevalidation").text("");
             }
 
             // Validate Phone Number
             if ($("#pi-phoneno").val().trim() === "") {
-                showError("pi-phoneno", "Phone Number is required.");
+
+                $("#phonenumbervalidation").text("Only alphabets and spaces are allowed.");
                 isValid = false;
             } else {
-                clearError("pi-phoneno");
+                $("#phonenumbervalidation").text("");
             }
 
             var email = $("#pi-email").val().trim();
             var emailRegex = /^[\w\.-]+@@[\w\.-]+\.\w+$/; // ✅ Regex for valid email format
             if (email === "") {
-                showError("pi-email", "Email is required.");
+                $("#emailvalidation").text("Email is required.");
+
                 isValid = false;
             } else if (!emailRegex.test(email)) {
-                showError("pi-email", "Invalid email address.");
+                $("#emailvalidation").text("Invalid email address.");
                 isValid = false;
             } else {
-                clearError("pi-email");
+                $("#emailvalidation").text("")
+            }
+            var countryDropdown = document.getElementById("countryDropdown")?.ej2_instances?.[0];
+            var countryText = countryDropdown?.text ?? "";
+            var countryValue = countryDropdown?.value ?? "";
+
+            // Validate State and City only if Country is India
+            if (countryText.toLowerCase() === "india") {
+                var stateDropdown = document.getElementById("stateDropdown")?.ej2_instances?.[0];
+                var stateValue = stateDropdown?.value;
+                var cityDropdown = document.getElementById("cityDropdown")?.ej2_instances?.[0];
+                var cityValue = cityDropdown?.value;
+
+                if (!stateValue) {
+
+                    $("#statevalidation").text("State is required.");
+                    isValid = false;
+                } else {
+                    $("#statevalidation").text("");
+                }
+
+                if (!cityValue) {
+                    $("#cityvalidation").text("City is required.");
+                    isValid = false;
+                } else {
+                    $("#cityvalidation").text("");
+                }
+            }
+            else
+            {
+                $("#statevalidation").text("");
+                $("#cityvalidation").text("");
             }
 
             // Validate Age
             var ageValue = $("#pi-age").val().trim();
             if (ageValue === "") {
-                showError("pi-age", "Age is required.");
+                $("#agevalidation").text("Age is required.");
                 isValid = false;
             } else if (isNaN(ageValue) || ageValue < 0 || ageValue > 99) {
-                showError("pi-age", "Invalid Age.");
+                $("#agevalidation").text("Invalid Age."); 
                 isValid = false;
             } else {
-                clearError("pi-age");
+                $("#agevalidation").text("");
             }
             var dobValue = $("#pi-dob").val().trim();
             if (dobValue === "") {
-                showError("pi-dob", "Date of Birth is required.");
+                $("#dobvalidation").text("Date of Birth is required.");
                 isValid = false;
             } else {
                 var dobDate = new Date(dobValue.split('/').reverse().join('-')); // Convert dd/MM/yyyy to yyyy-MM-dd
@@ -2371,27 +2439,35 @@
                 minDate.setFullYear(currentDate.getFullYear() - 100); // Minimum 99 years allowed
 
                 if (dobDate > currentDate) {
-                    showError("pi-dob", "Invalid Date of Birth.");
+                    $("#dobvalidation").text("Invalid Date of Birth.");
                     isValid = false;
                 } else if (dobDate < minDate) {
-                    showError("pi-dob", "Invalid Date of Birth.");
+                    $("#dobvalidation").text("Invalid Date of Birth.");
                     isValid = false;
                 }
                 else if (dobDate == "Invalid Date") {
-                    showError("pi-dob", "Invalid Date of Birth.");
+                    $("#dobvalidation").text("Invalid Date of Birth.");
                     isValid = false;
                 }
                 else {
-                    clearError("pi-dob");
+                    $("#dobvalidation").text("");
                 }
+            }
+            // Validate Gender
+            var selectedGender = $("input[name='gender']:checked").val();
+            if (!selectedGender) {
+                $("#GenderValidation").text("Gender is required.");
+                isValid = false;
+            } else {
+                $("#GenderValidation").text("");
             }
 
             // Validate Marital Status
             if ($("#pi-matstat").val() === null || $("#pi-matstat").val() === "") {
-                showError("pi-matstat", "Marital Status is required.");
+                $("#MaritalStatusValidation").text("Marital Status is required.");
                 isValid = false;
             } else {
-                clearError("pi-matstat");
+                $("#MaritalStatusValidation").text("");
             }
 
             // If any validation fails, stop AJAX request
