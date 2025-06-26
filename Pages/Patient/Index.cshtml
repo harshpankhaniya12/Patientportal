@@ -232,7 +232,7 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-matstat" class="form-label">Marital Status</label>
-                            <ejs-dropdownlist Id="pi-matstat" ejs-for="PatientData.MaritalStatus" style="height: 45px;" class="form-control" TValue="string" DataSource="MaritalStatusList" Placeholder="Select Marital Status"></ejs-dropdownlist>
+                            <ejs-dropdownlist Id="pi-matstat" ejs-for="PatientData.MaritalStatus" style="height: 45px;" class="form-control" TValue="string" DataSource="MaritalStatusList"></ejs-dropdownlist>
                             <span id="MaritalStatusValidation" asp-validation-for="PatientData.MaritalStatus" class="text-danger"></span>
                         </div>
 
@@ -265,6 +265,7 @@
                                    
                                    class="form-control"
                                    style="height: 45px;">
+                            <span id="custompincodeValidation" class="text-danger"></span>
                         </div>
 
 
@@ -2326,17 +2327,17 @@
             {
                 var customPincode = $("#custompincode").val().trim();
                 if (!customPincode) {
-                    $("#pincodeValidation").text("Pincode is required.");
+                    $("#custompincodeValidation").text("Pincode is required.");
                     isValid = false;
                 } else {
-                    var selectedText = customPincode.itemData?.Pincodes?.toString() ?? "";
+                    var selectedText = customPincode.toString() ?? "";
 
                     var pincodePattern = /^[0-9]{6}$/;
                     if (!pincodePattern.test(selectedText)) {
-                        $("#pincodeValidation").text("Enter a valid 6-digit pincode.");
+                        $("#custompincodeValidation").text("Enter a valid 6-digit pincode.");
                         isValid = false;
                     } else {
-                        $("#pincodeValidation").text("");
+                        $("#custompincodeValidation").text("");
                     }
                 }
             }
@@ -2357,10 +2358,10 @@
             }
             // Validate Name
             if ($("#pi-name").val().trim() === "") {
-                $("#namevalidation").text("Name is required.");
+                $("#Namevalidation").text("Name is required.");
                 isValid = false;
             } else {
-                $("#namevalidation").text("");
+                $("#Namevalidation").text("");
             }
 
             // Validate Phone Number
@@ -2480,6 +2481,7 @@
                 "gender-other": "Other"
             };
 
+            var multiselectObj = document.getElementById("pincodedropdown").ej2_instances[0];
             var selectedGenderId = $("input[name='gender']:checked").attr("id");
             var selectedGender = genderMapping[selectedGenderId] || "";
             var dobValue = $("#pi-dob").val(); // Get the date input
@@ -2488,7 +2490,7 @@
             var cityId = cityObj.value;
             var custompincode = $("#custompincode").val();
             var selectedPincodeId = multiselectObj.value;
-            var PincodeId = selectedPincodeId && selectedPincodeId.length > 0 ? parseInt(selectedPincodeId[0]) : null;
+            var PincodeId = selectedPincodeId ;
 
           
 
@@ -2500,7 +2502,6 @@
 
             var countryObj = document.getElementById("countryDropdown").ej2_instances[0];
             var countryId = countryObj.value;
-             var multiselectObj = document.getElementById("pincodedropdown").ej2_instances[0];
             var formData = {
                 Name: $("#pi-name").val(),
                 Id: $("#PatientId").val(),
