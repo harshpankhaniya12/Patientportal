@@ -163,7 +163,7 @@
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-email" class="form-label">Email*</label>
+                            <label for="pi-email" class="form-label">Email</label>
                             <input type="email" name="email" asp-for="PatientData.Email" maxlength="100" class="form-control" id="pi-email">
                             <span id="emailvalidation" asp-validation-for="PatientData.Email" class="text-danger"></span>
                         </div>
@@ -231,7 +231,7 @@
                         </div>
 
                         <div class="col-md-6 col-xl-4">
-                            <label for="pi-matstat" class="form-label">Marital Status*</label>
+                            <label for="pi-matstat" class="form-label">Marital Status</label>
                             <ejs-dropdownlist Id="pi-matstat" ejs-for="PatientData.MaritalStatus" style="height: 45px;" class="form-control" TValue="string" DataSource="MaritalStatusList" Placeholder="Select Marital Status"></ejs-dropdownlist>
                             <span id="MaritalStatusValidation" asp-validation-for="PatientData.MaritalStatus" class="text-danger"></span>
                         </div>
@@ -437,13 +437,13 @@
                     const selectedCountryText = countryDropdown?.text ?? "";
 
                     // Set or clear * for State and City based on Country
-                    if (selectedCountryText.toLowerCase() === "india") {
-                        $('#stateRequired').text('*');
-                        $('#cityRequired').text('*');
-                    } else {
-                        $('#stateRequired').text('');
-                        $('#cityRequired').text('');
-                    }
+                    // if (selectedCountryText.toLowerCase() === "india") {
+                    //     $('#stateRequired').text('*');
+                    //     $('#cityRequired').text('*');
+                    // } else {
+                    //     $('#stateRequired').text('');
+                    //     $('#cityRequired').text('');
+                    // }
                     if (shouldReset) {
                         stateDropdown.value = null;
                         stateDropdown.dataSource = [];
@@ -2374,47 +2374,46 @@
 
             var email = $("#pi-email").val().trim();
             var emailRegex = /^[\w\.-]+@@[\w\.-]+\.\w+$/; // ✅ Regex for valid email format
-            if (email === "") {
-                $("#emailvalidation").text("Email is required.");
+            if (email !== "") {
 
-                isValid = false;
-            } else if (!emailRegex.test(email)) {
-                $("#emailvalidation").text("Invalid email address.");
-                isValid = false;
-            } else {
-                $("#emailvalidation").text("")
+                if (!emailRegex.test(email)) {
+                    $("#emailvalidation").text("Invalid email address.");
+                    isValid = false;
+                } else {
+                    $("#emailvalidation").text("")
+                }
             }
             var countryDropdown = document.getElementById("countryDropdown")?.ej2_instances?.[0];
             var countryText = countryDropdown?.text ?? "";
             var countryValue = countryDropdown?.value ?? "";
 
             // Validate State and City only if Country is India
-            if (countryText.toLowerCase() === "india") {
-                var stateDropdown = document.getElementById("stateDropdown")?.ej2_instances?.[0];
-                var stateValue = stateDropdown?.value;
-                var cityDropdown = document.getElementById("cityDropdown")?.ej2_instances?.[0];
-                var cityValue = cityDropdown?.value;
+            // if (countryText.toLowerCase() === "india") {
+            //     var stateDropdown = document.getElementById("stateDropdown")?.ej2_instances?.[0];
+            //     var stateValue = stateDropdown?.value;
+            //     var cityDropdown = document.getElementById("cityDropdown")?.ej2_instances?.[0];
+            //     var cityValue = cityDropdown?.value;
 
-                if (!stateValue) {
+            //     if (!stateValue) {
 
-                    $("#statevalidation").text("State is required.");
-                    isValid = false;
-                } else {
-                    $("#statevalidation").text("");
-                }
+            //         $("#statevalidation").text("State is required.");
+            //         isValid = false;
+            //     } else {
+            //         $("#statevalidation").text("");
+            //     }
 
-                if (!cityValue) {
-                    $("#cityvalidation").text("City is required.");
-                    isValid = false;
-                } else {
-                    $("#cityvalidation").text("");
-                }
-            }
-            else
-            {
-                $("#statevalidation").text("");
-                $("#cityvalidation").text("");
-            }
+            //     if (!cityValue) {
+            //         $("#cityvalidation").text("City is required.");
+            //         isValid = false;
+            //     } else {
+            //         $("#cityvalidation").text("");
+            //     }
+            // }
+            // else
+            // {
+            //     $("#statevalidation").text("");
+            //     $("#cityvalidation").text("");
+            // }
 
             // Validate Age
             var ageValue = $("#pi-age").val().trim();
@@ -2463,12 +2462,12 @@
             }
 
             // Validate Marital Status
-            if ($("#pi-matstat").val() === null || $("#pi-matstat").val() === "") {
-                $("#MaritalStatusValidation").text("Marital Status is required.");
-                isValid = false;
-            } else {
-                $("#MaritalStatusValidation").text("");
-            }
+            // if ($("#pi-matstat").val() === null || $("#pi-matstat").val() === "") {
+            //     $("#MaritalStatusValidation").text("Marital Status is required.");
+            //     isValid = false;
+            // } else {
+            //     $("#MaritalStatusValidation").text("");
+            // }
 
             // If any validation fails, stop AJAX request
             if (!isValid) {
