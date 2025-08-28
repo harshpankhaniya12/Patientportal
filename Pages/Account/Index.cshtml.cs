@@ -46,7 +46,7 @@ namespace Patientportal.Pages.Account
         {
             string baseUrl = _configuration["ApiSettings:BaseUrl"];
             string token = _configuration["ApiSettings:AuthToken"];
-            string token2 = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyIiwic3ViIjoiMiIsInVuaXF1ZV9uYW1lIjoiSmFscGEiLCJlbWFpbCI6ImphbHBhQGludXJza24uaW4iLCJyb2xlIjoiRnJvbnREZXNrUHJlU2FsZXMiLCJuYmYiOjE3NTA4MzE0ODIsImV4cCI6MTc1MTQzNjI4MSwiaWF0IjoxNzUwODMxNDgyLCJpc3MiOiJDb25uZXR3ZWxsQ0lTIiwiYXVkIjoiQ29ubmV0d2VsbENJUyJ9.IGpD9XIl4IRHlanG5nMjxasFsLv9IDId965Kn0WAS08DAmgrZJANFEMj2V6rgWmVIYYGwckkeBg0H_XDpgOJYQ";
+            string token2 = _configuration["ApiSettings:AuthToken"];
             string apiUrl2 = $"{baseUrl}/api/Profile/GetpatientByMobilenumber?Mobilenumber={request.Mobile}";
             var PatientDetails = await _apiService.GetAsync<ProfileListItem>(apiUrl2, token);
             if (string.IsNullOrEmpty(request.Mobile) || request.Mobile.Length < 10)
