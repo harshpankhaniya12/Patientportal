@@ -12,6 +12,7 @@
 
     List<string> MaritalStatusList = new List<string> { "Single", "Married", "Divorced" };
 
+    var pendingBalance = ViewData["Invoice"] as decimal? ?? 0;
 }
 @Html.AntiForgeryToken()
 <!DOCTYPE html>
@@ -127,7 +128,7 @@
             @if (Model.ChangeRequests.Count > 0 && Model.ChangeRequests != null)
             {
                 <div class="ius-block ius-card ius-notes">
-                    <h2 class="mb-2 pb-1 text--red">Changes Requested</h2>
+                    <h2 class="mb-2 pb-1 text--red">Changes Requested : Below changes will reflect in your profile after approval from the clinic.</h2>
                     <ol>
                         @foreach (var change in Model?.ChangeRequests)
                         {
@@ -145,7 +146,13 @@
                 </ol>
             </div>
             <div class="ius-block ius-card">
-                <h2>Patient Information</h2>
+                <div class="ius-block ius-card d-flex">
+                    <h2>Patient Information</h2>
+                    <!-- Edit icon ke liye -->
+                    <a href="#" id="edit-icon" title="Edit Patient Info" style="font-size: 18px; margin-left: 10px;">
+                        <i class="fa fa-pencil"></i> <!-- FontAwesome pencil icon -->
+                    </a>
+                </div>
 
                 <form class="ius-form" action="#" method="POST">
                     <input type="hidden" id="PatientId" asp-for="PatientData.Id" name="medicalPatientSignature" class="custom-field-height" />
@@ -405,10 +412,15 @@
                     </div>
 
                     <div class="form-actions d-flex justify-content-between align-items-center flex-wrap">
-                        <div class="invoice-info mb-2">
-                            <label for="invoice-amount" class="form-label me-2">Invoice Amount:</label>
-                            <span id="invoice-amount" class="pa-amt">@ViewData["Invoice"]</span>
-                        </div>
+    
+                            <div class="invoice-info mb-2">
+                            @if (pendingBalance > 0)
+                            {
+                                <label for="invoice-amount" class="form-label me-2">Payment Balance:</label>
+                                <span id="invoice-amount" class="pa-amt">@ViewData["Invoice"]</span>
+                            }
+                            </div>
+    
 
                         <div class="action-buttons d-flex gap-2">
                             <a href="#" class="bttn bttn-primary" id="edit-btn" title="Edit">Edit</a>
@@ -1431,9 +1443,10 @@
 
                 // Set the selected date to 7 days after clicked appointment time
                 if (selectedScheduleDate) {
-                    scheduleObj.selectedDate = selectedScheduleDate;
+                    scheduleObj.selectedDate = new Date(); // Current date
                     scheduleObj.dataBind(); // Apply the selected date
                 }
+
 
                 // Mark holidays
                 scheduleObj.renderCell = function (args) {
@@ -2207,6 +2220,17 @@
         if (!regex.test(value)) {
             e.target.value = value.slice(0, -1); // Last invalid character hata dega
         }
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var editIcon = document.getElementById("edit-icon");
+        var editButton = document.getElementById("edit-btn");
+
+        editIcon.addEventListener("click", function (e) {
+            e.preventDefault(); // page reload na ho
+            editButton.click(); // Edit button click simulate
+        });
     });
 </script>
 
