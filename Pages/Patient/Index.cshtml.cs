@@ -84,7 +84,7 @@ namespace Patientportal.Pages.Patient
                     }
                     if (appointment.AppoinmentType == "Consultation")
                     {
-                        appointment.AppoinmentType = "Appointment for Consultation";
+                        appointment.AppoinmentType = "Dr. Sejal In-person Consultation";
                     }
                     if (appointment.StatusName == "Confirmed" ||
                       appointment.StatusName == "ReverseCheckin")
@@ -115,7 +115,7 @@ namespace Patientportal.Pages.Patient
                     }
                     if (appointmentes.AppoinmentType == "Consultation")
                     {
-                        appointmentes.AppoinmentType = "Appointment for Consultation";
+                        appointmentes.AppoinmentType = "Dr. Sejal In-person Consultation";
                     }
                 }
             }
@@ -197,7 +197,7 @@ namespace Patientportal.Pages.Patient
                     }
                     if (appointment.AppoinmentType == "Consultation")
                     {
-                        appointment.AppoinmentType = "Appointment for Consultation";
+                        appointment.AppoinmentType = "Dr. Sejal In-person Consultation";
                     }
 					if (appointment.StatusName == "Confirmed" ||
 					  appointment.StatusName == "ReverseCheckin")
@@ -229,7 +229,7 @@ namespace Patientportal.Pages.Patient
 
                     if (appointmentes.AppoinmentType == "Consultation")
                     {
-                        appointmentes.AppoinmentType = "Appointment for Consultation";
+                        appointmentes.AppoinmentType = "Dr. Sejal In-person Consultation";
                     } 
                     if (appointmentes.AppoinmentType == "Appointment Request for Online Consultation")
                     {

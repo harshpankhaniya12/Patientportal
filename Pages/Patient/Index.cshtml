@@ -47,12 +47,12 @@
                             <ul class="dropdown-menu">
                                 <li>
                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#schedulerModal2">
-                                        Appointment for Consultation
+                                        Dr. Sejal In-person Consultation
                                     </a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#oConsultationModal">
-                                        Appointment Request for Online Consultation
+                                        Dr. Sejal Online Consultation
                                     </a>
                                 </li>
                                 <li>
@@ -891,12 +891,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="mb-0">
-                        Appointment Request for Online Consultation
+                        Dr. Sejal Online Consultation
                     </h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <input type="hidden" id="OCAddPatientId" asp-for="PatientData.Id" name="medicalPatientSignature" class="custom-field-height" />
-                <input type="hidden" id="OCFormofAppointment" value="Appointment Request for Online Consultation" name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="OCFormofAppointment" value="Dr. Sejal Online Consultation" name="medicalPatientSignature" class="custom-field-height" />
                 <div class="modal-body">
                     <div class="">
                         <label for="OC-resched" class="form-label">Appointment Date Time*</label>
@@ -1976,12 +1976,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="mb-0">
-                        Appointment for Consultation
+                        Dr. Sejal In-person Consultation
                     </h3>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <input type="hidden" id="AddPatientId" asp-for="PatientData.Id" name="medicalPatientSignature" class="custom-field-height" />
-                <input type="hidden" id="ACFormofAppointment" value="Appointment for Consultation" name="medicalPatientSignature" class="custom-field-height" />
+                <input type="hidden" id="ACFormofAppointment" value="Dr. Sejal In-person Consultation" name="medicalPatientSignature" class="custom-field-height" />
 
                 <div class="modal-body">
                     <div class="">
@@ -2647,7 +2647,7 @@
                                         </div>
 
                                         <div class="ius-ctrls">
-                                                     ${appointment.statusName !== "Cancelled" && appointment.statusName !== "Check-In" && appointment.statusName !== "Completed" && appointment.appoinmentType !== "Appointment Request for Online Consultation" && appointment.appoinmentType !== "Appointment Request for Procedures" ? `
+                                                         ${appointment.statusName !== "Cancelled" && appointment.statusName !== "Check-In" && appointment.statusName !== "Completed" && appointment.appoinmentType !== "Dr. Sejal Online Consultation" && appointment.appoinmentType !== "Appointment Request for Procedures" ? `
                                                 <a href="#schedulerModal" class="app-resched" title="Reschedule" data-bs-toggle="modal" data-bs-target="#schedulerModal">
                                                          <img loading="lazy" src="@Url.Content("~/assets/calendar.svg")" width="18" height="20" alt="Calendar">
 

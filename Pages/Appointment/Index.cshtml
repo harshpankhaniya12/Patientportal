@@ -1,7 +1,7 @@
 ﻿@page
 @model Patientportal.Pages.Appointment.IndexModel
 @{
-    List<string> FormofAppointment = new List<string> { "Appointment for Consultation", "Appointment Request for Online Consultation", "Appointment Request for Procedures" };
+    List<string> FormofAppointment = new List<string> { "Dr. Sejal In-person Consultation", "Dr. Sejal Online Consultation", "Appointment Request for Procedures" };
 }
 @* @{
     ViewData["Title"] = "Appointment";
@@ -253,7 +253,7 @@
         debugger;
         var dateTimePicker = document.getElementById('pi-resched').ej2_instances[0];
         var selectedDateTime = new Date("@Model.SelectedDateTime.ToString("yyyy-MM-ddTHH:mm:ss")");
-        if (args.value === "Appointment for Consultation") {
+        if (args.value === "Dr. Sejal Online Consultation") {
             dateTimePicker.value = selectedDateTime;
             dateTimePicker.readonly = true; // Make it readonly
         } else {
