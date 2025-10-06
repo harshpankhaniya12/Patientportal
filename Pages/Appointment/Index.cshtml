@@ -7,6 +7,18 @@
     ViewData["Title"] = "Appointment";
     Layout = "_LayoutMainAppoinment";
 } *@
+<style>
+    .a-disabled {
+        pointer-events: none; /* Prevent click */
+        opacity: 0.5; /* Make it look disabled */
+    }
+
+    .a-disabled {
+        pointer-events: none; /* Prevent click */
+        opacity: 0.5; /* Make it look disabled */
+    }
+
+</style>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -58,9 +70,13 @@
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-phoneno" class="form-label">Phone Number*</label>
-                          <input type="text" name="phoneno" maxlength="10" class="form-control" id="pi-phoneno">
-                            <span id="pi-phoneno" class="text-danger"></span>
+                            <div class="input-group">
+                                <input type="text" name="phoneno" maxlength="10" class="form-control" id="pi-phoneno">
+                                <button type="button" class="btn btn-success d-none" id="verify-btn">Verify</button>
+                            </div>
+                            <span id="pi-phoneno-msg" class="text-danger"></span>
                         </div>
+
 
                         <div class="col-md-6 col-xl-4">
                             <label for="pi-email" class="form-label">Email*</label>
@@ -122,6 +138,116 @@
 
 
 </html>
+<div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="otpModalLabel">Enter OTP</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="otp-input" class="form-control" maxlength="4" placeholder="Enter OTP">
+                <span id="otp-msg" class="text-danger"></span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="otp-submit-btn" disabled>Submit OTP</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    /* Disable <a> buttons */
+    .a-disabled {
+        pointer-events: none; /* Prevent click */
+        opacity: 0.5; /* Make it look disabled */
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        const $phoneInput = $('#pi-phoneno');
+        const $verifyBtn = $('#verify-btn');
+        const $otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
+        const $otpInput = $('#otp-input');
+        const $otpSubmitBtn = $('#otp-submit-btn');
+        const $saveBtn = $('#save-btn');
+
+        // Initially disable Save button and hide Verify button
+        $saveBtn.addClass('a-disabled');
+        $verifyBtn.addClass('d-none');
+
+        $phoneInput.on('input', function () {
+            // Hide Verify button on any input change
+            $verifyBtn.addClass('d-none');
+
+            // Disable Save whenever phone input changes
+            $saveBtn.addClass('a-disabled');
+
+            // Show Verify button only if 10-digit number
+            const val = $(this).val();
+            if (val.length === 10 && /^\d{10}$/.test(val)) {
+                $verifyBtn.removeClass('d-none');
+                $verifyBtn.removeClass('a-disabled'); // enable Save
+            }
+        });
+
+        $verifyBtn.on('click', function () {
+            const mobile = $phoneInput.val();
+            $.ajax({
+                url: '/Appointment?handler=SendOTP',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ Mobile: mobile }),
+                success: function (res) {
+                    if (res.success) {
+                        $otpInput.val('');
+                        $('#otp-msg').text('');
+                        $otpSubmitBtn.prop('disabled', true);
+                        $verifyBtn.addClass('a-disabled'); // enable Save
+                        $otpModal.show();
+                    } else {
+                        $('#pi-phoneno-msg').text(res.message);
+                    }
+                }
+            });
+        });
+
+        $otpInput.on('input', function () {
+            const val = $(this).val();
+            $otpSubmitBtn.prop('disabled', !(val.length >= 4 && val.length <= 6));
+        });
+
+        $otpSubmitBtn.on('click', function () {
+            const mobile = $phoneInput.val();
+            const otp = $otpInput.val();
+            $.ajax({
+                url: '/Appointment?handler=VerifyOTP',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ Mobile: mobile, OTP: otp }),
+                success: function (res) {
+                    if (res.success) {
+                        $('#otp-msg').text(res.message);
+                        $otpModal.hide();
+                        $saveBtn.removeClass('a-disabled'); // enable Save
+                        $verifyBtn.addClass('a-disabled'); // enable Save
+                        toastr.success("OTP Verifyed successfully!"); // Show success message
+                    } else {
+                        $('#otp-msg').text(res.message);
+
+
+                        $saveBtn.addClass('a-disabled'); // keep disabled
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
 <script>
     function onAppointmentTypeChange(args) {
         debugger;
@@ -173,6 +299,9 @@ function validateAge(input) {
         }
     });
     document.getElementById("pi-phoneno").addEventListener("input", function (e) {
+    this.value = this.value.replace(/[^0-9+]/g, ''); // Allow only numbers and '+'
+});
+    document.getElementById("otp-input").addEventListener("input", function (e) {
     this.value = this.value.replace(/[^0-9+]/g, ''); // Allow only numbers and '+'
 });
 document.addEventListener("DOMContentLoaded", function () {
