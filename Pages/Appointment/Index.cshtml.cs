@@ -90,9 +90,6 @@ namespace Patientportal.Pages.Appointment
             }
             string baseUrl = _configuration["ApiSettings:BaseUrl"];
             string token = _configuration["ApiSettings:AuthToken"];
-            //string apiUrl2 = $"{baseUrl}/api/Profile/GetpatientByMobilenumber?Mobilenumber={request.Mobile}";
-            //var PatientDetails = await _apiService.GetAsync<ProfileListItem>(apiUrl2, token);
-            //var patient = PatientDetails;
 
             string apiUrl = $"{baseUrl}/api/v1/Account/Patientportalverify-otp";
             var payload = new { mobile = request.Mobile, otp = request.OTP };
@@ -102,7 +99,7 @@ namespace Patientportal.Pages.Appointment
             var Id = 1; 
             if (response.IsSucceeded)
             {
-                _otpService.ClearOTPAttempts(request.Mobile); // OTP attempts reset
+                _otpService.ClearOTPAttempts(request.Mobile); 
 
                 var claims = new List<Claim>
       {

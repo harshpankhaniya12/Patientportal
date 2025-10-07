@@ -283,7 +283,7 @@ function validateAge(input) {
                     Your appointment has been added successfully 
                 </div>
                 <div class="modal-footer border-top-0 d-flex justify-content-center">
-                    <button id="confirmYes" class="btn d-flex align-items-center gap-1 justify-content-center px-3"
+                    <button id="confirmYes" class="btn d-flex align-items-center gap-1 justify-content-center px-3" onclick="window.location.href='https://www.inurskn.in/'"
                         style="border-radius: 10px; background: #0061AB; height: 45px; min-width: 120px; font-size: 15px; font-weight: 600; color: #fff;">
                         Thanks 
                     </button>
@@ -682,7 +682,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
                         }
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "/account"; // Redirect to /account on button click
+                                window.location.href = "https://www.inurskn.in/";
             }
         });
                         }
@@ -700,7 +700,7 @@ maxDateTime.setFullYear(maxDateTime.getFullYear() + 10); // Max 10 years allowed
             }
         });
          $("#confirmYes").click(function () {
-        window.location.href = "/account"; // Redirect to /account
+        window.location.href = "https://www.inurskn.in/"; // Redirect to /account
     });
     });
 </script>
