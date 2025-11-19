@@ -158,7 +158,7 @@ namespace Patientportal.Pages
                     }
                     if (appointment.AppoinmentType == "Consultation")
                     {
-                        appointment.StatusName = "Appointment for Consultation";
+                        appointment.StatusName = "Dr. Sejal In-person Consultation";
                     }
                 }
             }
