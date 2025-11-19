@@ -329,7 +329,7 @@ namespace Patientportal.Pages.Patient
             }
             if (PatientData != null)
             {
-                ViewData["Invoice"] = invoiceResponse?.Invoice;
+                ViewData["Invoice"] = PatientData?.UnPaidValue;
             }
              if (PatientData != null)
             {

@@ -236,7 +236,7 @@ namespace Patientportal.Pages
             }
             if (PatientData != null)
             {
-                ViewData["Invoice"] = invoiceResponse?.Invoice;
+                ViewData["Invoice"] = PatientData?.UnPaidValue;
             }
 
 

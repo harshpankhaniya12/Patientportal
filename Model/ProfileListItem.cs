@@ -12,6 +12,9 @@ namespace Patientportal.Model
         public int? Age { get; set; }
         public string? Mobile { get; set; }
 
+       
+        public int? UnPaidValue { get; set; }
+
         [RegularExpression(@"^[\w\.-]+@[\w\.-]+\.\w+$", ErrorMessage = "Invalid email address")]
         public string? Email { get; set; }
         public string? Address { get; set; }
